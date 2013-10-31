@@ -9,7 +9,9 @@ def method2(infile, outfile):
     fdist.update(word_tokenize(line))
   return fdist
 
-def method3():
+def method3(text):
+  lang = "Proto-Indo European: English"
+  print "The language of the sentence is most probably",lang
   pass
 
 fd = method2("test1.in", "test1.out")
