@@ -13,3 +13,6 @@ def method3():
   pass
 
 fd = method2("test1.in", "test1.out")
+
+for i in fd:
+  print i
