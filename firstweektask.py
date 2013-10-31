@@ -18,3 +18,5 @@ fd = method2("test1.in", "test1.out")
 
 for i in fd:
   print i
+  
+# TODO: write test for each method. - LL
