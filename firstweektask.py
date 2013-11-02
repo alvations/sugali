@@ -18,13 +18,8 @@ def method3(text):
   pass
 
 
-method2("test1.in", "test1.out")
-
-method3("Was sentence ist dis?")
-
-
-
-
+#method2("test1.in", "test1.out")
+#method3("Was sentence ist dis?")
 
 
   
