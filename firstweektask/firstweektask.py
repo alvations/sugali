@@ -17,10 +17,4 @@ def method3(text):
   print "The language of the sentence is most probably",lang
   pass
 
-
-#method2("test1.in", "test1.out")
-#method3("Was sentence ist dis?")
-
-
-  
 # TODO: write test for each method. - LL
