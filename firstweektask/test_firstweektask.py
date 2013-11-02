@@ -18,7 +18,6 @@ class testfwt (ut.TestCase):
   def testMethod1(self):
     for sent,tokens in self.testsentences:
       result = fwt.method1(sent)
-      print result
       self.assertEqual(tokens, result)  
       
 if __name__ == "__main__":
