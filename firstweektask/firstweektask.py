@@ -18,3 +18,4 @@ def method3(text):
   pass
 
 # TODO: write test for each method. - LL
+# Hey I made a comment - G
