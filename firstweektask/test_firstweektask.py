@@ -46,33 +46,41 @@ class testfwt (ut.TestCase):
       self.assertEqual(tokens, result)
       
   def testMethod2(self):
-    tmpoutfile = tempfile.mkstemp()[1]
-    tmpinfile = tempfile.mkstemp()[1]
+    try: 
+      tmpoutfile = tempfile.mkstemp()[1]
+      tmpinfile = tempfile.mkstemp()[1]
+    except: # Just in case, python complains on Windows.
+      tmpoutfile = tempfile.NamedTemporaryFile()
+      tmpinfile = tempfile.NamedTemporaryFile()
+      tmpinfile = tmpinfile.name
+      tmpoutfile = tmpoutfile.name
+      pass
 
-    with open('tmpinfile', 'w') as infile:
-      for sentence, tokens, _ in self.testsentences:
-        infile.write(sentence + '\n')
+    with open(tmpinfile, 'w') as infile:
+      for sent, tokens, _ in self.testsentences:
+        infile.write(sent + '\n')
      
     expected_lines = []
     for token, num in self.tokencounts:
       expected_lines.append(token + "\t" + str(num))
                   
-    fwt.method2('tmpinfile', 'tmpoutfile')
+    fwt.method2(tmpinfile, tmpoutfile)
     lines = []
-    with codecs.open('tmpoutfile', 'r') as out:
+    with codecs.open(tmpoutfile, 'r') as out:
       for line in out:
         lines.append(line.strip('\n'))
 
     self.assertEqual(set(lines), set(expected_lines))
-    os.remove('tmpinfile')
-    os.remove('tmpoutfile')
 
+    os.remove(tmpinfile)
+    os.remove(tmpoutfile)
+    
   def testMethod3(self):  # We don't need to test if the language is correct, since the system will never be perfect. 
     for sentence, _, language in self.testsentences:
       prediction = fwt.method3(sentence)
       self.assertEqual(len(prediction),2)
       self.assertIsInstance(prediction[0],str)
       self.assertIsInstance(prediction[1],str)
-      
+  
 if __name__ == "__main__":
   ut.main()
