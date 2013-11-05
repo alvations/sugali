@@ -17,5 +17,6 @@ def method3(text):
   print "The language of the sentence is most probably",lang
   pass
 
-# TODO: write test for each method. - LL
+
+# TODO: write test for third method. - S
 # Hey I made a comment - G
