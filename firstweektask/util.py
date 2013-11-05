@@ -14,15 +14,18 @@ except ImportError:
 
 try:
   from nltk.probability import FreqDist
-except ImportError:
+  pass
+except:
   class FreqDist(Counter):
     """ Strip down version of NLTK's FreqDist. """
-    def __init__(self,corpus):
-      if all(isinstance(i, list) for i in corpus):
-        _corpus = list(chain(*corpus))# Flatten lists of lists into a single list.
-      else:
-        _corpus = corpus
-      self.update(_corpus)
+    def __init__(self, corpus=None):
+      if corpus != None:
+        if all(isinstance(i, list) for i in corpus):
+          # Flatten lists of lists into a single list.
+          _corpus = list(chain(*corpus))
+        else:
+          _corpus = corpus
+        self.update(_corpus)
       
       def __iter__(self):
         """ Iterator function: Returns keys of dict. """
@@ -32,3 +35,4 @@ except ImportError:
         """ Descriptor function. """
         items = ['%r: %r' % (s, self[s]) for s in self] 
         return '<FreqDist: %s>' % ', '.join(items)
+    
