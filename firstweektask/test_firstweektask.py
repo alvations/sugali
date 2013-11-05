@@ -45,15 +45,11 @@ class testfwt (ut.TestCase):
       result = fwt.method1(sentence)
       self.assertEqual(tokens, result)
       
-  def testMethod2(self):
-    try: 
-      tmpoutfile = tempfile.mkstemp()[1]
-      tmpinfile = tempfile.mkstemp()[1]
-    except: # Just in case, python complains on Windows.
-      tmpoutfile = tempfile.NamedTemporaryFile()
-      tmpinfile = tempfile.NamedTemporaryFile()
-      tmpinfile = tmpinfile.name
-      tmpoutfile = tmpoutfile.name
+  def testMethod2(self):  
+    tmpoutfile = tempfile.NamedTemporaryFile()
+    tmpinfile = tempfile.NamedTemporaryFile()
+    tmpinfile = tmpinfile.name
+    tmpoutfile = tmpoutfile.name
 
     with open(tmpinfile, 'w') as infile:
       for sent, tokens, _ in self.testsentences:
