@@ -4,6 +4,8 @@
 \author{Susanne Fertmann, Guy Emerson, Liling Tan}
 \date{}
 
+\usepackage{hyperref}
+
 \begin{document}
 
 \maketitle
@@ -16,9 +18,9 @@ Sugarlike is a language identification library designed for identifying low reso
 
 \subsection{Previous Work}
 
-Previous work on language identification has mostly be done high resource languages\footnote{e.g. http://shuyo.wordpress.com/2012/02/21/language-detection-for-twitter-with-99-1-accuracy/}. One exception is Scannell's (XXXX) indigenous tweets project. %where ....
+Previous work on language identification has mostly be done on high resource languages\footnote{e.g. \href{http://shuyo.wordpress.com/2012/02/21/language-detection-for-twitter-with-99-1-accuracy/}{http://shuyo.wordpress.com/2012/02/21/language-detection-for-twitter-with-99-1-accuracy/}}. One exception is Scannell's indigenous tweets project \footnote{\href{www.indigenoustweets.com}{www.indigenoustweets.com}}. %where ....
 
-Language identification at the word level is considered as one of the harder task because of the lack of context \{citation needed\}, especially in multilingual documents. King and Abney (2013) resolved it in a weakly supervised fashion.
+Language identification at the word level is considered as one of the harder tasks because of the lack of context \footnote{citation needed}, especially in multilingual documents. King and Abney (2013 \cite{king-abney:2013}) resolved it in a weakly supervised fashion.
 
 
 \section{Data}
@@ -26,10 +28,10 @@ Language identification at the word level is considered as one of the harder tas
 %With regards to the data sources, we propose crawling Twitter posts using a fixed list of hashtags in English and their respective translations. Although the redistribution of our crawled corpus remain questionable, we will distribute the source code that allows researchers to rebuild an update corpus. [we need some proper methodology... ahahhaa]
 
 \begin{itemize}
-\item Universal Declaration of Human Rights: almost parallel data,  needs some cleaning in ~300 language
-\item Language Id Corpus (LId): character 3-grams of Crubadan corpus %there's some unknown angeled brackets
-\item Crawl the tweets linked to www.indigenoustweets.com (~150 languages)
-\item Crawl the blogs linked to www.indigenoustweets.com/blogs (~75 languages)
+\item Universal Declaration of Human Rights: almost parallel data,  needs some cleaning (\~300 languages)
+\item Language Id Corpus (LId): character 3-grams of Crúbadán corpus %there's some unknown angeled brackets
+\item Crawl the tweets linked to www.indigenoustweets.com (\~150 languages)
+\item Crawl the blogs linked to www.indigenoustweets.com/blogs (\~75 languages)
 \end{itemize}
 
 \section{Model}
@@ -38,7 +40,7 @@ The resulting system needs to be able to identify (i) the language family and (i
 
 \begin{itemize}
 \item Baseline: Baysian model using LId corpus
-\item Main model: to be decided later.
+\item Main model: to be decided later
 \end{itemize}
 
 \section{Implementation}
@@ -51,5 +53,16 @@ The resulting system needs to be able to identify (i) the language family and (i
 \subsection{Need for Modularity}
 
 The trained language identification model would remain open and free for use. And more importantly, the model we are building must remain modular in the sense that other research can rebuild an updated Twitter corpus and extend the model simply by either adding new features or new datapoints to the classification model.
+
+\
+\
+\
+\
+\
+
+\bibliography{literature.bib}{}
+\bibliographystyle{plain}
+
+
 
 \end{document}
