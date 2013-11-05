@@ -54,7 +54,6 @@ class testfwt (ut.TestCase):
       tmpinfile = tempfile.NamedTemporaryFile()
       tmpinfile = tmpinfile.name
       tmpoutfile = tmpoutfile.name
-      pass
 
     with open(tmpinfile, 'w') as infile:
       for sent, tokens, _ in self.testsentences:
