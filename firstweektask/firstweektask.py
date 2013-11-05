@@ -13,9 +13,9 @@ def method2(infile, outfile):
   return fdist
 
 def method3(text):
-  lang = "Proto-Indo European: English"
-  print "The language of the sentence is most probably",lang
-  pass
+  lang = ("Indo-European","English")
+  print "The language of the sentence is most probably: {1} ({0})".format(lang[0],lang[1])
+  return lang
 
 
 # TODO: write test for third method. - S
