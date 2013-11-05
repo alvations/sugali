@@ -17,6 +17,3 @@ def method3(text):
   print "The language of the sentence is most probably: {1} ({0})".format(lang[0],lang[1])
   return lang
 
-
-# TODO: write test for third method. - S
-# Hey I made a comment - G
