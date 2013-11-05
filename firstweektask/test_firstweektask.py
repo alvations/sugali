@@ -49,7 +49,7 @@ class testfwt (ut.TestCase):
     tmpoutfile = tempfile.mkstemp()[1]
     tmpinfile = tempfile.mkstemp()[1]
 
-    with open(tmpinfile, 'w') as infile:
+    with open('tmpinfile', 'w') as infile:
       for sentence, tokens, _ in self.testsentences:
         infile.write(sentence + '\n')
      
@@ -57,15 +57,15 @@ class testfwt (ut.TestCase):
     for token, num in self.tokencounts:
       expected_lines.append(token + "\t" + str(num))
                   
-    fwt.method2(tmpinfile, tmpoutfile)
+    fwt.method2('tmpinfile', 'tmpoutfile')
     lines = []
-    with codecs.open(tmpoutfile, 'r') as out:
+    with codecs.open('tmpoutfile', 'r') as out:
       for line in out:
         lines.append(line.strip('\n'))
 
     self.assertEqual(set(lines), set(expected_lines))
-    os.remove(tmpinfile)
-    os.remove(tmpoutfile)
+    os.remove('tmpinfile')
+    os.remove('tmpoutfile')
 
   def testMethod3(self):  # We don't need to test if the language is correct, since the system will never be perfect. 
     for sentence, _, language in self.testsentences:
