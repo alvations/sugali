@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-
 import codecs, urllib2,re
 from bs4 import BeautifulSoup as bs
 import urllib2
