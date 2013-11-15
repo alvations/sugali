@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import codecs, urllib2, re, os
-from bs4 import BeautifulSoup as bs
 from collections import defaultdict
 import cPickle as pickle
-import time
 
 ETHNOLOGUE_DOMAIN = "http://www.ethnologue.com/"
 LANG_FAMILY_TAG = '''<div class="views-field views-field-name">'''
@@ -16,6 +14,7 @@ def get_language_families():
   Downloads the language families and its children from www.ethnology.com, and 
   return it as a defaultdict(list).
   """
+  from bs4 import BeautifulSoup as bs
   # If ethnologue language family html doesn't exist yet, download it.
   if not os.path.exists(ETHNO_DIR+'ethnologue-family.html'):
     fin = urllib2.urlopen(ETHNOLOGUE_DOMAIN+'browse/families')\
@@ -67,7 +66,7 @@ def load_language_families():
   with codecs.open(ETHNO_DIR+'languagefamilies.pk','rb') as fin2: 
     return pickle.load(fin2)
 
-'''
+''' Informal test...
 language_families = load_language_families() 
 for lf in language_families:
   for l in language_families[lf]:
