@@ -66,9 +66,14 @@ def load_language_families():
   with codecs.open(ETHNO_DIR+'languagefamilies.pk','rb') as fin2: 
     return pickle.load(fin2)
 
-''' Informal test...
-language_families = load_language_families() 
+#Informal test...
+language_families = load_language_families()
+numlang = 0 
+numfam = 0
 for lf in language_families:
+  numfam +=1
   for l in language_families[lf]:
     print lf, l
-'''
+    numlang+=1
+print numlang
+print numfam
