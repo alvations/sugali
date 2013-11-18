@@ -16,7 +16,9 @@ def word2ngrams(text, n=3, with_word_boundary=False):
 def doc2ngrams(text,n=3,with_word_boundary=False):
   """ Takes a documents/sentence, convert into ngrams"""
   return list(chain(*[word2ngrams(i) for i in text.split()]))
-  ''' # Informal test: see some magically characters that disappears in vie
+  ''' 
+  # Informal test: see some magically characters that disappears in vie
+  # This is another data encoding/font issue/stuff that we need to deal with.
   test_sentence = u'Nay, Đại hội đò̂ng Liên Hợp Quó̂c tuyên bó̂:'
   for i in doc2ngrams(test_sentence):
     print i
@@ -32,15 +34,10 @@ def file2str(infile, encoding='utf8'):
 def file2ngrams(infile, n=3,with_word_boundary=False):
   return doc2ngrams(file2str(infile))
 
-viefile = '../data/udhr/vie'
-engfile = '../data/udhr/eng'
-featuresets = [({'3gram':i},'vie') for i in file2ngrams(viefile)]
-featuresets+= [({'3gram':i},'eng') for i in file2ngrams(engfile)]
-
-classifier = nbc.train(featuresets)
-classifier.show_most_informative_features(5)
-
-st = u'Nay, dai hoi dong lien hop quoc tuyen bo:'
+def train(list_of_files):
+  featuresets = [({'3gram':i},'vie') for i in file2ngrams(viefile)]
+  featuresets+= [({'3gram':i},'eng') for i in file2ngrams(engfile)]
+  return nbc.train(featuresets)
 
 def test(test_sentence):
   testfeatures = word2ngrams(test_sentence)
@@ -49,13 +46,16 @@ def test(test_sentence):
   for i in word2ngrams(test_sentence):
     results[classifier.classify({'3gram':i})]+=1
   return {i:j/num_features for i, j in results.items()}
-    
+
+viefile = '../data/udhr/vie'
+engfile = '../data/udhr/eng'
+
+classifier = train([viefile,engfile])
+classifier.show_most_informative_features(5)
+
+st = u'Nay, dai hoi dong lien hop quoc tuyen bo:'
 print test(st)
     
 
   
-
-
-
-
-
+# TODO: please document your code, especially some of the one liners... !!!
