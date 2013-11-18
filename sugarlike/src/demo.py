@@ -55,6 +55,8 @@ classifier.show_most_informative_features(5)
 
 st = u'Nay, dai hoi dong lien hop quoc tuyen bo:'
 print test(st)
+st = u'Nay, Đại hội đò̂ng Liên Hợp Quó̂c tuyên bó̂:'
+print test(st)
     
 
   
