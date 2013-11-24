@@ -76,6 +76,7 @@ def langiso():
   """ [in]: Language name, [out]: isocode. """
   pass
 
+'''
 #Informal test...
 language_families = load_language_families()
 numlang = 0 
@@ -87,4 +88,4 @@ for lf in language_families:
     numlang+=1
 print numlang
 print numfam
-
+'''
