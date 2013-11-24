@@ -66,6 +66,16 @@ def load_language_families():
   with codecs.open(ETHNO_DIR+'languagefamilies.pk','rb') as fin2: 
     return pickle.load(fin2)
 
+# TODO:
+def get_langinfo(isocode):
+  """ Gets language information from Ethnologue. """
+  page = "http://www.ethnologue.com/language/"+isocode
+  
+# TODO:
+def langiso():
+  """ [in]: Language name, [out]: isocode. """
+  pass
+
 #Informal test...
 language_families = load_language_families()
 numlang = 0 
@@ -77,3 +87,4 @@ for lf in language_families:
     numlang+=1
 print numlang
 print numfam
+

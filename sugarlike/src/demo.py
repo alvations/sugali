@@ -14,7 +14,7 @@ def word2ngrams(text, n=3, with_word_boundary=False):
   return char_ngrams
 
 def doc2ngrams(text,n=3,with_word_boundary=False):
-  """ Takes a documents/sentence, convert into ngrams"""
+  """ Takes a document, convert into ngrams"""
   return list(chain(*[word2ngrams(i) for i in text.split()]))
   ''' 
   # Informal test: see some magically characters that disappears in vie
@@ -28,15 +28,16 @@ def doc2ngrams(text,n=3,with_word_boundary=False):
   '''
 
 def file2str(infile, encoding='utf8'):
-  return " ".join([i.strip('﻿ ﻿').strip() for i in \
+  return " ".join([i.strip() for i in \
                    codecs.open(infile,'r',encoding).readlines()])
 
 def file2ngrams(infile, n=3,with_word_boundary=False):
   return doc2ngrams(file2str(infile))
 
 def train(list_of_files):
-  featuresets = [({'3gram':i},'vie') for i in file2ngrams(viefile)]
-  featuresets+= [({'3gram':i},'eng') for i in file2ngrams(engfile)]
+  vie, eng = list_of_files
+  featuresets = [({'3gram':i},'vie') for i in file2ngrams(vie)]
+  featuresets+= [({'3gram':i},'eng') for i in file2ngrams(eng)]
   return nbc.train(featuresets)
 
 def test(test_sentence):
@@ -46,6 +47,7 @@ def test(test_sentence):
   for i in word2ngrams(test_sentence):
     results[classifier.classify({'3gram':i})]+=1
   return {i:j/num_features for i, j in results.items()}
+
 
 viefile = '../data/udhr/vie'
 engfile = '../data/udhr/eng'
@@ -57,7 +59,8 @@ st = u'Nay, dai hoi dong lien hop quoc tuyen bo:'
 print test(st)
 st = u'Nay, Đại hội đò̂ng Liên Hợp Quó̂c tuyên bó̂:'
 print test(st)
-    
+st = u'abacosa caiscaba cihc hsucsduvcwcnewjwec'
+print test(st)
 
-  
+
 # TODO: please document your code, especially some of the one liners... !!!
