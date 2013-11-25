@@ -38,6 +38,7 @@ except:
         return '<FreqDist: %s>' % ', '.join(items)
   
 def make_tarfile(output_filename, source_dir):
+  """ Compress all files into a single tarfile. """
   import os, tarfile
   with tarfile.open(output_filename, "w") as tar:
     tar.add(source_dir, arcname=os.path.basename(source_dir))
