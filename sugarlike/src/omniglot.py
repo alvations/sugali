@@ -93,10 +93,11 @@ def get_phrases(with_mp3=False,testing=False):
         for trg in all_phrases[gloss]:
           if type(trg) is tuple:
             trg = "\t".join(trg)
-          print>>outfile, eng+"\t"+trg          
+          print>>outfile, eng+"\t"+trg
+          print eng, trg
+      if testing: # only process one page if testing.
+        break        
       time.sleep(random.randrange(5,10))
-    if testing:
-      break
   if testing:
     # Compresses the omniglot phrases files into the tarfile in the test dir.
     make_tarfile('../test/omniglot-phrases.tar',outputdir)
@@ -113,4 +114,4 @@ def get_num_pages():
   return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
           for i in bs(num).find_all('dd')]))
 
-
+get_phrases(testing=True)
