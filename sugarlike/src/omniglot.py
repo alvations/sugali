@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import urllib2, re, time, codecs, os, random
+import urllib2, re, time, codecs, os, random, tempfile, shutil
 from bs4 import BeautifulSoup as bs
 from collections import defaultdict
+from utils import make_tarfile
 
 OMNIGLOT = 'http://www.omniglot.com'
 HTTP_REGEX = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'+\
@@ -46,10 +47,16 @@ MULTILING_URLS = {
 'song':"http://www.omniglot.com/songs/index.php" # Irregular pages.
 }
 
-def get_phrases(with_mp3=False, outputdir='../data/omniglot/'):
+def get_phrases(with_mp3=False):
   """ Gets phrases list from Omniglot. """
   # Downloads and open the phrases index.htm on Omniglot.
   phrase_lang = urllib2.urlopen(MULTILING_URLS['phrase_lang']).read()
+  
+  # Makes a temp output directory to the phrases files.
+  outputdir= '../data/omniglot-temp/'
+  if not os.path.exists(outputdir):
+    os.makedirs(outputdir)
+    
   for i in re.findall(AHREF_REGEX,phrase_lang):
     # Finds all link for the phrases page for each language.
     if '/language/phrases/' in i and not i.endswith('index.htm'):
@@ -86,14 +93,18 @@ def get_phrases(with_mp3=False, outputdir='../data/omniglot/'):
         for trg in all_phrases[gloss]:
           if type(trg) is tuple:
             trg = "\t".join(trg)
-          print>>outfile, eng+"\t"+trg
+          print>>outfile, eng+"\t"+trg          
       time.sleep(random.randrange(5,10))
+  # Compresses the omniglot phrases files into a single tarfile.
+  make_tarfile('../data/omniglot/omniglot-phrases.tar',outputdir)
+  # Remove the temp phrases directory.
+  shutil.rmtree(outputdir)
 
 def get_num_pages():
   """ Returns a list of linked pages from Omniglot's numbers page"""
   NUMBERS = "http://www.omniglot.com/language/numbers/"
   num = urllib2.urlopen(MULTILING_URLS['num']).read()
   return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
-          for i in bs(num).find_all('dd')]))  
+          for i in bs(num).find_all('dd')]))
 
 
