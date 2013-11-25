@@ -63,4 +63,10 @@ def convert_to_utf8(testing=False):
     # Compresses the utf8 UDHR files into a single tarfile.
     make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
   # Remove the udhr-utf8 directory.
-  shutil.rmtree(UDHR_UTF8_DIR)
+  try:
+    shutil.rmtree(UDHR_UTF8_DIR)
+  except WindowsError:
+    # If windows complain, glob through and remove file individually.
+    import glob
+    for f in glob.glob(outputdir):
+      os.remove(f)
