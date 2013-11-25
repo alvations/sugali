@@ -113,8 +113,28 @@ def get_phrases(with_mp3=False,testing=False):
       os.remove(f)
 
 def get_num_pages():
-  """ Returns a list of linked pages from Omniglot's numbers page"""
+  """ Returns a list of linked pages from Omniglot's numbers page. """
   NUMBERS = "http://www.omniglot.com/language/numbers/"
   num = urllib2.urlopen(MULTILING_URLS['num']).read()
   return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
           for i in bs(num).find_all('dd')]))
+
+def get_babel_pages():
+  """ Returns a list of linked pages from Omniglot's babel page. """
+  BABEL = "http://www.omniglot.com/babel/"
+  babel = urllib2.urlopen(MULTILING_URLS['babel']).read()
+  return [(unicode(lang.text), BABEL+lang.get('href')) for lang in \
+          bs(unicode(bs(babel).find_all('ol')[0])).find_all('a')]
+
+def crawl_babel_pages(outputdir="../data/omniglot/babel/"):
+  """ Crawls Omniglot for babel stories pages and save in **outputdir**. """
+  babel = get_babel_pages()
+  # Creates output directory if it doesn't exist.
+  if not os.path.exists(outputdir):
+    os.makedirs(outputdir)
+  for lang, page in babel:
+    html = urllib2.urlopen(page).read()
+    with codecs.open(outputdir,'w','utf8') as fout:
+      print>>fout, html
+    time.sleep(random.randrange(5,10))
+
