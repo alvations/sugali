@@ -94,7 +94,6 @@ def get_phrases(with_mp3=False,testing=False):
           if type(trg) is tuple:
             trg = "\t".join(trg)
           print>>outfile, eng+"\t"+trg
-          print eng, trg
       if testing: # only process one page if testing.
         break        
       time.sleep(random.randrange(5,10))

@@ -39,7 +39,8 @@ def convert_to_utf8(testing=False):
           print>>outfile, readfile
       except UnicodeDecodeError:
         # Sometimes the file has some chars that cannot be converted into utf8.
-        print infile, encoding 
+        ##print infile, encoding
+        pass 
     else:
       # If libmagic fails, try the encoding as specified by the filename.
       given_encoding = infile.rpartition('-')[2].lower()
@@ -52,7 +53,8 @@ def convert_to_utf8(testing=False):
           print>>outfile, readfile
       except:
         # Sometimes the file has some chars that cannot be converted into utf8.
-        print infile, given_encoding
+        ##print infile, given_encoding
+        pass
   
   if testing:
     # Compress the utf8 UDHR files into a single tarfile in the test dir.
