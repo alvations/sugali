@@ -18,7 +18,7 @@ def convert_udhr_to_utf8():
     z.extractall(TEMP_UDHR_DIR)
   TEMP_UDHR_DIR+='/udhr/'
   
-  # Makes the output directory for the files that can be converted into utf8.
+  # Makes a temp output directory for the files that can be converted into utf8.
   UDHR_UTF8_DIR = '../data/udhr-utf8/'
   if not os.path.exists(UDHR_UTF8_DIR):
     os.makedirs(UDHR_UTF8_DIR)
@@ -57,4 +57,4 @@ def convert_udhr_to_utf8():
   # Compresses the utf8 UDHR files into a single tarfile.
   make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
   # Remove the udhr-utf8 directory.
-  shutil.rmtree('../data/udhr-utf8/')
+  shutil.rmtree(UDHR_UTF8_DIR)
