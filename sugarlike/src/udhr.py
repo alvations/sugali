@@ -4,7 +4,7 @@ import codecs, os, zipfile, urllib, urllib2, tempfile, shutil
 from unicodize import is_utf8, what_the_encoding
 from utils import make_tarfile
 
-def convert_udhr_to_utf8():
+def convert_udhr_to_utf8(testing=False):
   """ Converts UDHR files to utf8. """
   # Make temp directories to keep the UDHR files.
   TEMP_DIR = tempfile.mkdtemp() # for keeping the udhr.zip
@@ -54,7 +54,11 @@ def convert_udhr_to_utf8():
         # Sometimes the file has some chars that cannot be converted into utf8.
         print infile, given_encoding
   
-  # Compresses the utf8 UDHR files into a single tarfile.
-  make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
+  if testing:
+    # Compress the utf8 UDHR files into a single tarfile in the test dir.
+    make_tarfile('../test/udhr-utf8.tar','../data/udhr-utf8/')
+  else:
+    # Compresses the utf8 UDHR files into a single tarfile.
+    make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)

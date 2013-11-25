@@ -47,7 +47,7 @@ MULTILING_URLS = {
 'song':"http://www.omniglot.com/songs/index.php" # Irregular pages.
 }
 
-def get_phrases(with_mp3=False):
+def get_phrases(with_mp3=False,testing=False):
   """ Gets phrases list from Omniglot. """
   # Downloads and open the phrases index.htm on Omniglot.
   phrase_lang = urllib2.urlopen(MULTILING_URLS['phrase_lang']).read()
@@ -95,8 +95,12 @@ def get_phrases(with_mp3=False):
             trg = "\t".join(trg)
           print>>outfile, eng+"\t"+trg          
       time.sleep(random.randrange(5,10))
-  # Compresses the omniglot phrases files into a single tarfile.
-  make_tarfile('../data/omniglot/omniglot-phrases.tar',outputdir)
+  if testing:
+    # Compresses the omniglot phrases files into the tarfile in the test dir.
+    make_tarfile('../test/omniglot-phrases.tar',outputdir)
+  else:
+    # Compresses the omniglot phrases files into a single tarfile.
+    make_tarfile('../data/omniglot/omniglot-phrases.tar',outputdir)
   # Remove the temp phrases directory.
   shutil.rmtree(outputdir)
 
