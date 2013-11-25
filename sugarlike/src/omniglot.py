@@ -104,7 +104,13 @@ def get_phrases(with_mp3=False,testing=False):
     # Compresses the omniglot phrases files into a single tarfile.
     make_tarfile('../data/omniglot/omniglot-phrases.tar',outputdir)
   # Remove the temp phrases directory.
-  shutil.rmtree(outputdir)
+  try:
+    shutil.rmtree(outputdir) 
+  except WindowsError:
+    # If windows complain, glob through and remove file individually.
+    import glob
+    for f in glob.glob(outputdir):
+      os.remove(f)
 
 def get_num_pages():
   """ Returns a list of linked pages from Omniglot's numbers page"""
@@ -112,5 +118,3 @@ def get_num_pages():
   num = urllib2.urlopen(MULTILING_URLS['num']).read()
   return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
           for i in bs(num).find_all('dd')]))
-
-get_phrases(testing=True)
