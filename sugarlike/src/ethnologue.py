@@ -75,17 +75,3 @@ def get_langinfo(isocode):
 def langiso():
   """ [in]: Language name, [out]: isocode. """
   pass
-
-'''
-#Informal test...
-language_families = load_language_families()
-numlang = 0 
-numfam = 0
-for lf in language_families:
-  numfam +=1
-  for l in language_families[lf]:
-    print lf, l
-    numlang+=1
-print numlang
-print numfam
-'''

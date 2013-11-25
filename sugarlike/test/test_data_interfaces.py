@@ -2,10 +2,13 @@
 
 import tarfile, codecs, tempfile, os
 import sys; sys.path.append('../src/')
-import omniglot, udhr
+import omniglot, udhr, ethnologue
 
 def test_tarfile_for_utf8(intarfile):
-  # Checks if omniglot-phrase.tar contains utf8 files.
+  """ 
+  Checks if omniglot-phrase.tar contains readable utf8 files and prints out
+  the first file in the tarball. 
+  """
   TEMP_DIR = tempfile.mkdtemp()
   with tarfile.open(intarfile) as tf:
     for member in tf.getmembers():
@@ -53,7 +56,25 @@ def test_udhr_convert_to_utf8():
   """
   udhr.convert_to_utf8(testing=True)
   test_tarfile_for_utf8("udhr-utf8.tar")
-  os.remove("udhr-utf8.tar")  
+  os.remove("udhr-utf8.tar")
+  
+def test_load_language_families():
+  """
+  The load_language_families() function loads the language families from
+  languagefamilies.pk and return it as a defaultdict(list). 
+  """
+  language_families = ethnologue.load_language_families()
+  numlang = 0 
+  numfam = 0
+  for lf in language_families:
+    numfam +=1
+    for l in language_families[lf]:
+      print lf, l
+      numlang+=1  
+  print "#language_families:",numfam
+  print "#language:",numlang
+
   
 test_omniglot_get_phrase()
 test_udhr_convert_to_utf8()
+test_load_language_families()
