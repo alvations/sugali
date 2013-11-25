@@ -95,6 +95,8 @@ def get_phrases(with_mp3=False,testing=False):
             trg = "\t".join(trg)
           print>>outfile, eng+"\t"+trg          
       time.sleep(random.randrange(5,10))
+    if testing:
+      break
   if testing:
     # Compresses the omniglot phrases files into the tarfile in the test dir.
     make_tarfile('../test/omniglot-phrases.tar',outputdir)

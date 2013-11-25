@@ -4,7 +4,7 @@ import codecs, os, zipfile, urllib, urllib2, tempfile, shutil
 from unicodize import is_utf8, what_the_encoding
 from utils import make_tarfile
 
-def convert_udhr_to_utf8(testing=False):
+def convert_to_utf8(testing=False):
   """ Converts UDHR files to utf8. """
   # Make temp directories to keep the UDHR files.
   TEMP_DIR = tempfile.mkdtemp() # for keeping the udhr.zip
