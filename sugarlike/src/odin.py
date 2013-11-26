@@ -7,6 +7,7 @@ try:
   from bs4 import BeautifulSoup as bs
 except:
   from BeautifulSoup import BeautifulSoup as bs
+#bs.find_all = getattr(bs, 'find_all',False) or getattr(bs, 'findAll')
 
 ODIN = '../data/odin/odin-full.tar'
 ODIN_DIR = '../data/odin/'
