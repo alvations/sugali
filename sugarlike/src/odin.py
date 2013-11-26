@@ -2,8 +2,11 @@
 
 import tarfile, codecs, os
 from collections import defaultdict
-from bs4 import BeautifulSoup as bs
 import cPickle as pickle
+try:
+  from bs4 import BeautifulSoup as bs
+except:
+  from BeautifulSoup import BeautifulSoup as bs
 
 ODIN = '../data/odin/odin-full.tar'
 ODIN_DIR = '../data/odin/'
@@ -19,17 +22,29 @@ def get_odin_examples():
     if '.xml' in infile.name: # there's a rogue file in the tar that is not xml.
       lang = infile.name[:-4].lower()
       # Find the <igt>...</igt> in the xml.
-      for igt in bs(tar.extractfile(infile).read()).find_all('igt'):
+      try: 
+        igts = bs(tar.extractfile(infile).read()).find_all('igt')
+      except TypeError: # Using BeautifulSoup 3
+        igts = bs(tar.extractfile(infile).read()).findAll('igt')
+      for igt in igts:
         # Find the <example>...</example> in the igt.
-        for eg in bs(unicode(igt)).find_all('example'):
+        try:
+          examples = bs(unicode(igt)).find_all('example')
+        except TypeError: # Using BeautifulSoup 3
+          examples = bs(unicode(igt)).findAll('example')
+        for eg in examples:
           try:
             # Only use triplets lines and assumes that
-            # line1: src, line2:eng, line3:gloss 
-            src, eng, gloss = bs(unicode(eg)).find_all('line')
+            # line1: src, line2:eng, line3:gloss
+            try: 
+              src, eng, gloss = bs(unicode(eg)).find_all('line')
+            except TypeError: # Using BeautifulSoup 3
+              src, eng, gloss = bs(unicode(eg)).findAll('line')
             src, eng, gloss = map(unicode, [src, eng, gloss])
             docs[lang].append((src, eng, gloss))
+            print src, eng, gloss
           except:
-            pass; print eg
+            raise; print eg
   return docs
 
 def load_odin_examples():
@@ -50,4 +65,4 @@ def load_odin_examples():
     docs = pickle.load(fin2)
     for lang in docs:
       # the data might be too much for the RAM, so yield instead of return.
-      yield (lang, docs[lang]) 
+      yield (lang, docs[lang])
