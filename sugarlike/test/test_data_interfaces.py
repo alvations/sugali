@@ -85,5 +85,5 @@ def test_load_odin_examples():
 
 test_omniglot_get_phrase()
 test_load_odin_examples()
-#test_udhr_convert_to_utf8()
-#test_load_language_families()
+test_load_language_families()
+test_udhr_convert_to_utf8()
