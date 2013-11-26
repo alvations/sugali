@@ -55,7 +55,7 @@ def get_phrases(with_mp3=False,testing=False):
   # Makes a temp output directory to the phrases files.
   outputdir= '../data/omniglot-temp/'
   if not os.path.exists(outputdir):
-    os.makedirs(outputdir)
+    os.makedirs(outputdir,mode=0777)
     
   for i in re.findall(AHREF_REGEX,phrase_lang):
     # Finds all link for the phrases page for each language.

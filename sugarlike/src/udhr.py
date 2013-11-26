@@ -21,7 +21,7 @@ def convert_to_utf8(testing=False):
   # Makes a temp output directory for the files that can be converted into utf8.
   UDHR_UTF8_DIR = '../data/udhr-utf8/'
   if not os.path.exists(UDHR_UTF8_DIR):
-    os.makedirs(UDHR_UTF8_DIR)
+    os.makedirs(UDHR_UTF8_DIR,mode=0777)
   
   # Iterate through the extracted files.
   for filename in os.listdir(TEMP_UDHR_DIR):
