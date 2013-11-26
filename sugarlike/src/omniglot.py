@@ -68,28 +68,16 @@ def get_phrases(with_mp3=False,testing=False):
       # Create a textfile for the output.
       outfile = codecs.open(outputdir+'phrases.'+langname,'w','utf8')
       # Finds the section that starts with <div id="unicode">
-      try:
-        soup = bs(urllib2.urlopen(OMNIGLOT+i).read()).find_all(id='unicode')[0]
-      except TypeError: # Using BeautifulSoup 3
-        soup = bs(urllib2.urlopen(OMNIGLOT+i).read()).findAll(id='unicode')[0]
+      soup = bs(urllib2.urlopen(OMNIGLOT+i).read()).findAll(id='unicode')[0]
       # Get name of language in the particular language.
-      try:
-        langname2 = bs(str(soup.find_all('th')[1])).text
-      except TypeError: # Using BeautifulSoup 3
-        langname2 = bs(str(soup.findAll('th')[1])).text
+      langname2 = bs(str(soup.findAll('th')[1])).text
       all_phrases = defaultdict(list)
       # Each <tr>...</tr> is a phrase in the table.
-      try:
-        phrasetable = soup.find_all('tr')
-      except TypeError: # Using BeautifulSoup 3
-        phrasetable = soup.findAll('tr')
+      phrasetable = soup.findAll('tr')
       for phrases in phrasetable:
         try:
           # Each <td>...</td> is a column in the <tr/>.
-          try: 
-            eng,phrase =  bs(unicode(phrases)).find_all('td')
-          except TypeError: # Using BeautifulSoup 3
-            eng,phrase =  bs(unicode(phrases)).findAll('td')
+          eng,phrase =  bs(unicode(phrases)).findAll('td')
           eng = str(eng.text)
           if with_mp3:
             # Maps the phrase to the corresponding mp3.
@@ -132,22 +120,14 @@ def get_num_pages():
   """ Returns a list of linked pages from Omniglot's numbers page. """
   NUMBERS = "http://www.omniglot.com/language/numbers/"
   num = urllib2.urlopen(MULTILING_URLS['num']).read()
-  try:
-    return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
-            for i in bs(num).find_all('dd')]))
-  except TypeError: # Using BeautifulSoup 3
-    return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
+  return list(set([NUMBERS+str(re.findall(AHREF_REGEX,str(i))[0]) \
           for i in bs(num).findAll('dd')]))
 
 def get_babel_pages():
   """ Returns a list of linked pages from Omniglot's babel page. """
   BABEL = "http://www.omniglot.com/babel/"
   babel = urllib2.urlopen(MULTILING_URLS['babel']).read()
-  try:
-    return [(unicode(lang.text), BABEL+lang.get('href')) for lang in \
-            bs(unicode(bs(babel).find_all('ol')[0])).find_all('a')]
-  except TypeError: # Using BeautifulSoup 3
-    return [(unicode(lang.text), BABEL+lang.get('href')) for lang in \
+  return [(unicode(lang.text), BABEL+lang.get('href')) for lang in \
             bs(unicode(bs(babel).findAll('ol')[0])).findAll('a')]
     
 def crawl_babel_pages(outputdir="../data/omniglot/babel/"):
