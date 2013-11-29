@@ -9,6 +9,10 @@ LANG_FAMILY_TAG = '''<div class="views-field views-field-name">'''
 LANG_TAG = '''<span class="views-field views-field-field-iso-639-3">'''
 ETHNO_DIR = "../data/ethnologue/"
 
+class Tree(defaultdict):
+  def __init__(self):
+    super(Tree, self).__init__(Tree)
+
 def get_language_families():
   """ REQUIRES INTERNET CONNECTION !!!! (takes ~3mins with 1.8 MB/s)
   Downloads the language families and its children from www.ethnology.com, and 
