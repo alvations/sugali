@@ -6,12 +6,12 @@ DATADIR = '../data'
 DATASOURCE = ['wikpedia','omniglot','odin','udhr','crubadan']
 
 # TODO: this returns the language code used for the individual data source.
-def magic_iso_func(datasource,iso):
+def specific_code(datasource,iso):
   return iso # placeholder
 
 def get_data(datasource=None, iso=None, datatype=None):
-  languagecode = magic_iso_func(datasource, iso)
-  filename =  '/'.join([DATADIR,datasource,languagecode,datatype])
+  languagecode = specific_code(datasource, iso)
+  filename =  '/'.join([DATADIR,datasource,languagecode,"{}_{}.tar".format(languagecode,datatype)])
   print filename
   return codecs.open(filename,'r','utf8')
 
