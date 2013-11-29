@@ -74,7 +74,7 @@ def load_language_families():
 def get_langinfo(isocode):
   """ Gets language information from Ethnologue. """
   page = "http://www.ethnologue.com/language/"+isocode
-  
+
 # TODO:
 def langiso():
   """ [in]: Language name, [out]: isocode. """

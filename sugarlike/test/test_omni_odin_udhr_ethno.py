@@ -6,7 +6,7 @@ import omniglot, udhr, ethnologue, odin
 
 def test_tarfile_for_utf8(intarfile):
   """ 
-  Checks if omniglot-phrase.tar contains readable utf8 files and prints out
+  Checks if tarfile contains readable utf8 files and prints out
   the first file in the tarball. 
   """
   TEMP_DIR = tempfile.mkdtemp()
@@ -83,7 +83,15 @@ def test_load_odin_examples():
     print lang, examples
     break
 
-test_omniglot_get_phrase()
-test_load_odin_examples()
-test_load_language_families()
-test_udhr_convert_to_utf8()
+#test_omniglot_get_phrase()
+#test_load_odin_examples()
+#test_udhr_convert_to_utf8()
+
+#test_load_language_families()
+
+
+for lang, examples in odin.load_odin_examples():
+  print examples[0]
+  break
+
+
