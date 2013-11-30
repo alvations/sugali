@@ -9,9 +9,29 @@ LANG_FAMILY_TAG = '''<div class="views-field views-field-name">'''
 LANG_TAG = '''<span class="views-field views-field-field-iso-639-3">'''
 ETHNO_DIR = "../data/ethnologue/"
 
-class Tree(defaultdict):
-  def __init__(self):
+class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New elements can created by calling them.
+  def __init__(self, label=""):
     super(Tree, self).__init__(Tree)
+    self.mother = None
+    self.name = label
+  def tidy(self):  # Fill in mother and name information of all descendants
+    for child in self.keys():
+      self[child].name = child
+      self[child].mother = self
+      self[child].tidy()
+  def __str__(self):  # Pretty print, as long as tidy() has been run.
+    if self.keys():
+      children = [str(x) for x in self.itervalues()]
+      return "[{} {}]".format(self.name," ".join(children))
+    else:
+      return "[{}]".format(self.name)
+  def ancestors(self):  # Returns a list, giving all nodes from the given node to the root 
+    ancestorList = [self.name]
+    currentNode = self
+    while currentNode.mother:
+      ancestorList.append(currentNode.mother.name)
+      currentNode = currentNode.mother
+    return ancestorList
 
 def get_language_families():
   """ REQUIRES INTERNET CONNECTION !!!! (takes ~3mins with 1.8 MB/s)
