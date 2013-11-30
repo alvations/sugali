@@ -10,20 +10,19 @@ LANG_TAG = '''<span class="views-field views-field-field-iso-639-3">'''
 ETHNO_DIR = "../data/ethnologue/"
 
 class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New elements can created by calling them.
-  def __init__(self, label=""):
+  def __init__(self, label=""):  # Use a defaultdict(Tree), with two extra attributes
     super(Tree, self).__init__(Tree)
     self.mother = None
     self.name = label
-  def __missing__(self, key):  # Automatically propagate labels to children
-    super(Tree, self).__missing__(key)
-    child = self[key]
+  def __missing__(self, key):  # Do the same as defaultdict, then propagate labels to children
+    child = super(Tree, self).__missing__(key)
     child.name = key
     child.mother = self
     return child
   def __str__(self):  # Pretty display
     if self.keys():
-      children = [str(x) for x in self.itervalues()]
-      return "[{} {}]".format(self.name," ".join(children))
+      childStrings = [str(child) for child in self.itervalues()]
+      return "[{} {}]".format(self.name," ".join(childStrings))
     else:
       return "[{}]".format(self.name)
   def ancestors(self):  # Returns a list, giving all nodes from the given node to the root 
@@ -34,9 +33,33 @@ class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New e
       currentNode = currentNode.mother
     return ancestorList
 
+def read_language(filehandle):
+  soup = bs(filehandle.read())
+  for meta in soup.find_all("meta"):
+    try:
+      if meta["property"] == "og:title":
+        primary_name = meta["content"]
+        break
+    except KeyError:
+      continue
+  for div in soup.find_all("div"):
+    try: fieldName = div["class"][1]
+    except KeyError: continue
+    except IndexError: continue
+    if fieldName[0:10] == "field-name":
+      for subdiv in div.find_all("div"):
+        if subdiv["class"] == ["field-item", "even"]:
+          if fieldName == "field-name-field-alternate-names":
+            alternate_names = subdiv.string.split(", ")
+          if fieldName == "field-name-language-classification-link":
+            classification = subdiv.string.split(", ")
+          if fieldName == "field-name-field-dialects":
+            dialects = subdiv.p.get_text()
+  return (primary_name, alternate_name, classification, dialects)
+
 def get_language_families():
   """ REQUIRES INTERNET CONNECTION !!!! (takes ~3mins with 1.8 MB/s)
-  Downloads the language families and its children from www.ethnology.com, and 
+  Downloads the language families and its children from www.ethnologue.com, and 
   return it as a defaultdict(list).
   """
   from bs4 import BeautifulSoup as bs
