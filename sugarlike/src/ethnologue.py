@@ -14,12 +14,13 @@ class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New e
     super(Tree, self).__init__(Tree)
     self.mother = None
     self.name = label
-  def tidy(self):  # Fill in mother and name information of all descendants
-    for child in self.keys():
-      self[child].name = child
-      self[child].mother = self
-      self[child].tidy()
-  def __str__(self):  # Pretty print, as long as tidy() has been run.
+  def __missing__(self, key):  # Automatically propagate labels to children
+    super(Tree, self).__missing__(key)
+    child = self[key]
+    child.name = key
+    child.mother = self
+    return child
+  def __str__(self):  # Pretty display
     if self.keys():
       children = [str(x) for x in self.itervalues()]
       return "[{} {}]".format(self.name," ".join(children))
