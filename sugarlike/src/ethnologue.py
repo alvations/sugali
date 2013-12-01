@@ -14,7 +14,7 @@ class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New e
     super(Tree, self).__init__(Tree)
     self.mother = None
     self.name = label
-  def __missing__(self, key):  # Do the same as defaultdict, then propagate labels to children
+  def __missing__(self, key):  # Do the same as defaultdict, then propagate labels to the newborn child
     child = super(Tree, self).__missing__(key)
     child.name = key
     child.mother = self
@@ -25,37 +25,26 @@ class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New e
       return "[{} {}]".format(self.name," ".join(childStrings))
     else:
       return "[{}]".format(self.name)
-  def ancestors(self):  # Returns a list, giving all nodes from the given node to the root 
+  def ancestors(self):  # Returns a list, giving the names of all nodes from the given node to the root 
     ancestorList = [self.name]
     currentNode = self
     while currentNode.mother:
       ancestorList.append(currentNode.mother.name)
       currentNode = currentNode.mother
     return ancestorList
+  def leaves(self):  # Returns a set, giving the names of all leaves dominated by the given node
+    if self.keys():
+      return set().union(*[child.leaves() for child in self.itervalues()])
+    else:
+      return set(self.name)
 
-def read_language(filehandle):
+def read_language(filehandle):  # Extracts languages names, the language family, and dialect information from a page on Ethnologue 
   soup = bs(filehandle.read())
-  for meta in soup.find_all("meta"):
-    try:
-      if meta["property"] == "og:title":
-        primary_name = meta["content"]
-        break
-    except KeyError:
-      continue
-  for div in soup.find_all("div"):
-    try: fieldName = div["class"][1]
-    except KeyError: continue
-    except IndexError: continue
-    if fieldName[0:10] == "field-name":
-      for subdiv in div.find_all("div"):
-        if subdiv["class"] == ["field-item", "even"]:
-          if fieldName == "field-name-field-alternate-names":
-            alternate_names = subdiv.string.split(", ")
-          if fieldName == "field-name-language-classification-link":
-            classification = subdiv.string.split(", ")
-          if fieldName == "field-name-field-dialects":
-            dialects = subdiv.p.get_text()
-  return (primary_name, alternate_name, classification, dialects)
+  primary_name = soup.find("meta", property="og:title")["content"]
+  alternate_names = soup.find("div", class_="field-name-field-alternate-names"       ).find("div", class_=["field-item", "even"]).string.split(", ")
+  classification  = soup.find("div", class_="field-name-language-classification-link").find("div", class_=["field-item", "even"]).string.split(", ")
+  dialects        = soup.find("div", class_="field-name-field-dialects"              ).find("div", class_=["field-item", "even"]).p.get_text()
+  return ([unicode(primary_name)]+alternate_names, classification, dialects)
 
 def get_language_families():
   """ REQUIRES INTERNET CONNECTION !!!! (takes ~3mins with 1.8 MB/s)
