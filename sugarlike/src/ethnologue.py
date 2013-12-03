@@ -14,7 +14,6 @@ class Tree(defaultdict):
   A tree is a dictionary of trees (recursively). 
   New elements can created by calling them.
   """
-  
   def __init__(self, label=""):
     super(Tree, self).__init__(Tree) # Use a defaultdict(Tree), with two extra attributes 
     self.mother = None
@@ -58,7 +57,7 @@ class Tree(defaultdict):
     else:
       return set(self.name)
 
-def read_language(filehandle):  # 
+def read_language(filehandle):
   """
   Extracts languages names, the language family, and dialect information 
   from a page on Ethnologue.
