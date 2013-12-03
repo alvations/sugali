@@ -15,7 +15,10 @@ class Tree(defaultdict):
   New elements can created by calling them.
   """
   def __init__(self, label=""):
-    super(Tree, self).__init__(Tree) # Use a defaultdict(Tree), with two extra attributes 
+    """
+    Use a defaultdict(Tree), with two extra attributes to help navigate in the tree
+    """
+    super(Tree, self).__init__(Tree) 
     self.mother = None
     self.name = label
     
