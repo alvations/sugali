@@ -9,36 +9,60 @@ LANG_FAMILY_TAG = '''<div class="views-field views-field-name">'''
 LANG_TAG = '''<span class="views-field views-field-field-iso-639-3">'''
 ETHNO_DIR = "../data/ethnologue/"
 
-class Tree(defaultdict):  # A tree is a dictionary of trees (recursively). New elements can created by calling them.
-  def __init__(self, label=""):  # Use a defaultdict(Tree), with two extra attributes
-    super(Tree, self).__init__(Tree)
+class Tree(defaultdict):
+  """
+  A tree is a dictionary of trees (recursively). 
+  New elements can created by calling them.
+  """
+  
+  def __init__(self, label=""):
+    super(Tree, self).__init__(Tree) # Use a defaultdict(Tree), with two extra attributes 
     self.mother = None
     self.name = label
-  def __missing__(self, key):  # Do the same as defaultdict, then propagate labels to the newborn child
+    
+  def __missing__(self, key): 
+    """
+    Do the same as defaultdict, then propagate labels to the newborn child
+    """
     child = super(Tree, self).__missing__(key)
     child.name = key
     child.mother = self
     return child
-  def __str__(self):  # Pretty display
+  
+  def __str__(self):
+    """ Descriptor function for pretty display. """
     if self.keys():
       childStrings = [str(child) for child in self.itervalues()]
       return "[{} {}]".format(self.name," ".join(childStrings))
     else:
       return "[{}]".format(self.name)
-  def ancestors(self):  # Returns a list, giving the names of all nodes from the given node to the root 
+    
+  def ancestors(self):
+    """
+    Returns a list, giving the names of all nodes from the given node 
+    to the root.
+    """ 
     ancestorList = [self.name]
     currentNode = self
     while currentNode.mother:
       ancestorList.append(currentNode.mother.name)
       currentNode = currentNode.mother
     return ancestorList
-  def leaves(self):  # Returns a set, giving the names of all leaves dominated by the given node
+  
+  def leaves(self): 
+    """
+    Returns a set, giving the names of all leaves dominated by the given node.
+    """
     if self.keys():
       return set().union(*[child.leaves() for child in self.itervalues()])
     else:
       return set(self.name)
 
-def read_language(filehandle):  # Extracts languages names, the language family, and dialect information from a page on Ethnologue 
+def read_language(filehandle):  # 
+  """
+  Extracts languages names, the language family, and dialect information 
+  from a page on Ethnologue.
+  """ 
   soup = bs(filehandle.read())
   primary_name = soup.find("meta", property="og:title")["content"]
   alternate_names = soup.find("div", class_="field-name-field-alternate-names"       ).find("div", class_=["field-item", "even"]).string.split(", ")
