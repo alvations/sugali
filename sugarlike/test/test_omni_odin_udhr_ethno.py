@@ -54,7 +54,8 @@ def test_udhr_convert_to_utf8():
   
   P/S: REQUIRES INTERNET CONNECTION to download the udhr.zip!!!
   """
-  udhr.convert_to_utf8(testing=True)
+  ##udhr.convert_to_utf8(testing=True)
+  udhr_from_unicodedotorg(testing=True)
   test_tarfile_for_utf8("udhr-utf8.tar")
   os.remove("udhr-utf8.tar")
   
@@ -84,14 +85,14 @@ def test_load_odin_examples():
     break
 
 #test_omniglot_get_phrase()
-#test_load_odin_examples()
+test_load_odin_examples()
 #test_udhr_convert_to_utf8()
 
 #test_load_language_families()
 
 
-for lang, examples in odin.load_odin_examples():
-  print examples[0]
-  break
+#for lang, examples in odin.load_odin_examples():
+#  print examples[0]
+#  break
 
 

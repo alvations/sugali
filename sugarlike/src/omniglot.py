@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import urllib2, re, time, codecs, os, random, tempfile, shutil
+import urllib2, re, time, codecs, os, random, tempfile, shutil, glob
 from collections import defaultdict
 from utils import make_tarfile
 try:
@@ -138,6 +138,16 @@ def crawl_babel_pages(outputdir="../data/omniglot/babel/"):
     os.makedirs(outputdir)
   for lang, page in babel:
     html = urllib2.urlopen(page).read()
-    with codecs.open(outputdir,'w','utf8') as fout:
-      print>>fout, html
+    if outputdir != None:
+      with codecs.open(outputdir,'w','utf8') as fout:
+        print>>fout, html
+    time.sleep(random.randrange(5,10))
+
+def crawl_and_clean_babel_pages():
+  for lang, page in get_babel_pages():
+    html = urllib2.urlopen(page).read()
+    ol_sections = bs(html).findAll('ol')
+    for i, orthography in enumerate(ol_sections):
+      for j in bs(unicode(ol_sections)).findAll('li'):
+        print lang+"_"+str(i)+"\t"+j.text.strip()
     time.sleep(random.randrange(5,10))

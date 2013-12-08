@@ -58,3 +58,10 @@ def load_odin_examples():
     for lang in docs:
       # the data might be too much for the RAM, so yield instead of return.
       yield (lang, docs[lang])
+      
+def odin_src_only():
+  for language, documents in sorted(load_odin_examples()):
+    for d in documents:
+      print language, " ".join(d[0].split())
+
+odin_src_only()

@@ -14,9 +14,7 @@ def is_utf8(fname):
   return True
 
 def what_the_encoding(fname):
-  """
-  Using libmagic to determine encoding of file.
-  """
+  """ Using libmagic to determine encoding of file. """
   try:
     import magic
   except:
@@ -30,27 +28,34 @@ def what_the_encoding(fname):
       raise OSError(err_message)
   return magic.Magic(mime_encoding=True).from_buffer(open(fname).read())
 
-def encoding2language():
+def what_the_language(fname):
+  """ Guess the language of a file based on its encoding. """
+  encoding = what_the_encoding(fname)
+  try:
+    return language_from_encoding(encoding)
+  except:
+    return 'unknown'
+  
+def language_from_encoding(encoding):
   """
   Guess the language of a file based on its encoding.
   http://docs.python.org/3/library/codecs.html
   """
-  
-  ENCODING_ALIAS_LANGUAGE = '''
-  ascii  646, us-ascii  English
+  from collections import defaultdict
+  ENCODING_ALIAS_LANGUAGE = '''ascii  646, us-ascii  English
   big5  big5-tw, csbig5  Traditional Chinese
   big5hkscs  big5-hkscs, hkscs  Traditional Chinese
   cp037  IBM037, IBM039  English
   cp424  EBCDIC-CP-HE, IBM424  Hebrew
   cp437  437, IBM437  English
   cp500  EBCDIC-CP-BE, EBCDIC-CP-CH, IBM500  Western Europe
-  cp720     Arabic
-  cp737     Greek
+  cp720    Arabic
+  cp737    Greek
   cp775  IBM775  Baltic languages
   cp850  850, IBM850  Western Europe
   cp852  852, IBM852  Central and Eastern Europe
   cp855  855, IBM855  Bulgarian, Byelorussian, Macedonian, Russian, Serbian
-  cp856     Hebrew
+  cp856    Hebrew
   cp857  857, IBM857  Turkish
   cp858  858, IBM858  Western Europe
   cp860  860, IBM860  Portuguese
@@ -61,12 +66,12 @@ def encoding2language():
   cp865  865, IBM865  Danish, Norwegian
   cp866  866, IBM866  Russian
   cp869  869, CP-GR, IBM869  Greek
-  cp874     Thai
-  cp875     Greek
+  cp874    Thai
+  cp875    Greek
   cp932  932, ms932, mskanji, ms-kanji  Japanese
   cp949  949, ms949, uhc  Korean
   cp950  950, ms950  Traditional Chinese
-  cp1006     Urdu
+  cp1006    Urdu
   cp1026  ibm1026  Turkish
   cp1140  ibm1140  Western Europe
   cp1250  windows-1250  Central and Eastern Europe
@@ -109,8 +114,8 @@ def encoding2language():
   iso8859_15  iso-8859-15, latin9, L9  Western Europe
   iso8859_16  iso-8859-16, latin10, L10  South-Eastern Europe
   johab  cp1361, ms1361  Korean
-  koi8_r     Russian
-  koi8_u     Ukrainian
+  koi8_r    Russian
+  koi8_u    Ukrainian
   mac_cyrillic  maccyrillic  Bulgarian, Byelorussian, Macedonian, Russian, Serbian
   mac_greek  macgreek  Greek
   mac_iceland  maciceland  Icelandic
@@ -129,13 +134,20 @@ def encoding2language():
   utf_16_le  UTF-16LE  all languages
   utf_7  U7, unicode-1-1-utf-7  all languages
   utf_8  U8, UTF, utf8  all languages
-  utf_8_sig     all languages
-  '''
+  utf_8_sig    all languages'''
   
-  import codecs
-  for k in charsets.keys():
-    try:
-      codecs.lookup(k)
-    except LookupError:
-      del charsets[k]
-  del k
+  lang2encoding = defaultdict(list)
+  # Parse the encoding<tab>alias<tab>language format.
+  for line in ENCODING_ALIAS_LANGUAGE.split('\n'):
+    code, alias, language = line.strip().split('  ')
+    for l in language.split(','):
+      l = l.strip(', ')
+      lang2encoding[l].append(code)
+      for a in alias.split(','):
+        lang2encoding[l].append(a.strip(', '))
+        
+  def getkeybyvalue(dictionary, value):
+    return [i for i,j in dictionary.items() if value in j]
+  
+  return getkeybyvalue(lang2encoding, encoding)
+

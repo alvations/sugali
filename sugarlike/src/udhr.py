@@ -1,9 +1,80 @@
 # -*- coding: utf-8 -*-
 
-import codecs, os, zipfile, urllib, urllib2, tempfile, shutil
+import codecs, os, zipfile, urllib, urllib2, tempfile, shutil, re, io
 from unicodize import is_utf8, what_the_encoding
 from utils import make_tarfile
 
+
+def udhr_from_unicodedotorg(testing=False):
+  """ Crawl and clean UDHR files from www.unicode.org . """
+  TEMP_RAW_DIR = tempfile.mkdtemp()
+  UDHR_DOWNLOAD = 'http://www.unicode.org/udhr/d/'
+  AHREF_REGEX = '<a href="?\'?([^"\'>]*)'
+  
+  # Makes a temp output directory for the files that can be converted into utf8.
+  UDHR_UTF8_DIR = '../data/udhr-utf8/' # for saving the temp udhr files.
+  if not os.path.exists(UDHR_UTF8_DIR):
+    os.makedirs(UDHR_UTF8_DIR)
+  # Get the directory page from the www.unicode.org UDHR page
+  unicode_page = urllib.urlopen(UDHR_DOWNLOAD).read()
+  # Crawls the www.unicode.org page for all udhr txt files.
+  for i in re.findall(AHREF_REGEX,unicode_page):
+    if i.endswith('.txt'):
+      print UDHR_DOWNLOAD+i
+      urllib.urlretrieve(UDHR_DOWNLOAD+i, filename=TEMP_RAW_DIR+i)
+      with io.open(TEMP_RAW_DIR+i,'r',encoding='utf8') as udhrfile:
+        # Gets the language from the end of the file line.
+        lang = udhrfile.readline().partition('-')[2].strip()
+        # Gets the language code from the filename.
+        langcode = i.partition('.')[0].partition('_')[2]
+        # Skip the header lines.
+        for _ in range(5): udhrfile.readline();
+        # Reads the rest of the lines and that's the udhr data.
+        the_rest = udhrfile.readlines()
+        data = "\n".join([i.strip() for i in the_rest if i.strip() != ''])
+        ##print langcode, data.split('\n')[0]
+        with codecs.open(UDHR_UTF8_DIR+langcode+'.utf8','w','utf8') as outfile:
+          print>>outfile, data
+    if testing:
+      break
+
+  if testing:
+    # Compress the utf8 UDHR files into a single tarfile in the test dir.
+    make_tarfile('../test/udhr-unicode.tar','../data/udhr-utf8/')
+  else:
+    # Compresses the utf8 UDHR files into a single tarfile.
+    make_tarfile('../data/udhr/udhr-unicode.tar','../data/udhr-utf8/')
+  # Remove the udhr-utf8 directory.
+  shutil.rmtree(UDHR_UTF8_DIR)
+  
+def enumerate_udhr(intarfile):
+  """
+  Returns the number of languages in a defaultdict(list). If language(s) has
+  dialects/registers in the UDHR, len(enumerate_udhr(intarfile)[lang]) > 1 .
+  
+  # USAGE:
+  >>> ls = count_udhr('../data/udhr/udhr-unicode.tar')
+  >>> for i in sorted(ls):
+  >>>   print i, ls[i]
+  >>> print len(ls) # Number of languages
+  """
+  from collections import defaultdict
+  import tarfile
+  TEMP_DIR = tempfile.mkdtemp()
+  with tarfile.open(intarfile) as tf:
+    for member in tf.getmembers():
+      tf.extract(member, TEMP_DIR)
+  languages = defaultdict(list)
+  for infile in os.listdir(TEMP_DIR):
+    lang = infile.partition('.')[0].lower()
+    try:
+      lang, dialect = lang.split('_')
+      languages[lang].append(dialect)
+    except:
+      languages[lang].append(lang)
+  return languages
+
+# DEPRECATED: Use instead udhr_from_unicodedotorg !!!!
 def convert_to_utf8(testing=False):
   """ Converts UDHR files to utf8. """
   # Make temp directories to keep the UDHR files.
@@ -25,6 +96,7 @@ def convert_to_utf8(testing=False):
   
   # Iterate through the extracted files.
   for filename in os.listdir(TEMP_UDHR_DIR):
+    if "~" in filename: continue
     infile = TEMP_UDHR_DIR+filename
     # Uses libmagic to determine the encoding.
     encoding = what_the_encoding(infile)
