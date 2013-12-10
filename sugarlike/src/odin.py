@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import tarfile, codecs, os
+import tarfile, codecs, os, re
 from collections import defaultdict
 import cPickle as pickle
+from utils import remove_tags
+
 try:
   from bs4 import BeautifulSoup as bs
 except:
@@ -60,8 +62,13 @@ def load_odin_examples():
       yield (lang, docs[lang])
       
 def odin_src_only():
+  """ Extracts only the source language tokens from the ODIN IGTs."""
   for language, documents in sorted(load_odin_examples()):
     for d in documents:
-      print language, " ".join(d[0].split())
-
-odin_src_only()
+      src = remove_tags(d[0])
+      # Removes heading bullets, e.g. (1)... | 1) | ( 12 ) | i. ... | A2. ...
+      src = re.sub(r'^\(?\s?\w{1,5}\s*[):.]\s*', '', src)
+      src = re.sub(r'^\(?\w{1,5}\s*[):.]\s*', '', src)
+      # Joins the morphemes up into words.
+      src = re.sub( ' *- *', '', src)
+      yield (lang,src)
