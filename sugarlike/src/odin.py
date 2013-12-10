@@ -61,8 +61,9 @@ def load_odin_examples():
       # the data might be too much for the RAM, so yield instead of return.
       yield (lang, docs[lang])
       
-def odin_src_only():
+def odin_src_only(outputfile=True, testing=False):
   """ Extracts only the source language tokens from the ODIN IGTs."""
+  odinsrc = defaultdict(list)
   for language, documents in sorted(load_odin_examples()):
     for d in documents:
       src = remove_tags(d[0])
@@ -71,4 +72,10 @@ def odin_src_only():
       src = re.sub(r'^\(?\w{1,5}\s*[):.]\s*', '', src)
       # Joins the morphemes up into words.
       src = re.sub( ' *- *', '', src)
-      yield (lang,src)
+      odinsrc[language].append(src)
+    if testing:
+      return odinsrc
+      
+  if outputfile == True:
+    with codecs.open(ODIN_DIR+'odin-src.pk','wb') as fout:
+      pickle.dump(odinsrc, fout)
