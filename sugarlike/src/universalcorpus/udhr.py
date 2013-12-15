@@ -34,7 +34,7 @@ def get_from_unicodedotorg(testing=False):
         the_rest = udhrfile.readlines()
         data = "\n".join([i.strip() for i in the_rest if i.strip() != ''])
         ##print langcode, data.split('\n')[0]
-        with codecs.open(UDHR_UTF8_DIR+langcode+'.utf8','w','utf8') as outfile:
+        with codecs.open(UDHR_UTF8_DIR+'udhr-'+langcode+'.txt','w','utf8') as outfile:
           print>>outfile, data
       if testing:
         break
@@ -42,20 +42,20 @@ def get_from_unicodedotorg(testing=False):
   if testing:
     # Compress the utf8 UDHR files into a single tarfile in the test dir.
       try:
-        make_tarfile('../test/udhr-unicode.tar','./udhr-utf8/')
+        make_tarfile('../test/udhr-unicode.tar',UDHR_UTF8_DIR)
       except IOError:
         # if function is called within the sugarlike/src/universalcorpus dir
         # To move up directory to access sugarlike/data/ and sugarlike/test/.
-        make_tarfile('../../test/udhr-unicode.tar','./udhr-utf8/')
+        make_tarfile('../../test/udhr-unicode.tar',UDHR_UTF8_DIR)
       
   else:
     # Compresses the utf8 UDHR files into a single tarfile.
     try:
-      make_tarfile('../data/udhr/udhr-unicode.tar','./udhr-utf8/')
+      make_tarfile('../data/udhr/udhr-unicode.tar',UDHR_UTF8_DIR)
     except IOError:
       # if function is called within the sugarlike/src/universalcorpus dir
       # To move up directory to access sugarlike/data/ and sugarlike/test/.
-      make_tarfile('../../data/udhr/udhr-unicode.tar','./udhr-utf8/')  
+      make_tarfile('../../data/udhr/udhr-unicode.tar',UDHR_UTF8_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
 
@@ -86,8 +86,7 @@ def enumerate_udhr(intarfile):
       languages[lang].append(lang)
   return languages
 
-get_from_unicodedotorg(testing=True)
-
+'''
 # DEPRECATED: Use instead get_from_unicodedotorg() !!!!
 def convert_to_utf8(testing=False):
   """ Converts UDHR files to utf8. """
@@ -152,5 +151,5 @@ def convert_to_utf8(testing=False):
     make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
-  
+'''
      

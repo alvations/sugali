@@ -2,10 +2,10 @@
 
 import sys; sys.path.append('../') # Access modules from parent dir.
 
-import tarfile, codecs, os, re, string
+import tarfile, codecs, os, re, string, shutil
 from collections import defaultdict
 import cPickle as pickle
-from utils import remove_tags
+from utils import remove_tags, make_tarfile
 
 try:
   from bs4 import BeautifulSoup as bs
@@ -28,19 +28,23 @@ def get_odin_igts(ODINFILE = '../../data/odin/odin-full.tar'):
   for infile in tar:
     if '.xml' in infile.name: # there's a rogue file in the tar that is not xml.
       lang = infile.name[:-4].lower()
+      ##print lang
       # Find the <igt>...</igt> in the xml.
-      igts = bs(tar.extractfile(infile).read()).findAll('igt')
-      for igt in igts:
+      odinfile = tar.extractfile(infile).read()
+      igts = bs(odinfile).findAll('igt')
+      citations = bs(odinfile).findAll('citation')
+      for igt, cite in zip(igts, citations):        
         # Find the <example>...</example> in the igt.
         examples = bs(unicode(igt)).findAll('example')
+        cite = remove_tags(unicode(cite)).strip(' &lt;/p&gt;')
         for eg in examples:
           try:
             # Only use triplets lines and assumes that
             # line1: src, line2:eng, line3:gloss
             src, eng, gloss = bs(unicode(eg)).findAll('line')
-            src, eng, gloss = map(unicode, [src, eng, gloss])
-            docs[lang].append((src, eng, gloss))
-            ##print src, eng, gloss
+            src, eng, gloss, cite = map(unicode, [src, eng, gloss, cite])
+            docs[lang].append((src, eng, gloss, cite))
+            ##print src, eng, gloss, cite
           except:
             raise; print eg
   return docs
@@ -58,7 +62,8 @@ def load_odin_pickle(ODIN_DIR='../../data/odin/'):
     odindocs = get_odin_igts()
     # Outputs the odin igts examples into '../data/odin/odin-docs.pk'.
     with codecs.open(ODIN_DIR+'odin-docs.pk','wb') as fout:
-      pickle.dump(odindocs, fout)
+      pickle.dump(odindocs, fout)  
+      
   # Loads the pickled file.
   with codecs.open(ODIN_DIR+'odin-docs.pk','rb') as fin2: 
     docs = pickle.load(fin2)
@@ -79,9 +84,16 @@ def load_odin_tarfile():
    
 ##load_odin_tarfile()
       
-def odin_src_only(outputtofile=True, testing=False):
-  """ Extracts only the source language tokens from the ODIN IGTs."""
+def pickle2plaintext(testing=False,option='cleanest'):
+  """ Converted ODIN IGTs from the .pk file into tab-delimited plaintexts."""
+  
+  # Makes a temp output directory for the individual files.
+  TEMPODIN_DIR = './tmpodin/' # for saving the temp udhr files.
+  if not os.path.exists(TEMPODIN_DIR):
+    os.makedirs(TEMPODIN_DIR)
+    
   for language, documents in sorted(load_odin_pickle()):
+    tab_igts = []
     for d in documents:
       if d[0].strip() == "": continue;
       src = remove_tags(d[0])
@@ -92,22 +104,54 @@ def odin_src_only(outputtofile=True, testing=False):
       morphemes = src
       # Joins the morphemes up into words.
       words = re.sub( ' *- *', '', src)
-      if src == '' or any(i for i in string.punctuation if i in src):
-        continue
-      yield language, words, morphemes, remove_tags(d[1]), remove_tags(d[2])
       
-  #if outputtofile == True:
-  #  with codecs.open(ODIN_DIR+'odin-src.pk','wb') as fout:
-  #    pickle.dump(odinsrc, fout)
-
-'''
+      # Accepts only IGTs without punctuation.
+      if option == 'cleanest':
+        if src == '' or any(i for i in string.punctuation if i in src):
+          continue
+      else:
+        if src == '':
+          continue
+        
+      tab_igts.append([words, morphemes, remove_tags(d[1]), \
+            remove_tags(d[2]), d[3]])
+    if len(tab_igts) > 0:
+      with codecs.open(TEMPODIN_DIR+'odin-'+language+'.txt','w','utf8') as fout:
+        for igt in tab_igts:
+          print>>fout, "\t".join(igt)
+    
+    if testing:
+      break
+    
+  if testing:
+  # Compress the utf8 UDHR files into a single tarfile in the test dir.
+    try:
+      make_tarfile('../test/odin-'+option+'.tar',TEMPODIN_DIR)
+    except IOError:
+      # if function is called within the sugarlike/src/universalcorpus dir
+      # To move up directory to access sugarlike/data/ and sugarlike/test/.
+      make_tarfile('../../test/odin-'+option+'.tar',TEMPODIN_DIR)
+  else:
+    # Compresses the utf8 UDHR files into a single tarfile.
+    try:
+      make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)
+    except IOError:
+      # if function is called within the sugarlike/src/universalcorpus dir
+      # To move up directory to access sugarlike/data/ and sugarlike/test/.
+      make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
+  # Remove the udhr-utf8 directory.
+  shutil.rmtree(TEMPODIN_DIR)
+      
+'''    
 all_lang = set()
-for lang, tokens, morphs, gloss, eng, in odin_src_only():
-  print "\t".join([lang, tokens, morphs, gloss, eng])
+for lang, tokens, morphs, gloss, eng, cite in odin_src_only():
+  print "\t".join([lang, tokens, morphs, gloss, eng, cite])
   all_lang.add(lang)
 print len(all_lang)
 '''
 
+
+'''
 def load_odin_src():
   """
   Loads odin-docs.pk and returns it as a defaultdict
@@ -116,3 +160,4 @@ def load_odin_src():
   >>>   print lang, text
   """
   pass
+'''

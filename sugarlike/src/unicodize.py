@@ -36,7 +36,7 @@ def what_the_language(fname):
   except:
     return 'unknown'
   
-def language_from_encoding(encoding):
+def guess_language_from_encoding(encoding):
   """
   Guess the language of a file based on its encoding.
   http://docs.python.org/3/library/codecs.html

@@ -99,6 +99,12 @@ def get_phrases(with_mp3=False,testing=False):
       # Outputs to file.
       for gloss in all_phrases:
         eng = gloss.replace('\n  ',' ').strip()
+        repls ={'todance':'to dance', 'Christmasand':'Christmas and',
+                'ladywill':'lady will','hovercraftis':'hovercraft is',
+                'languageis':'language is'}
+        eng = reduce(lambda a, kv: a.replace(*kv), repls.iteritems(), eng)
+        
+        
         for trg in all_phrases[gloss]:
           if type(trg) is tuple:
             trg = "\t".join(trg)
