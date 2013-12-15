@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import sys; sys.path.append('../') # Access modules from parent dir.
+
 import urllib2, re, time, codecs, os, random, tempfile, shutil, glob
 from collections import defaultdict
 from utils import make_tarfile
+
 try:
   from bs4 import BeautifulSoup as bs
 except:
@@ -12,23 +15,9 @@ OMNIGLOT = 'http://www.omniglot.com'
 HTTP_REGEX = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'+\
                 '(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 AHREF_REGEX = '<a href="?\'?([^"\'>]*)'
-  
-def crawl_omniglot():
-  """ Full crawl within the omniglot domain."""
-  homepage = urllib2.urlopen(OMNIGLOT).read()
-  crawled = []
-  
-  for i in re.findall(AHREF_REGEX,homepage):  
-    if not i.startswith("http://") and not i.endswith("/") and \
-    not i.startswith('https://'): 
-      if OMNIGLOT+i not in crawled:
-        print OMNIGLOT+i
-        x = urllib2.urlopen(OMNIGLOT+i).read()
-        filename = (OMNIGLOT+i).rpartition('/')[2]
-        print filename
-        print>>codecs.open('../data/omniglot/'+filename,'w','utf8'), x 
-        time.sleep(random.randrange(5,10))
-        crawled.append(OMNIGLOT+i)
+
+DATADIR = '../data/'
+TESTDIR = '../test/'
 
 # Multilingual pages in Omniglot.
 MULTILING_URLS = {
@@ -49,6 +38,26 @@ MULTILING_URLS = {
 'kinship':"http://www.omniglot.com/language/kinship/index.htm", # Irregular pages. 
 'song':"http://www.omniglot.com/songs/index.php" # Irregular pages.
 }
+  
+def crawl_omniglot():
+  """ Full crawl within the omniglot domain."""
+  homepage = urllib2.urlopen(OMNIGLOT).read()
+  crawled = []
+  
+  for i in re.findall(AHREF_REGEX,homepage):  
+    if not i.startswith("http://") and not i.endswith("/") and \
+    not i.startswith('https://'): 
+      if OMNIGLOT+i not in crawled:
+        print OMNIGLOT+i
+        x = urllib2.urlopen(OMNIGLOT+i).read()
+        filename = (OMNIGLOT+i).rpartition('/')[2]
+        print filename
+        try:
+          print>>codecs.open(DATADIR+'omniglot/'+filename,'w','utf8'), x
+        except IOError:
+           print>>codecs.open('../'+DATADIR+'omniglot/'+filename,'w','utf8'), x
+        time.sleep(random.randrange(5,10))
+        crawled.append(OMNIGLOT+i)
 
 def get_phrases(with_mp3=False,testing=False):
   """ Gets phrases list from Omniglot. """
@@ -56,7 +65,7 @@ def get_phrases(with_mp3=False,testing=False):
   phrase_lang = urllib2.urlopen(MULTILING_URLS['phrase_lang']).read()
   
   # Makes a temp output directory to the phrases files.
-  outputdir= '../data/omniglot-temp/'
+  outputdir= DATADIR+'omniglot-temp/'
   if not os.path.exists(outputdir):
     os.makedirs(outputdir)
     
@@ -103,10 +112,17 @@ def get_phrases(with_mp3=False,testing=False):
       time.sleep(random.randrange(5,10))
   if testing:
     # Compresses the omniglot phrases files into the tarfile in the test dir.
-    make_tarfile('../test/omniglot-phrases.tar',outputdir)
+    try:
+      make_tarfile(TESTDIR+'omniglot-phrases.tar',outputdir)
+    except IOError:
+      make_tarfile("../"+TESTDIR+'omniglot-phrases.tar',outputdir)
   else:
     # Compresses the omniglot phrases files into a single tarfile.
-    make_tarfile('../data/omniglot/omniglot-phrases.tar',outputdir)
+    try:
+      make_tarfile(DATADIR+'omniglot/omniglot-phrases.tar',outputdir)
+    except IOError:
+      make_tarfile("../"+DATADIR+'omniglot/omniglot-phrases.tar',outputdir)
+    
   # Remove the temp phrases directory.
   try:
     shutil.rmtree(outputdir) 
@@ -115,6 +131,8 @@ def get_phrases(with_mp3=False,testing=False):
     import glob
     for f in glob.glob(outputdir):
       os.remove(f)
+
+get_phrases(testing=True)
 
 def get_num_pages():
   """ Returns a list of linked pages from Omniglot's numbers page. """
@@ -130,7 +148,7 @@ def get_babel_pages():
   return [(unicode(lang.text), BABEL+lang.get('href')) for lang in \
             bs(unicode(bs(babel).findAll('ol')[0])).findAll('a')]
     
-def crawl_babel_pages(outputdir="../data/omniglot/babel/"):
+def crawl_babel_pages(outputdir=DATADIR+"omniglot/babel/"):
   """ Crawls Omniglot for babel stories pages and save in **outputdir**. """
   babel = get_babel_pages()
   # Creates output directory if it doesn't exist.

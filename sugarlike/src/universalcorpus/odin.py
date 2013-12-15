@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys; sys.path.append('../') # Access modules from parent dir.
+
 import tarfile, codecs, os, re
 from collections import defaultdict
 import cPickle as pickle
@@ -43,7 +45,7 @@ def get_odin_examples():
 
 def load_odin_examples():
   """
-  Loads languagefamilies.pk and return it as a defaultdict(list).
+  Loads odin-docs.pk and return it as a defaultdict(list).
   
   >>> for lang, examples in load_odin_examples():
   >>>   print lang, examples
@@ -79,3 +81,12 @@ def odin_src_only(outputfile=True, testing=False):
   if outputfile == True:
     with codecs.open(ODIN_DIR+'odin-src.pk','wb') as fout:
       pickle.dump(odinsrc, fout)
+
+def load_odin_src():
+  """
+  Loads odin-docs.pk and returns it as a defaultdict
+  
+  >>> for lang, text in load_odin_src():
+  >>>   print lang, text
+  """
+  pass

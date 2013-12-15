@@ -2,7 +2,8 @@
 
 import tarfile, codecs, tempfile, os
 import sys; sys.path.append('../src/')
-import omniglot, udhr, ethnologue, odin
+from universalcorpus import omniglot, udhr
+import ethnologue, odin
 
 def test_tarfile_for_utf8(intarfile):
   """ 
@@ -18,7 +19,7 @@ def test_tarfile_for_utf8(intarfile):
     try:
       print codecs.open(infile,'r','utf8').read()
     except IOError:
-      print TEMP_DIR+infile
+      ##print TEMP_DIR+infile
       print codecs.open(TEMP_DIR+'/'+infile,'r','utf8').read()
     break
 
@@ -55,9 +56,9 @@ def test_udhr_convert_to_utf8():
   P/S: REQUIRES INTERNET CONNECTION to download the udhr.zip!!!
   """
   ##udhr.convert_to_utf8(testing=True)
-  udhr_from_unicodedotorg(testing=True)
-  test_tarfile_for_utf8("udhr-utf8.tar")
-  os.remove("udhr-utf8.tar")
+  udhr.get_from_unicodedotorg(testing=True)
+  test_tarfile_for_utf8("udhr-unicode.tar")
+  os.remove("udhr-unicode.tar")
   
 def test_load_language_families():
   """
@@ -85,7 +86,7 @@ def test_load_odin_examples():
     break
 
 #test_omniglot_get_phrase()
-test_load_odin_examples()
+#test_load_odin_examples()
 #test_udhr_convert_to_utf8()
 
 #test_load_language_families()

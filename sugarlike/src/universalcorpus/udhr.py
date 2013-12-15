@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import sys; sys.path.append('../') # Access modules from parent dir.
+
 import codecs, os, zipfile, urllib, urllib2, tempfile, shutil, re, io
 from unicodize import is_utf8, what_the_encoding
 from utils import make_tarfile
 
-
-def udhr_from_unicodedotorg(testing=False):
+def get_from_unicodedotorg(testing=False):
   """ Crawl and clean UDHR files from www.unicode.org . """
   TEMP_RAW_DIR = tempfile.mkdtemp()
   UDHR_DOWNLOAD = 'http://www.unicode.org/udhr/d/'
   AHREF_REGEX = '<a href="?\'?([^"\'>]*)'
   
   # Makes a temp output directory for the files that can be converted into utf8.
-  UDHR_UTF8_DIR = '../data/udhr-utf8/' # for saving the temp udhr files.
+  UDHR_UTF8_DIR = '../../data/udhr-utf8/' # for saving the temp udhr files.
   if not os.path.exists(UDHR_UTF8_DIR):
     os.makedirs(UDHR_UTF8_DIR)
   # Get the directory page from the www.unicode.org UDHR page
@@ -20,7 +21,7 @@ def udhr_from_unicodedotorg(testing=False):
   # Crawls the www.unicode.org page for all udhr txt files.
   for i in re.findall(AHREF_REGEX,unicode_page):
     if i.endswith('.txt'):
-      print UDHR_DOWNLOAD+i
+      ##print UDHR_DOWNLOAD+i
       urllib.urlretrieve(UDHR_DOWNLOAD+i, filename=TEMP_RAW_DIR+i)
       with io.open(TEMP_RAW_DIR+i,'r',encoding='utf8') as udhrfile:
         # Gets the language from the end of the file line.
@@ -35,15 +36,26 @@ def udhr_from_unicodedotorg(testing=False):
         ##print langcode, data.split('\n')[0]
         with codecs.open(UDHR_UTF8_DIR+langcode+'.utf8','w','utf8') as outfile:
           print>>outfile, data
-    if testing:
-      break
+      if testing:
+        break
 
   if testing:
     # Compress the utf8 UDHR files into a single tarfile in the test dir.
-    make_tarfile('../test/udhr-unicode.tar','../data/udhr-utf8/')
+      try:
+        make_tarfile('../test/udhr-unicode.tar','../data/udhr-utf8/')
+      except IOError:
+        # if function is called within the sugarlike/src/universalcorpus dir
+        # To move up directory to access sugarlike/data/ and sugarlike/test/.
+        make_tarfile('../../test/udhr-unicode.tar','../../data/udhr-utf8/')
+      
   else:
     # Compresses the utf8 UDHR files into a single tarfile.
-    make_tarfile('../data/udhr/udhr-unicode.tar','../data/udhr-utf8/')
+    try:
+      make_tarfile('../data/udhr/udhr-unicode.tar','../data/udhr-utf8/')
+    except IOError:
+      # if function is called within the sugarlike/src/universalcorpus dir
+      # To move up directory to access sugarlike/data/ and sugarlike/test/.
+      make_tarfile('../../data/udhr/udhr-unicode.tar','../../data/udhr-utf8/')  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
   
@@ -74,7 +86,8 @@ def enumerate_udhr(intarfile):
       languages[lang].append(lang)
   return languages
 
-# DEPRECATED: Use instead udhr_from_unicodedotorg !!!!
+
+# DEPRECATED: Use instead get_from_unicodedotorg() !!!!
 def convert_to_utf8(testing=False):
   """ Converts UDHR files to utf8. """
   # Make temp directories to keep the UDHR files.
