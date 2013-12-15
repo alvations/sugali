@@ -16,8 +16,7 @@ HTTP_REGEX = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'+\
                 '(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 AHREF_REGEX = '<a href="?\'?([^"\'>]*)'
 
-DATADIR = '../data/'
-TESTDIR = '../test/'
+TESTDIR = '../test/'; DATADIR = '../data/'
 
 # Multilingual pages in Omniglot.
 MULTILING_URLS = {
@@ -39,7 +38,7 @@ MULTILING_URLS = {
 'song':"http://www.omniglot.com/songs/index.php" # Irregular pages.
 }
   
-def crawl_omniglot():
+def crawl_omniglot(outputdir):
   """ Full crawl within the omniglot domain."""
   homepage = urllib2.urlopen(OMNIGLOT).read()
   crawled = []
@@ -52,10 +51,7 @@ def crawl_omniglot():
         x = urllib2.urlopen(OMNIGLOT+i).read()
         filename = (OMNIGLOT+i).rpartition('/')[2]
         print filename
-        try:
-          print>>codecs.open(DATADIR+'omniglot/'+filename,'w','utf8'), x
-        except IOError:
-           print>>codecs.open('../'+DATADIR+'omniglot/'+filename,'w','utf8'), x
+        print>>codecs.open(outputdir+filename,'w','utf8'), x
         time.sleep(random.randrange(5,10))
         crawled.append(OMNIGLOT+i)
 
@@ -110,6 +106,7 @@ def get_phrases(with_mp3=False,testing=False):
       if testing: # only process one page if testing.
         break        
       time.sleep(random.randrange(5,10))
+  
   if testing:
     # Compresses the omniglot phrases files into the tarfile in the test dir.
     try:
@@ -117,7 +114,7 @@ def get_phrases(with_mp3=False,testing=False):
     except IOError:
       make_tarfile("../"+TESTDIR+'omniglot-phrases.tar',outputdir)
   else:
-    # Compresses the omniglot phrases files into a single tarfile.
+    # Compresses the omniglot phrases files into a single tarfile.    
     try:
       make_tarfile(DATADIR+'omniglot/omniglot-phrases.tar',outputdir)
     except IOError:
@@ -131,8 +128,6 @@ def get_phrases(with_mp3=False,testing=False):
     import glob
     for f in glob.glob(outputdir):
       os.remove(f)
-
-get_phrases(testing=True)
 
 def get_num_pages():
   """ Returns a list of linked pages from Omniglot's numbers page. """
