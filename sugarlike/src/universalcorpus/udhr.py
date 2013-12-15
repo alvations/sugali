@@ -13,7 +13,7 @@ def get_from_unicodedotorg(testing=False):
   AHREF_REGEX = '<a href="?\'?([^"\'>]*)'
   
   # Makes a temp output directory for the files that can be converted into utf8.
-  UDHR_UTF8_DIR = '../../data/udhr-utf8/' # for saving the temp udhr files.
+  UDHR_UTF8_DIR = './udhr-utf8/' # for saving the temp udhr files.
   if not os.path.exists(UDHR_UTF8_DIR):
     os.makedirs(UDHR_UTF8_DIR)
   # Get the directory page from the www.unicode.org UDHR page
@@ -42,23 +42,23 @@ def get_from_unicodedotorg(testing=False):
   if testing:
     # Compress the utf8 UDHR files into a single tarfile in the test dir.
       try:
-        make_tarfile('../test/udhr-unicode.tar','../data/udhr-utf8/')
+        make_tarfile('../test/udhr-unicode.tar','./udhr-utf8/')
       except IOError:
         # if function is called within the sugarlike/src/universalcorpus dir
         # To move up directory to access sugarlike/data/ and sugarlike/test/.
-        make_tarfile('../../test/udhr-unicode.tar','../../data/udhr-utf8/')
+        make_tarfile('../../test/udhr-unicode.tar','./udhr-utf8/')
       
   else:
     # Compresses the utf8 UDHR files into a single tarfile.
     try:
-      make_tarfile('../data/udhr/udhr-unicode.tar','../data/udhr-utf8/')
+      make_tarfile('../data/udhr/udhr-unicode.tar','./udhr-utf8/')
     except IOError:
       # if function is called within the sugarlike/src/universalcorpus dir
       # To move up directory to access sugarlike/data/ and sugarlike/test/.
-      make_tarfile('../../data/udhr/udhr-unicode.tar','../../data/udhr-utf8/')  
+      make_tarfile('../../data/udhr/udhr-unicode.tar','./udhr-utf8/')  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
-  
+
 def enumerate_udhr(intarfile):
   """
   Returns the number of languages in a defaultdict(list). If language(s) has
@@ -86,6 +86,7 @@ def enumerate_udhr(intarfile):
       languages[lang].append(lang)
   return languages
 
+get_from_unicodedotorg(testing=True)
 
 # DEPRECATED: Use instead get_from_unicodedotorg() !!!!
 def convert_to_utf8(testing=False):
@@ -151,3 +152,5 @@ def convert_to_utf8(testing=False):
     make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
+  
+     
