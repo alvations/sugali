@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import sys; sys.path.append('../') # Access modules from parent dir.
+
 import tarfile, tempfile, os, codecs
 from itertools import chain
+
+from miniethnologue import ISO2LANG
 
 def word2ngrams(text, n=3, with_word_boundary=False):
   """ Convert text into character ngrams. """
@@ -33,30 +37,34 @@ def extract_odin_sentences(intarfile):
       for line in fin.readlines():
         sentence, sentence_morphemes, _ , _ ,_ = line.split('\t')
         yield language, sentence
-
-# TODO: requires langtoiso function.
-def extract_omniglot_phrases(intarfile):
-  """ Extracts char ngrams features from omniglot. """
-  for infile in read_tarfile(intarfile):
-    language = infile.split('/')[-1].split('-')[1].split('.')[0]
-    print language
-
+        
 def extract_udhr_sentences(intarfile):
   """ Extracts char ngrams features from udhr. """
   for infile in read_tarfile(intarfile):
-    language = infile.split('/')[-1][:3]
+    #language = infile.split('/')[-1][:3]
+    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
     with codecs.open(infile,'r','utf8') as fin:
       for sentence in fin.readlines():
         yield language, sentence
 
-extract_omniglot_phrases('../../data/omniglot/omniglotphrases.tar')
 
+def extract_omniglot_phrases(intarfile):
+  """ Extracts char ngrams features from omniglot. """
+  for infile in read_tarfile(intarfile):
+    language = infile.split('/')[-1].split('-')[1].split('.')[0]
+    with codecs.open(infile,'r','utf8') as fin:
+      for sentence in fin.readlines():
+        yield language, sentence
 
-'''
 # Informal tests.
 for lang, sent in extract_odin_sentences('../../data/odin/odin-cleaner.tar'):
-  print lang, sentence2ngrams(sent)
+  if lang in ISO2LANG:
+    print lang, sentence2ngrams(sent)
     
 for lang, sent in extract_udhr_sentences('../../data/udhr/udhr-unicode.tar'):
-  print lang, sentence2ngrams(sent)
-'''  
+  if lang in ISO2LANG:
+    print lang, sentence2ngrams(sent)
+
+for lang, sent in extract_omniglot_phrases('../../data/omniglot/omniglotphrases.tar'):
+  if lang in ISO2LANG:
+    print lang, sentence2ngrams(sent)
