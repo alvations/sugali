@@ -28,7 +28,17 @@ def read_tarfile(intarfile):
   
   for infile in os.listdir(TEMP_DIR):
     yield TEMP_DIR+'/'+infile
-    
+
+def extract_features_from_tarfile(intarfile):
+  """ Extracts character ngrams features given a tar ball. """
+  for infile in read_tarfile(intarfile):
+    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
+    with codecs.open(infile,'r','utf8') as fin:
+      for line in fin.readlines():
+        sentence = line.split('\t')[0]
+        yield language, sentence
+
+# DEPRECATED: use extract_features_from_tarfile() 
 def extract_odin_sentences(intarfile):
   """ Extracts char ngrams features from odin. """
   for infile in read_tarfile(intarfile):
@@ -37,7 +47,8 @@ def extract_odin_sentences(intarfile):
       for line in fin.readlines():
         sentence, sentence_morphemes, _ , _ ,_ = line.split('\t')
         yield language, sentence
-        
+
+# DEPRECATED: use extract_features_from_tarfile()         
 def extract_udhr_sentences(intarfile):
   """ Extracts char ngrams features from udhr. """
   for infile in read_tarfile(intarfile):
@@ -47,7 +58,7 @@ def extract_udhr_sentences(intarfile):
       for sentence in fin.readlines():
         yield language, sentence
 
-
+# DEPRECATED: use extract_features_from_tarfile() 
 def extract_omniglot_phrases(intarfile):
   """ Extracts char ngrams features from omniglot. """
   for infile in read_tarfile(intarfile):
@@ -56,15 +67,14 @@ def extract_omniglot_phrases(intarfile):
       for sentence in fin.readlines():
         yield language, sentence
 
+'''
 # Informal tests.
-for lang, sent in extract_odin_sentences('../../data/odin/odin-cleaner.tar'):
-  if lang in ISO2LANG:
-    print lang, sentence2ngrams(sent)
-    
-for lang, sent in extract_udhr_sentences('../../data/udhr/udhr-unicode.tar'):
-  if lang in ISO2LANG:
-    print lang, sentence2ngrams(sent)
+data_source = {'odin':'../../data/odin/odin-cleaner.tar',
+              'udhr':'../../data/udhr/udhr-unicode.tar',
+              'omniglotphrase':'../../data/omniglot/omniglotphrases.tar'}
 
-for lang, sent in extract_omniglot_phrases('../../data/omniglot/omniglotphrases.tar'):
-  if lang in ISO2LANG:
-    print lang, sentence2ngrams(sent)
+for s in data_source:
+  for lang, sent in extract_features_from_tarfile(data_source[s]):
+    if lang in ISO2LANG:
+      print lang, sentence2ngrams(sent)
+'''
