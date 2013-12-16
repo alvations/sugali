@@ -21,7 +21,7 @@ def get_from_unicodedotorg(testing=False):
   # Crawls the www.unicode.org page for all udhr txt files.
   for i in re.findall(AHREF_REGEX,unicode_page):
     if i.endswith('.txt'):
-      ##print UDHR_DOWNLOAD+i
+      print UDHR_DOWNLOAD+i
       urllib.urlretrieve(UDHR_DOWNLOAD+i, filename=TEMP_RAW_DIR+i)
       with io.open(TEMP_RAW_DIR+i,'r',encoding='utf8') as udhrfile:
         # Gets the language from the end of the file line.
@@ -58,6 +58,8 @@ def get_from_unicodedotorg(testing=False):
       make_tarfile('../../data/udhr/udhr-unicode.tar',UDHR_UTF8_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
+
+get_from_unicodedotorg()
 
 def enumerate_udhr(intarfile):
   """
