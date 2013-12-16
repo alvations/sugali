@@ -51,3 +51,9 @@ def remove_tags(text):
   return " ".join(no_tag_text.split())
 
 
+def remove_words_in_brackets(text):
+  import re
+  patterns = [r"\(.{1,}\)",r"[\(\)]"]
+  for pat in patterns:
+    text = re.sub(pat,'',text)
+  return text

@@ -68,16 +68,16 @@ def get_phrases(with_mp3=False,testing=False):
   if not os.path.exists(outputdir):
     os.makedirs(outputdir)
     
-  for i in re.findall(AHREF_REGEX,phrase_lang):
+  for link in re.findall(AHREF_REGEX,phrase_lang):
     # Finds all link for the phrases page for each language.
-    if '/language/phrases/' in i and not i.endswith('index.htm'):
+    if '/language/phrases/' in link and not link.endswith('index.htm'):
       # Get name of language in English.
-      langname = i.rpartition('/')[2].strip().rpartition('.')[0]
+      langname = link.rpartition('/')[2].strip().rpartition('.')[0]
       # Create a textfile for the output.
       outfile = codecs.open(outputdir+'omnilgotphrases-'+langname+'.txt', \
                             'w','utf8')
       # Finds the section that starts with <div id="unicode">
-      soup = bs(urllib2.urlopen(OMNIGLOT+i).read()).findAll(id='unicode')[0]
+      soup = bs(urllib2.urlopen(OMNIGLOT+link).read()).findAll(id='unicode')[0]
       # Get name of language in the particular language.
       langname2 = bs(str(soup.findAll('th')[1])).text
       all_phrases = defaultdict(list)
@@ -112,8 +112,8 @@ def get_phrases(with_mp3=False,testing=False):
         for trg in all_phrases[gloss]:
           if type(trg) is tuple:
             trg = "\t".join(trg)
-          print>>outfile, eng+"\t"+trg
-          print eng+"\t"+trg
+          print>>outfile, eng+"\t"+trg+"\t"+OMNIGLOT+link
+          print eng+"\t"+trg+"\t"+OMNIGLOT+link
       if testing: # only process one page if testing.
         break        
       time.sleep(random.randrange(5,10))
@@ -186,6 +186,19 @@ def rename_omniglotphrase_tarfile(intarfile):
   for infile in os.listdir(TEMP_DIR):
     _, lang = infile.split('.')
     lang = lang.split('_')[0]
-    print lang, langiso(lang)
-    
-rename_omniglotphrase_tarfile('../../data/omniglot/omniglot-phrases.tar')
+    isocode = langiso(lang)
+    if len(isocode) > 0: 
+      with codecs.open(TEMP_DIR+'/'+infile,'r','utf8') as fin:
+        fout = codecs.open(TEMP_OUT_DIR+'/omniglotphrase-'+isocode[0]+'.txt',\
+                           'w','utf8')
+        for line in fin:
+          try:
+            eng, src = line.strip().split('\t')
+            print>>fout, src+"\t"+eng
+          except ValueError:
+            print lang, line
+            pass
+  make_tarfile('../../data/omniglot/omniglotphrases.tar', TEMP_OUT_DIR+"/")
+
+
+##rename_omniglotphrase_tarfile('../../data/omniglot/omniglot-phrases.tar')
