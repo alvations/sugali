@@ -3,8 +3,11 @@
 import sys; sys.path.append('../') # Access modules from parent dir.
 
 import urllib2, re, time, codecs, os, random, tempfile, shutil, glob
+import tarfile
 from collections import defaultdict
 from utils import make_tarfile
+
+from miniethnologue import langiso
 
 try:
   from bs4 import BeautifulSoup as bs
@@ -71,7 +74,8 @@ def get_phrases(with_mp3=False,testing=False):
       # Get name of language in English.
       langname = i.rpartition('/')[2].strip().rpartition('.')[0]
       # Create a textfile for the output.
-      outfile = codecs.open(outputdir+'phrases.'+langname,'w','utf8')
+      outfile = codecs.open(outputdir+'omnilgotphrases-'+langname+'.txt', \
+                            'w','utf8')
       # Finds the section that starts with <div id="unicode">
       soup = bs(urllib2.urlopen(OMNIGLOT+i).read()).findAll(id='unicode')[0]
       # Get name of language in the particular language.
@@ -109,6 +113,7 @@ def get_phrases(with_mp3=False,testing=False):
           if type(trg) is tuple:
             trg = "\t".join(trg)
           print>>outfile, eng+"\t"+trg
+          print eng+"\t"+trg
       if testing: # only process one page if testing.
         break        
       time.sleep(random.randrange(5,10))
@@ -170,3 +175,17 @@ def crawl_and_clean_babel_pages():
       for j in bs(unicode(ol_sections)).findAll('li'):
         print lang+"_"+str(i)+"\t"+j.text.strip()
     time.sleep(random.randrange(5,10))
+    
+def rename_omniglotphrase_tarfile(intarfile):
+  TEMP_DIR = tempfile.mkdtemp()
+  with tarfile.open(intarfile) as tf:
+    for member in tf.getmembers():
+      tf.extract(member, TEMP_DIR)
+  
+  TEMP_OUT_DIR = tempfile.mkdtemp()
+  for infile in os.listdir(TEMP_DIR):
+    _, lang = infile.split('.')
+    lang = lang.split('_')[0]
+    print lang, langiso(lang)
+    
+rename_omniglotphrase_tarfile('../../data/omniglot/omniglot-phrases.tar')

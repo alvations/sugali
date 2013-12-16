@@ -28,7 +28,7 @@ def get_odin_igts(ODINFILE = '../../data/odin/odin-full.tar'):
   for infile in tar:
     if '.xml' in infile.name: # there's a rogue file in the tar that is not xml.
       lang = infile.name[:-4].lower()
-      ##print lang
+      print lang
       # Find the <igt>...</igt> in the xml.
       odinfile = tar.extractfile(infile).read()
       igts = bs(odinfile).findAll('igt')
@@ -109,6 +109,10 @@ def pickle2plaintext(testing=False,option='cleanest'):
       if option == 'cleanest':
         if src == '' or any(i for i in string.punctuation if i in src):
           continue
+      elif option == 'cleaner':
+        patterns = [r"\(.{1,}\)",r"[\(\)]"]
+        for pat in patterns:
+          src = re.sub(pat,'',src)
       else:
         if src == '':
           continue
@@ -141,7 +145,9 @@ def pickle2plaintext(testing=False,option='cleanest'):
       make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
-      
+
+pickle2plaintext(option="cleaner")
+
 '''    
 all_lang = set()
 for lang, tokens, morphs, gloss, eng, cite in odin_src_only():

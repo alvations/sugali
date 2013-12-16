@@ -34,6 +34,7 @@ def file2str(infile, encoding='utf8'):
 def file2ngrams(infile, n=3,with_word_boundary=False):
   return doc2ngrams(file2str(infile))
 
+
 def train(list_of_files):
   vie, eng = list_of_files
   featuresets = [({'3gram':i},'vie') for i in file2ngrams(vie)]

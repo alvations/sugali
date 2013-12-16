@@ -152,4 +152,3 @@ def convert_to_utf8(testing=False):
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
 '''
-     

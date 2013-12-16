@@ -49,3 +49,5 @@ def remove_tags(text):
   tags = {i:" " for i in re.findall("(<[^>\n]*>)",text.strip())}
   no_tag_text = reduce(lambda x, kv:x.replace(*kv), tags.iteritems(), text)
   return " ".join(no_tag_text.split())
+
+

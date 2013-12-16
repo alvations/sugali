@@ -137,4 +137,5 @@ def get_langinfo(isocode):
 # TODO:
 def langiso():
   """ [in]: Language name, [out]: isocode. """
+  
   pass
