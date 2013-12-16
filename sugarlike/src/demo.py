@@ -44,7 +44,7 @@ def train(list_of_files):
 def test(test_sentence):
   testfeatures = word2ngrams(test_sentence)
   num_features = float(len(testfeatures))
-  results = Counter() 
+  results = Counter()
   for i in word2ngrams(test_sentence):
     results[classifier.classify({'3gram':i})]+=1
   return {i:j/num_features for i, j in results.items()}

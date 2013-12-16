@@ -8134,6 +8134,455 @@ zza  Zaza  Zaza
 zza  Zazaki  Zazaki
 zzj  Zuojiang Zhuang  Zhuang, Zuojiang"""
 
+iso6395 = """aka  Akan  fat  Fanti
+   twi  Twi
+ara  Arabic  aao  Algerian Saharan Arabic
+   abh  Tajiki Arabic
+   abv  Baharna Arabic
+   acm  Mesopotamian Arabic
+   acq  Ta'izzi-Adeni Arabic
+   acw  Hijazi Arabic
+   acx  Omani Arabic
+   acy  Cypriot Arabic
+   adf  Dhofari Arabic
+   aeb  Tunisian Arabic
+   aec  Saidi Arabic
+   afb  Gulf Arabic
+   ajp  South Levantine Arabic
+   apc  North Levantine Arabic
+   apd  Sudanese Arabic
+   arb  Standard Arabic
+   arq  Algerian Arabic
+   ars  Najdi Arabic
+   ary  Moroccan Arabic
+   arz  Egyptian Arabic
+   auz  Uzbeki Arabic
+   avl  Eastern Egyptian Bedawi Arabic
+   ayh  Hadrami Arabic
+   ayl  Libyan Arabic
+   ayn  Sanaani Arabic
+   ayp  North Mesopotamian Arabic
+   bbz  Babalia Creole Arabic
+   pga  Sudanese Creole Arabic
+   shu  Chadian Arabic
+   ssh  Shihhi Arabic
+aym  Aymara  ayc  Southern Aymara
+   ayr  Central Aymara
+aze  Azerbaijani  azb  South Azerbaijani
+   azj  North Azerbaijani
+bal  Baluchi  bcc  Southern Balochi
+   bgn  Western Balochi
+   bgp  Eastern Balochi
+bik  Bikol  bcl  Central Bikol
+   bhk  Albay Bicolano  (Retired 1/15/2010)
+   bln  Southern Catanduanes Bikol
+   bto  Rinconada Bikol
+   cts  Northern Catanduanes Bikol
+   fbl  West Albay Bikol
+   lbl  Libon Bikol
+   rbl  Miraya Bikol
+   ubl  Buhi'non Bikol
+bnc  Bontok  ebk  Eastern Bontok
+   lbk  Central Bontok
+   obk  Southern Bontok
+   rbk  Northern Bontok
+   vbk  Southwestern Bontok
+bua  Buriat  bxm  Mongolia Buriat
+   bxr  Russia Buriat
+   bxu  China Buriat
+chm  Mari (Russia)  mhr  Eastern Mari
+   mrj  Western Mari
+cre  Cree  crj  Southern East Cree
+   crk  Plains Cree
+   crl  Northern East Cree
+   crm  Moose Cree
+   csw  Swampy Cree
+   cwd  Woods Cree
+del  Delaware  umu  Munsee
+   unm  Unami
+den  Slave (Athapascan)  scs  North Slavey
+   xsl  South Slavey
+din  Dinka  dib  South Central Dinka
+   dik  Southwestern Dinka
+   dip  Northeastern Dinka
+   diw  Northwestern Dinka
+   dks  Southeastern Dinka
+doi  Dogri (macrolanguage)  dgo  Dogri (individual language)
+   xnr  Kangri
+est  Estonian  ekk  Standard Estonian
+   vro  Võro
+fas  Persian  pes  Iranian Persian
+   prs  Dari
+ful  Fulah  ffm  Maasina Fulfulde
+   fub  Adamawa Fulfulde
+   fuc  Pulaar
+   fue  Borgu Fulfulde
+   fuf  Pular
+   fuh  Western Niger Fulfulde
+   fui  Bagirmi Fulfulde
+   fuq  Central-Eastern Niger Fulfulde
+   fuv  Nigerian Fulfulde
+gba  Gbaya (Central African Republic)  bdt  Bokoto
+   gbp  Gbaya-Bossangoa
+   gbq  Gbaya-Bozoum
+   gmm  Gbaya-Mbodomo
+   gso  Southwest Gbaya
+   gya  Northwest Gbaya
+   mdo  Southwest Gbaya  (Retired 1/14/2008)
+gon  Gondi  ggo  Southern Gondi
+   gno  Northern Gondi
+grb  Grebo  gbo  Northern Grebo
+   gec  Gboloo Grebo
+   grj  Southern Grebo
+   grv  Central Grebo
+   gry  Barclayville Grebo
+grn  Guarani  gnw  Western Bolivian Guaraní
+   gug  Paraguayan Guaraní
+   gui  Eastern Bolivian Guaraní
+   gun  Mbyá Guaraní
+   nhd  Chiripá
+hai  Haida  hax  Southern Haida
+   hdn  Northern Haida
+hbs  Serbo-Croatian  bos  Bosnian
+   hrv  Croatian
+   srp  Serbian
+hmn  Hmong  blu  Hmong Njua  (Retired 1/14/2008)
+   cqd  Chuanqiandian Cluster Miao
+   hea  Northern Qiandong Miao
+   hma  Southern Mashan Hmong
+   hmc  Central Huishui Hmong
+   hmd  Large Flowery Miao
+   hme  Eastern Huishui Hmong
+   hmg  Southwestern Guiyang Hmong
+   hmh  Southwestern Huishui Hmong
+   hmi  Northern Huishui Hmong
+   hmj  Ge
+   hml  Luopohe Hmong
+   hmm  Central Mashan Hmong
+   hmp  Northern Mashan Hmong
+   hmq  Eastern Qiandong Miao
+   hms  Southern Qiandong Miao
+   hmw  Western Mashan Hmong
+   hmy  Southern Guiyang Hmong
+   hmz  Hmong Shua
+   hnj  Hmong Njua
+   hrm  Horned Miao
+   huj  Northern Guiyang Hmong
+   mmr  Western Xiangxi Miao
+   muq  Eastern Xiangxi Miao
+   mww  Hmong Daw
+   sfm  Small Flowery Miao
+iku  Inuktitut  ike  Eastern Canadian Inuktitut
+   ikt  Inuinnaqtun
+ipk  Inupiaq  esi  North Alaskan Inupiatun
+   esk  Northwest Alaska Inupiatun
+jrb  Judeo-Arabic  ajt  Judeo-Tunisian Arabic
+   aju  Judeo-Moroccan Arabic
+   jye  Judeo-Yemeni Arabic
+   yhd  Judeo-Iraqi Arabic
+   yud  Judeo-Tripolitanian Arabic
+kau  Kanuri  kby  Manga Kanuri
+   knc  Central Kanuri
+   krt  Tumari Kanuri
+kln  Kalenjin  enb  Markweeta
+   eyo  Keiyo
+   niq  Nandi
+   oki  Okiek
+   pko  Pökoot
+   sgc  Kipsigis
+   spy  Sabaot
+   tec  Terik
+   tuy  Tugen
+kok  Konkani (macrolanguage)  gom  Goan Konkani
+   knn  Konkani (individual language)
+kom  Komi  koi  Komi-Permyak
+   kpv  Komi-Zyrian
+kon  Kongo  kng  Koongo
+   kwy  San Salvador Kongo
+   ldi  Laari
+kpe  Kpelle  gkp  Guinea Kpelle
+   xpe  Liberia Kpelle
+kur  Kurdish  ckb  Central Kurdish
+   kmr  Northern Kurdish
+   sdh  Southern Kurdish
+lah  Lahnda  hnd  Southern Hindko
+   hno  Northern Hindko
+   jat  Jakati
+   phr  Pahari-Potwari
+   pmu  Mirpur Panjabi
+   pnb  Western Panjabi
+   skr  Seraiki
+   xhe  Khetrani
+lav  Latvian  ltg  Latgalian
+   lvs  Standard Latvian
+luy  Luyia  bxk  Bukusu
+   ida  Idakho-Isukha-Tiriki
+   lkb  Kabras
+   lko  Khayo
+   lks  Kisa
+   lri  Marachi
+   lrm  Marama
+   lsm  Saamia
+   lto  Tsotso
+   lts  Tachoni
+   lwg  Wanga
+   nle  East Nyala
+   nyd  Nyore
+   rag  Logooli
+man  Mandingo  emk  Eastern Maninkakan
+   mku  Konyanka Maninka
+   mlq  Western Maninkakan
+   mnk  Mandinka
+   msc  Sankaran Maninka
+   mwk  Kita Maninkakan
+   myq  Forest Maninka  (Retired )
+mlg  Malagasy  bhr  Bara Malagasy
+   bjq  Southern Betsimisaraka Malagasy  (Retired )
+   bmm  Northern Betsimisaraka Malagasy
+   bzc  Southern Betsimisaraka Malagasy
+   msh  Masikoro Malagasy
+   plt  Plateau Malagasy
+   skg  Sakalava Malagasy
+   tdx  Tandroy-Mahafaly Malagasy
+   tkg  Tesaka Malagasy
+   txy  Tanosy Malagasy
+   xmv  Antankarana Malagasy
+   xmw  Tsimihety Malagasy
+mon  Mongolian  khk  Halh Mongolian
+   mvf  Peripheral Mongolian
+msa  Malay (macrolanguage)  bjn  Banjar
+   btj  Bacanese Malay
+   bve  Berau Malay
+   bvu  Bukit Malay
+   coa  Cocos Islands Malay
+   dup  Duano
+   hji  Haji
+   ind  Indonesian
+   jak  Jakun
+   jax  Jambi Malay
+   kvb  Kubu
+   kvr  Kerinci
+   kxd  Brunei
+   lce  Loncong
+   lcf  Lubu
+   liw  Col
+   max  North Moluccan Malay
+   meo  Kedah Malay
+   mfa  Pattani Malay
+   mfb  Bangka
+   min  Minangkabau
+   mly  Malay (individual language)  (Retired 2/18/2008)
+   mqg  Kota Bangun Kutai Malay
+   msi  Sabah Malay
+   mui  Musi
+   orn  Orang Kanaq
+   ors  Orang Seletar
+   pel  Pekal
+   pse  Central Malay
+   tmw  Temuan
+   urk  Urak Lawoi'
+   vkk  Kaur
+   vkt  Tenggarong Kutai Malay
+   xmm  Manado Malay
+   zlm  Malay (individual language)
+   zmi  Negeri Sembilan Malay
+   zsm  Standard Malay
+mwr  Marwari  dhd  Dhundari
+   mtr  Mewari
+   mve  Marwari (Pakistan)
+   rwr  Marwari (India)
+   swv  Shekhawati
+   wry  Merwari
+nep  Nepali (macrolanguage)  dty  Dotyali
+   npi  Nepali (individual language)
+nor  Norwegian  nno  Norwegian Nynorsk
+   nob  Norwegian Bokmål
+oji  Ojibwa  ciw  Chippewa
+   ojb  Northwestern Ojibwa
+   ojc  Central Ojibwa
+   ojg  Eastern Ojibwa
+   ojs  Severn Ojibwa
+   ojw  Western Ojibwa
+   otw  Ottawa
+ori  Oriya (macrolanguage)  ory  Oriya (individual language)
+   spv  Sambalpuri
+orm  Oromo  gax  Borana-Arsi-Guji Oromo
+   gaz  West Central Oromo
+   hae  Eastern Oromo
+   orc  Orma
+pus  Pushto  pbt  Southern Pashto
+   pbu  Northern Pashto
+   pst  Central Pashto
+que  Quechua  cqu  Chilean Quechua
+   qub  Huallaga Huánuco Quechua
+   qud  Calderón Highland Quichua
+   quf  Lambayeque Quechua
+   qug  Chimborazo Highland Quichua
+   quh  South Bolivian Quechua
+   quk  Chachapoyas Quechua
+   qul  North Bolivian Quechua
+   qup  Southern Pastaza Quechua
+   qur  Yanahuanca Pasco Quechua
+   qus  Santiago del Estero Quichua
+   quw  Tena Lowland Quichua
+   qux  Yauyos Quechua
+   quy  Ayacucho Quechua
+   quz  Cusco Quechua
+   qva  Ambo-Pasco Quechua
+   qvc  Cajamarca Quechua
+   qve  Eastern Apurímac Quechua
+   qvh  Huamalíes-Dos de Mayo Huánuco Quechua
+   qvi  Imbabura Highland Quichua
+   qvj  Loja Highland Quichua
+   qvl  Cajatambo North Lima Quechua
+   qvm  Margos-Yarowilca-Lauricocha Quechua
+   qvn  North Junín Quechua
+   qvo  Napo Lowland Quechua
+   qvp  Pacaraos Quechua
+   qvs  San Martín Quechua
+   qvw  Huaylla Wanca Quechua
+   qvz  Northern Pastaza Quichua
+   qwa  Corongo Ancash Quechua
+   qwc  Classical Quechua
+   qwh  Huaylas Ancash Quechua
+   qws  Sihuas Ancash Quechua
+   qxa  Chiquián Ancash Quechua
+   qxc  Chincha Quechua
+   qxh  Panao Huánuco Quechua
+   qxl  Salasaca Highland Quichua
+   qxn  Northern Conchucos Ancash Quechua
+   qxo  Southern Conchucos Ancash Quechua
+   qxp  Puno Quechua
+   qxr  Cañar Highland Quichua
+   qxt  Santa Ana de Tusi Pasco Quechua
+   qxu  Arequipa-La Unión Quechua
+   qxw  Jauja Wanca Quechua
+raj  Rajasthani  bgq  Bagri
+   gda  Gade Lohar
+   gju  Gujari
+   hoj  Hadothi
+   mup  Malvi
+   wbr  Wagdi
+rom  Romany  rmc  Carpathian Romani
+   rmf  Kalo Finnish Romani
+   rml  Baltic Romani
+   rmn  Balkan Romani
+   rmo  Sinte Romani
+   rmw  Welsh Romani
+   rmy  Vlax Romani
+sqi  Albanian  aae  Arbëreshë Albanian
+   aat  Arvanitika Albanian
+   aln  Gheg Albanian
+   als  Tosk Albanian
+srd  Sardinian  sdc  Sassarese Sardinian
+   sdn  Gallurese Sardinian
+   src  Logudorese Sardinian
+   sro  Campidanese Sardinian
+swa  Swahili (macrolanguage)  swc  Congo Swahili
+   swh  Swahili (individual language)
+syr  Syriac  aii  Assyrian Neo-Aramaic
+   cld  Chaldean Neo-Aramaic
+tmh  Tamashek  taq  Tamasheq
+   thv  Tahaggart Tamahaq
+   thz  Tayart Tamajeq
+   ttq  Tawallammat Tamajaq
+uzb  Uzbek  uzn  Northern Uzbek
+   uzs  Southern Uzbek
+yid  Yiddish  ydd  Eastern Yiddish
+   yih  Western Yiddish
+zap  Zapotec  zaa  Sierra de Juárez Zapotec
+   zab  San Juan Guelavía Zapotec
+   zac  Ocotlán Zapotec
+   zad  Cajonos Zapotec
+   zae  Yareni Zapotec
+   zaf  Ayoquesco Zapotec
+   zai  Isthmus Zapotec
+   zam  Miahuatlán Zapotec
+   zao  Ozolotepec Zapotec
+   zaq  Aloápam Zapotec
+   zar  Rincón Zapotec
+   zas  Santo Domingo Albarradas Zapotec
+   zat  Tabaa Zapotec
+   zav  Yatzachi Zapotec
+   zaw  Mitla Zapotec
+   zax  Xadani Zapotec
+   zca  Coatecas Altas Zapotec
+   zoo  Asunción Mixtepec Zapotec
+   zpa  Lachiguiri Zapotec
+   zpb  Yautepec Zapotec
+   zpc  Choapan Zapotec
+   zpd  Southeastern Ixtlán Zapotec
+   zpe  Petapa Zapotec
+   zpf  San Pedro Quiatoni Zapotec
+   zpg  Guevea De Humboldt Zapotec
+   zph  Totomachapan Zapotec
+   zpi  Santa María Quiegolani Zapotec
+   zpj  Quiavicuzas Zapotec
+   zpk  Tlacolulita Zapotec
+   zpl  Lachixío Zapotec
+   zpm  Mixtepec Zapotec
+   zpn  Santa Inés Yatzechi Zapotec
+   zpo  Amatlán Zapotec
+   zpp  El Alto Zapotec
+   zpq  Zoogocho Zapotec
+   zpr  Santiago Xanica Zapotec
+   zps  Coatlán Zapotec
+   zpt  San Vicente Coatlán Zapotec
+   zpu  Yalálag Zapotec
+   zpv  Chichicapan Zapotec
+   zpw  Zaniza Zapotec
+   zpx  San Baltazar Loxicha Zapotec
+   zpy  Mazaltepec Zapotec
+   zpz  Texmelucan Zapotec
+   zsr  Southern Rincon Zapotec
+   ztc  Lachirioag Zapotec  (Retired 7/18/2007)
+   zte  Elotepec Zapotec
+   ztg  Xanaguía Zapotec
+   ztl  Lapaguía-Guivini Zapotec
+   ztm  San Agustín Mixtepec Zapotec
+   ztn  Santa Catarina Albarradas Zapotec
+   ztp  Loxicha Zapotec
+   ztq  Quioquitani-Quierí Zapotec
+   zts  Tilquiapan Zapotec
+   ztt  Tejalapan Zapotec
+   ztu  Güilá Zapotec
+   ztx  Zaachila Zapotec
+   zty  Yatee Zapotec
+zha  Zhuang  ccx  Northern Zhuang  (Retired 1/14/2008)
+   ccy  Southern Zhuang  (Retired 7/18/2007)
+   zch  Central Hongshuihe Zhuang
+   zeh  Eastern Hongshuihe Zhuang
+   zgb  Guibei Zhuang
+   zgm  Minz Zhuang
+   zgn  Guibian Zhuang
+   zhd  Dai Zhuang
+   zhn  Nong Zhuang
+   zlj  Liujiang Zhuang
+   zln  Lianshan Zhuang
+   zlq  Liuqian Zhuang
+   zqe  Qiubei Zhuang
+   zyb  Yongbei Zhuang
+   zyg  Yang Zhuang
+   zyj  Youjiang Zhuang
+   zyn  Yongnan Zhuang
+   zzj  Zuojiang Zhuang
+zho  Chinese  cdo  Min Dong Chinese
+   cjy  Jinyu Chinese
+   cmn  Mandarin Chinese
+   cpx  Pu-Xian Chinese
+   czh  Huizhou Chinese
+   czo  Min Zhong Chinese
+   gan  Gan Chinese
+   hak  Hakka Chinese
+   hsn  Xiang Chinese
+   lzh  Literary Chinese
+   mnp  Min Bei Chinese
+   nan  Min Nan Chinese
+   wuu  Wu Chinese
+   yue  Yue Chinese
+zza  Zaza  diq  Dimli (individual language)
+   kiu  Kirmanjki (individual language)""" 
+
 def getKey(dic, value):
   return [k for k,v in sorted(dic.items()) if value in v]
 
@@ -8144,4 +8593,17 @@ for i in iso6963.split('\n'):
 
 def langiso(languagename):
   return getKey(ISO2LANG, languagename)
+
+def macrolang():
+  macro2lang = defaultdict(list)
+  for i in iso6395.split('\n'):
+    lastmarco = ""; lang = ""
+    if len(i.split('  ')) == 4 and i[0] != " ":
+      lastmacro, lang = i.split('  ')[0], i.split('  ')[2]
+    else:
+      lang = i.strip().split('  ')[0]
+    macro2lang[lastmacro].append(lang)
+  return macro2lang
+    
+MACRO2LANG = macrolang()
 

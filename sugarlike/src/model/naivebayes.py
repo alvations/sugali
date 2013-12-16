@@ -5,6 +5,7 @@ from extractfeature import extract_features_from_tarfile, ISO2LANG, sentence2ngr
 import cPickle as pickle
 import codecs, operator, math
 from collections import Counter, defaultdict
+from probability import arithmetic_mean, geometric_mean, arigeo_mean
 
 def train_nbc():
   data_source = {'odin':'../../data/odin/odin-cleaner.tar',
@@ -19,7 +20,7 @@ def train_nbc():
         print len(featuresets)
   return nbc.train(featuresets)
       
-def test(test_sentence, classifier, option='geometric'):
+def test(test_sentence, classifier, option=''):
   classes = defaultdict(list)
   test_features = [{'3gram':i} for i in sentence2ngrams(test_sentence)]
   
@@ -28,30 +29,29 @@ def test(test_sentence, classifier, option='geometric'):
     result = classifier.prob_classify(i); best = result.max()
     classes[best].append(result.prob(best))
   
+  # Calculate the scores of the classified features from the test_sentence.
   answers = {}
   if option[:3] == 'geo': # geometric mean
     for i in classes:
-      answers[i] = math.pow(reduce(operator.mul, classes[i], 1), \
-                            1/float(len(classes[i])))
-      
+      answers[i] = geometric_mean(classes[i])
   elif option[:3] == 'ari': # arithmetic mean
     for i in classes:
-      answers[i] = sum(classes[i])/len(classes[i])
-      
-  else: # use arithmetic-geometric mean
+      answers[i] = arithmetic_mean(classes[i])
+  else: # use arithmetic-geometric mean, see 
     for i in classes:
-      pass
-    
-  print answers
-  return max(answers.iteritems(), key=operator.itemgetter(1))[0]
+      answers[i] = arigeo_mean(classes[i])
+  return max(answers.iteritems(), key=operator.itemgetter(1))[0], answers
   
     
-
+# To train and dump tagger into pickle.
 #sugarlike = train_nbc()
 #with codecs.open('3gram-sugarlike.pk','wb') as fout:
 #  pickle.dump(sugarlike, fout)
 
+# To test and tag the tagger into pickle
 with codecs.open('3gram-sugarlike.pk','rb') as fin2: 
   sugarlike = pickle.load(fin2)
   print test('Ich bin schwanger',sugarlike)
-    
+  print test('Ich bin schwanger',sugarlike, option='geo')
+  print test('Ich bin schwanger',sugarlike, option='ari')
+

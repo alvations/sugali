@@ -50,10 +50,20 @@ def remove_tags(text):
   no_tag_text = reduce(lambda x, kv:x.replace(*kv), tags.iteritems(), text)
   return " ".join(no_tag_text.split())
 
-
 def remove_words_in_brackets(text):
+  """ Remove words in parentheses, [in]:'foo (bar bar)' [out]:'foo'. """ 
   import re
   patterns = [r"\(.{1,}\)",r"[\(\)]"]
   for pat in patterns:
     text = re.sub(pat,'',text)
   return text
+
+def goto_rand_website():
+  """ Go to a random website. """
+  import webbrowser, urllib2, tempfile
+  from random import choice
+  random_page_generator = ['http://www.randomwebsite.com/cgi-bin/random.pl',
+                           'http://www.uroulette.com/visit',
+                           'http://www.randomwebsitemachine.com/random_website/']
+  webbrowser.open(tmpinfile, new=2)
+  return rpage

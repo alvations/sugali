@@ -81,8 +81,6 @@ def load_odin_tarfile():
   for lang, igts in load_odin_pickle():
     for igt in igts:
       print lang, igt
-   
-##load_odin_tarfile()
       
 def pickle2plaintext(testing=False,option='cleanest'):
   """ Converted ODIN IGTs from the .pk file into tab-delimited plaintexts."""
@@ -146,24 +144,4 @@ def pickle2plaintext(testing=False,option='cleanest'):
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
 
-pickle2plaintext(option="cleaner")
-
-'''    
-all_lang = set()
-for lang, tokens, morphs, gloss, eng, cite in odin_src_only():
-  print "\t".join([lang, tokens, morphs, gloss, eng, cite])
-  all_lang.add(lang)
-print len(all_lang)
-'''
-
-
-'''
-def load_odin_src():
-  """
-  Loads odin-docs.pk and returns it as a defaultdict
-  
-  >>> for lang, text in load_odin_src():
-  >>>   print lang, text
-  """
-  pass
-'''
+##pickle2plaintext(option="cleaner")
