@@ -2,3 +2,4 @@
 
 import data_interface
 import utils
+import miniethnologue

@@ -85,7 +85,7 @@ def get_language_families():
     with codecs.open(ETHNO_DIR+'ethnologue-family.html','w','utf8') as fout:
       print>>fout, fin
   
-  fin = codecs.open('ethnologue-family.html','r','utf8')
+  fin = codecs.open(ETHNO_DIR+'ethnologue-family.html','r','utf8')
   lang_fams = defaultdict(list)
   
   for line in fin.readlines():
@@ -94,7 +94,7 @@ def get_language_families():
     if LANG_FAMILY_TAG in line:
       langfamlink = bs(line).find('a').get('href')
       langfamily = bs(line).get_text().strip()
-      ##print langfamily, langfamlink
+      print langfamily, langfamlink
       # Downloads the page of a language family and gets its:
       # (1) name, (2) iscode (3) geographical information
       for line2 in urllib2.urlopen(ETHNOLOGUE_DOMAIN+langfamlink):
@@ -138,3 +138,6 @@ def get_langinfo(isocode):
 def langiso():
   """ [in]: Language name, [out]: isocode. """
   pass
+
+langfam = get_language_families()
+print len(langfam)

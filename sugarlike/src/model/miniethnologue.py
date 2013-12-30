@@ -8606,4 +8606,4 @@ def macrolang():
   return macro2lang
     
 MACRO2LANG = macrolang()
-
+##print len(MACRO2LANG)

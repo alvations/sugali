@@ -73,8 +73,18 @@ data_source = {'odin':'../../data/odin/odin-cleaner.tar',
               'udhr':'../../data/udhr/udhr-unicode.tar',
               'omniglotphrase':'../../data/omniglot/omniglotphrases.tar'}
 
+datalost = set()
+
+('aiz','aiw'),('baz','tvu'),('blu','hnj'),()
+
 for s in data_source:
   for lang, sent in extract_features_from_tarfile(data_source[s]):
     if lang in ISO2LANG:
-      print lang, sentence2ngrams(sent)
+      ##print lang, sentence2ngrams(sent)
+      pass
+    else:
+      datalost.add((s, lang))
+
+for i in sorted(datalost):
+  print i
 '''

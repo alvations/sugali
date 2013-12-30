@@ -59,8 +59,6 @@ def get_from_unicodedotorg(testing=False):
   # Remove the udhr-utf8 directory.
   shutil.rmtree(UDHR_UTF8_DIR)
 
-get_from_unicodedotorg()
-
 def enumerate_udhr(intarfile):
   """
   Returns the number of languages in a defaultdict(list). If language(s) has
@@ -87,6 +85,8 @@ def enumerate_udhr(intarfile):
     except:
       languages[lang].append(lang)
   return languages
+
+##print len(enumerate_udhr('../../data/udhr/udhr-unicode.tar'))
 
 '''
 # DEPRECATED: Use instead get_from_unicodedotorg() !!!!
