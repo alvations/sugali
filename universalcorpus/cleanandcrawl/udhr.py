@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import sys; sys.path.append('../') # Access modules from parent dir.
+import os
+# Access modules from parent dir.
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+import sys; sys.path.append(parentddir)
 
 import codecs, os, zipfile, urllib, urllib2, tempfile, shutil, re, io
 from unicodize import is_utf8, what_the_encoding
-from utils import make_tarfile
+from utils import make_tarfile, read_tarfile
 
 def get_from_unicodedotorg(testing=False):
   """ Crawl and clean UDHR files from www.unicode.org . """
@@ -88,3 +91,19 @@ def enumerate_udhr(intarfile):
       languages[lang].append(lang)
   return languages
 
+def documents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+              bysentence=False):
+  """ Yields UDHR by documents. """
+  for infile in read_tarfile(intarfile):
+    #language = infile.split('/')[-1][:3]
+    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
+    with codecs.open(infile,'r','utf8') as fin:
+      if bysentence:
+        for sentence in fin.readlines():
+          yield language, sentence
+      else:
+        yield language, fin.read()
+        
+def sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+          bysentence=True):
+  return documents(intarfile, bysentence)

@@ -220,4 +220,4 @@ def phrases(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
 def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
             onlysource=True):
   """ Yield clean sentences from the clean Omniglot tarball. """
-  return phrases(intarfile, True)
+  return phrases(intarfile, onlysource)
