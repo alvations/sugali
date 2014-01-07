@@ -73,84 +73,17 @@ def enumerate_udhr(intarfile):
   from collections import defaultdict
   import tarfile
   TEMP_DIR = tempfile.mkdtemp()
+  # Reads the tarfile and extract to temp directory.
   with tarfile.open(intarfile) as tf:
     for member in tf.getmembers():
       tf.extract(member, TEMP_DIR)
   languages = defaultdict(list)
+  # Loop through temp directory.
   for infile in os.listdir(TEMP_DIR):
     lang = infile.partition('.')[0].lower()
     try:
-      lang, dialect = lang.split('_')
+      lang, dialect = lang.split('_') # Checks for dialects denoted by "_".
       languages[lang].append(dialect)
     except:
       languages[lang].append(lang)
   return languages
-
-##print len(enumerate_udhr('../../data/udhr/udhr-unicode.tar'))
-
-'''
-# DEPRECATED: Use instead get_from_unicodedotorg() !!!!
-def convert_to_utf8(testing=False):
-  """ Converts UDHR files to utf8. """
-  # Make temp directories to keep the UDHR files.
-  TEMP_DIR = tempfile.mkdtemp() # for keeping the udhr.zip
-  TEMP_UDHR_DIR = tempfile.mkdtemp() # for extracting the udhr.
-  
-  # Downloads and extract the UDHR files into temp directory.
-  UDHR_DOWNLOAD = 'http://nltk.googlecode.com/svn/trunk/nltk_data/'+\
-                  'packages/corpora/udhr.zip'
-  urllib.urlretrieve(UDHR_DOWNLOAD, filename=TEMP_DIR+'udhr.zip')  
-  with zipfile.ZipFile(TEMP_DIR+'udhr.zip', "r") as z:
-    z.extractall(TEMP_UDHR_DIR)
-  TEMP_UDHR_DIR+='/udhr/'
-  
-  # Makes a temp output directory for the files that can be converted into utf8.
-  UDHR_UTF8_DIR = '../data/udhr-utf8/'
-  if not os.path.exists(UDHR_UTF8_DIR):
-    os.makedirs(UDHR_UTF8_DIR)
-  
-  # Iterate through the extracted files.
-  for filename in os.listdir(TEMP_UDHR_DIR):
-    if "~" in filename: continue
-    infile = TEMP_UDHR_DIR+filename
-    # Uses libmagic to determine the encoding.
-    encoding = what_the_encoding(infile)
-    # If libmagic doesn't give unknown or binary as encoding.
-    if 'unknown' not in str(encoding) and 'binary' not in str(encoding):
-      try:
-        # Reads the file with encoding specified by libmagic.
-        readfile = codecs.open(infile, 'r',encoding).read()
-        infile = infile.rpartition("/")[2] 
-        # Outputs file into utf8. 
-        with codecs.open(UDHR_UTF8_DIR+infile+'.utf8','w','utf8') as outfile:
-          print>>outfile, readfile
-      except UnicodeDecodeError:
-        # Sometimes the file has some chars that cannot be converted into utf8.
-        ##print infile, encoding
-        pass
-    else:
-      # If libmagic fails, try the encoding as specified by the filename.
-      given_encoding = infile.rpartition('-')[2].lower()
-      try:
-        # Reads the file with encoding specified by the filename.
-        readfile = codecs.open(infile, 'r',given_encoding).read()
-        infile = infile.rpartition("/")[2]
-        # Outputs file into utf8.
-        with codecs.open(UDHR_UTF8_DIR+infile+'.utf8','w','utf8') as outfile:
-          print>>outfile, readfile
-      except:
-        # Sometimes the file has some chars that cannot be converted into utf8.
-        ##print infile, given_encoding
-        pass
-    if testing:
-      break
-  
-  if testing:
-    # Compress the utf8 UDHR files into a single tarfile in the test dir.
-    make_tarfile('../test/udhr-utf8.tar','../data/udhr-utf8/')
-  else:
-    # Compresses the utf8 UDHR files into a single tarfile.
-    make_tarfile('../data/udhr/udhr-utf8.tar','../data/udhr-utf8/')
-  # Remove the udhr-utf8 directory.
-  shutil.rmtree(UDHR_UTF8_DIR)
-'''
