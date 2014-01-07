@@ -13,7 +13,7 @@ except:
   from BeautifulSoup import BeautifulSoup as bs
 #bs.find_all = getattr(bs, 'find_all',False) or getattr(bs, 'findAll')
 
-def get_odin_igts(ODINFILE = '../data/odin/odin-full.tar'):
+def get_odin_igts(ODINFILE = 'data/odin/odin-full.tar'):
   """
   Extracts the examples from the ODIN igts and returns a defaultdict(list),
   where the keys are the lang iso codes and values are the examples.
@@ -23,6 +23,7 @@ def get_odin_igts(ODINFILE = '../data/odin/odin-full.tar'):
   >>>  for igt in igts[lang]:
   >>>    print lang, igt
   """
+  
   tar = tarfile.open(ODINFILE)
   docs = defaultdict(list)
   for infile in tar:
@@ -49,7 +50,7 @@ def get_odin_igts(ODINFILE = '../data/odin/odin-full.tar'):
             raise; print eg
   return docs
 
-def load_odin_pickle(ODIN_DIR='../data/odin/'):
+def load_odin_pickle(ODIN_DIR='data/odin/'):
   """
   Loads odin-docs.pk and yield one IGT at a time.
   
@@ -116,19 +117,23 @@ def pickle2plaintext(testing=False,option='cleanest'):
   if testing:
   # Compress the utf8 UDHR files into a single tarfile in the test dir.
     try:
-      make_tarfile('../test/odin-'+option+'.tar',TEMPODIN_DIR)
+      make_tarfile('test/odin-'+option+'.tar',TEMPODIN_DIR)
     except IOError:
       # if function is called within the sugarlike/src/universalcorpus dir
       # To move up directory to access sugarlike/data/ and sugarlike/test/.
-      make_tarfile('../../test/odin-'+option+'.tar',TEMPODIN_DIR)
+      make_tarfile('../test/odin-'+option+'.tar',TEMPODIN_DIR)
   else:
     # Compresses the utf8 UDHR files into a single tarfile.
     try:
-      make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)
+      make_tarfile('../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)
     except IOError:
       # if function is called within the sugarlike/src/universalcorpus dir
       # To move up directory to access sugarlike/data/ and sugarlike/test/.
-      make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
+      make_tarfile('../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
 
+def igts():
+  """ Yields IGTs from ODIN. """
+  for lang, examples in load_odin_pickle():
+    yield lang, examples
