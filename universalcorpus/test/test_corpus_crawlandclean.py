@@ -85,14 +85,13 @@ def test_load_odin_examples():
     print lang, examples
     break
 
+
 ##test_omniglot_get_phrase()
 ##test_udhr_convert_to_utf8()
 ##test_load_odin_examples()
-test_load_language_families()
+##test_load_language_families()
 
 
 #for lang, examples in odin.load_odin_examples():
 #  print examples[0]
 #  break
-
-
