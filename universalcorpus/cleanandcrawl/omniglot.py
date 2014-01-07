@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import sys; sys.path.append('../') # Access modules from parent dir.
+import os
+# Access modules from parent dir.
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+import sys; sys.path.append(parentddir)
 
-import urllib2, re, time, codecs, os, random, tempfile, shutil, glob
+import urllib2, re, time, codecs, random, tempfile, shutil, glob
 import tarfile
 from collections import defaultdict
-from utils import make_tarfile
+from utils import make_tarfile, read_tarfile
 
 from miniethnologue import langiso
 
@@ -201,5 +204,20 @@ def rename_omniglotphrase_tarfile(intarfile):
             pass
   make_tarfile('../../data/omniglot/omniglotphrases.tar', TEMP_OUT_DIR+"/")
 
+def phrases(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+            onlysource=False):
+  """ Yield source and tranlsation sentences from the clean Omniglot tarball. """
+  for infile in read_tarfile(intarfile):
+    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
+    with codecs.open(infile,'r','utf8') as fin:
+      for line in fin.readlines():
+        sentence, translation = line.strip().split('\t')
+        if onlysource:
+          yield language, sentence
+        else:
+          yield language, sentence, translation
 
-##rename_omniglotphrase_tarfile('../../data/omniglot/omniglot-phrases.tar')
+def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+            onlysource=True):
+  """ Yield clean sentences from the clean Omniglot tarball. """
+  return phrases(intarfile, True)

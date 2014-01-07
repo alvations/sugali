@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import sys; sys.path.append('../') # Access modules from parent dir.
+import os
+# Access modules from parent dir.
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+import sys; sys.path.append(parentddir)
 
 import tarfile, codecs, os, re, string, shutil
 from collections import defaultdict
 import cPickle as pickle
-from utils import remove_tags, make_tarfile
+from utils import remove_tags, make_tarfile, read_tarfile
 
 try:
   from bs4 import BeautifulSoup as bs
@@ -13,7 +16,8 @@ except:
   from BeautifulSoup import BeautifulSoup as bs
 #bs.find_all = getattr(bs, 'find_all',False) or getattr(bs, 'findAll')
 
-def get_odin_igts(ODINFILE = 'data/odin/odin-full.tar'):
+
+def get_odin_igts(ODINFILE=parentddir+'/data/odin/odin-full.tar'):
   """
   Extracts the examples from the ODIN igts and returns a defaultdict(list),
   where the keys are the lang iso codes and values are the examples.
@@ -50,7 +54,7 @@ def get_odin_igts(ODINFILE = 'data/odin/odin-full.tar'):
             raise; print eg
   return docs
 
-def load_odin_pickle(ODIN_DIR='data/odin/'):
+def load_odin_pickle(ODIN_PICKLE=parentddir+'/data/odin/odin-docs.pk'):
   """
   Loads odin-docs.pk and yield one IGT at a time.
   
@@ -59,14 +63,14 @@ def load_odin_pickle(ODIN_DIR='data/odin/'):
   >>>     print lang, igt
   """
   # If odin-docs.pk is not available create it.
-  if not os.path.exists(ODIN_DIR+'odin-docs.pk'):
+  if not os.path.exists(ODIN_PICKLE):
     odindocs = get_odin_igts()
     # Outputs the odin igts examples into '../data/odin/odin-docs.pk'.
-    with codecs.open(ODIN_DIR+'odin-docs.pk','wb') as fout:
+    with codecs.open(ODIN_PICKLE,'wb') as fout:
       pickle.dump(odindocs, fout)  
       
   # Loads the pickled file.
-  with codecs.open(ODIN_DIR+'odin-docs.pk','rb') as fin2: 
+  with codecs.open(ODIN_PICKLE,'rb') as fin2: 
     docs = pickle.load(fin2)
     for lang in docs:
       # the data might be too much for the RAM, so yield instead of return.
@@ -137,3 +141,12 @@ def igts():
   """ Yields IGTs from ODIN. """
   for lang, examples in load_odin_pickle():
     yield lang, examples
+    
+def source_sents(intarfile=parentddir+'/data/odin/odin-cleanest.tar'):
+  """ Yield clean sentences from the clean ODIN tarball. """
+  for infile in sorted(read_tarfile(intarfile)):
+    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
+    with codecs.open(infile,'r','utf8') as fin:
+      for line in fin.readlines():
+        sentence = line.strip().split('\t')[0]
+        yield language, sentence
