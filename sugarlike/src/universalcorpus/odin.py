@@ -70,21 +70,9 @@ def load_odin_pickle(ODIN_DIR='../../data/odin/'):
     for lang in docs:
       # the data might be too much for the RAM, so yield instead of return.
       yield (lang, docs[lang])
-
-def load_odin_tarfile():
-  """
-  Loads odin-igts.tar and yield one IGT at a time.
-  
-  """
-  prev_lang = ''
-  
-  for lang, igts in load_odin_pickle():
-    for igt in igts:
-      print lang, igt
-      
+ 
 def pickle2plaintext(testing=False,option='cleanest'):
-  """ Converted ODIN IGTs from the .pk file into tab-delimited plaintexts."""
-  
+  """ Converted ODIN IGTs from the .pk file into tab-delimited plaintexts."""  
   # Makes a temp output directory for the individual files.
   TEMPODIN_DIR = './tmpodin/' # for saving the temp udhr files.
   if not os.path.exists(TEMPODIN_DIR):
@@ -103,18 +91,18 @@ def pickle2plaintext(testing=False,option='cleanest'):
       # Joins the morphemes up into words.
       words = re.sub( ' *- *', '', src)
       
-      # Accepts only IGTs without punctuation.
-      if option == 'cleanest':
+      if option == 'cleanest': # Accepts only IGTs without punctuation.
         if src == '' or any(i for i in string.punctuation if i in src):
           continue
-      elif option == 'cleaner':
+      elif option == 'cleaner': # Removes the example number at the end.  
         patterns = [r"\(.{1,}\)",r"[\(\)]"]
         for pat in patterns:
           src = re.sub(pat,'',src)
-      else:
+      else: # Accepts IGTs as they are.
         if src == '':
           continue
-        
+      
+      # src, eng, gloss, cite = d[0], d[1], d[2], d[3]
       tab_igts.append([words, morphemes, remove_tags(d[1]), \
             remove_tags(d[2]), d[3]])
     if len(tab_igts) > 0:
@@ -143,5 +131,3 @@ def pickle2plaintext(testing=False,option='cleanest'):
       make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
-
-##pickle2plaintext(option="cleaner")
