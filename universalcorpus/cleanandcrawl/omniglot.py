@@ -177,6 +177,7 @@ def crawl_and_clean_babel_pages():
     time.sleep(random.randrange(5,10))
     
 def rename_omniglotphrase_tarfile(intarfile):
+  """ Rename the files and use ISO codes instead of full language names. """
   TEMP_DIR = tempfile.mkdtemp()
   with tarfile.open(intarfile) as tf:
     for member in tf.getmembers():

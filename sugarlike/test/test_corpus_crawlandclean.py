@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import tarfile, codecs, tempfile, os
-import sys; sys.path.append('../src/')
-from universalcorpus import omniglot, udhr, odin
+import omniglot, udhr, odin
 import ethnologue
 
 def test_tarfile_for_utf8(intarfile):
@@ -76,7 +75,6 @@ def test_load_language_families():
   print "#language_families:",numfam
   print "#language:",numlang
 
-# DEPRECATED.
 def test_load_odin_examples():
   """
   The load_odin_examples() function loads the odin igts examples from
@@ -87,12 +85,9 @@ def test_load_odin_examples():
     break
 
 test_omniglot_get_phrase()
-test_udhr_convert_to_utf8()
-
-#test_load_odin_examples()
-
-
-#test_load_language_families()
+##test_udhr_convert_to_utf8()
+##test_load_odin_examples()
+##test_load_language_families()
 
 
 #for lang, examples in odin.load_odin_examples():
