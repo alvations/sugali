@@ -13,7 +13,7 @@ except:
   from BeautifulSoup import BeautifulSoup as bs
 #bs.find_all = getattr(bs, 'find_all',False) or getattr(bs, 'findAll')
 
-def get_odin_igts(ODINFILE = '../../data/odin/odin-full.tar'):
+def get_odin_igts(ODINFILE = '../data/odin/odin-full.tar'):
   """
   Extracts the examples from the ODIN igts and returns a defaultdict(list),
   where the keys are the lang iso codes and values are the examples.
@@ -49,7 +49,7 @@ def get_odin_igts(ODINFILE = '../../data/odin/odin-full.tar'):
             raise; print eg
   return docs
 
-def load_odin_pickle(ODIN_DIR='../../data/odin/'):
+def load_odin_pickle(ODIN_DIR='../data/odin/'):
   """
   Loads odin-docs.pk and yield one IGT at a time.
   
@@ -131,3 +131,4 @@ def pickle2plaintext(testing=False,option='cleanest'):
       make_tarfile('../../data/odin/odin-'+option+'.tar',TEMPODIN_DIR)  
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
+
