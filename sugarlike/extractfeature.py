@@ -27,16 +27,7 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                       for i in text.split()]))
 
-# DEPRECATED: use extract_sentence_from_tarfile()         
-def extract_udhr_sentences(intarfile):
-  """ Extracts char ngrams features from udhr. """
-  for infile in read_tarfile(intarfile):
-    #language = infile.split('/')[-1][:3]
-    language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
-    with codecs.open(infile,'r','utf8') as fin:
-      for sentence in fin.readlines():
-        yield language, sentence
-
+'''
 # Informal tests.
 data_source = {'odin':'../../data/odin/odin-cleaner.tar',
               'udhr':'../../data/udhr/udhr-unicode.tar',
@@ -60,3 +51,4 @@ for s in data_source:
     pickle.dump(charngrams, fout)
   with codecs.open(s+'-word.pk','wb') as fout:
     pickle.dump(charngrams, fout)
+'''
