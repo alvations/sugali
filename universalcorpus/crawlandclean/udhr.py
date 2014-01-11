@@ -107,3 +107,7 @@ def documents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
 def sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
           bysentence=True):
   return documents(intarfile, bysentence)
+
+def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+          bysentence=True):
+  return sents(intarfile, bysentence)
