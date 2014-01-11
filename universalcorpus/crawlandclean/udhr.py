@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import os
-# Access modules from parent dir.
+# Access modules from parent dir, see http://goo.gl/dZ5HVk
+import os, sys
 parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-import sys; sys.path.append(parentddir)
+sys.path.append(parentddir)
+
 
 import codecs, os, zipfile, urllib, urllib2, tempfile, shutil, re, io
 from unicodize import is_utf8, what_the_encoding
