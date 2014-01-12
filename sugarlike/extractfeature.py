@@ -23,3 +23,79 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                       for i in text.split()]))
 
+def extract_feature_from_datasource(data_source, outputpath):
+  """ Returns a Counter object with the ngrams/word counts. """
+  import tarfile, codecs, os
+  import cPickle as pickle
+  from collections import defaultdict, Counter
+  from universalcorpus.miniethnologue import ISO2LANG
+  from universalcorpus import odin, omniglot, udhr
+  
+  assert data_source in ['odin','omniglot','udhr','crubadan','wiki'], \
+        'Only data from crubadan/odin/ominglot/udhr/wikipedia available.'
+  
+  datalost = set() # To keep track of which languages not in ISO.
+  charngrams = defaultdict(Counter)
+  wordfreqs = defaultdict(Counter)
+
+  if data_source in ['odin','omniglot','udhr']:
+    for lang, sent in locals()[data_source].source_sents():
+      ##print data_source, lang
+      if lang in ISO2LANG:
+        for n in range(1,5): # Generates 1-5character ngrams.
+          charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
+        wordfreqs[lang]+=Counter(sent.split())
+      else:
+        datalost.add((data_source, lang))
+  elif data_source == 'crubadan':
+    charngrams, wordfreqs, datalost = crubadan2counters()
+    
+  if outputpath and os.path.exists(outputpath):
+    with codecs.open(outputpath+'/'+data_source+'-char.pk','wb') as fout:
+      pickle.dump(charngrams, fout)
+    with codecs.open(outputpath+'/'+data_source+'-word.pk','wb') as fout:
+      pickle.dump(wordfreqs, fout)
+        
+    return charngrams, wordfreqs, datalost
+    
+  #elif data_source == 'crubadan':
+  #  with ZipFile('crub-131119.zip','r') as myzip:
+  
+def crubadan2counters(crubadanfile='crub-131119.zip'):
+  """ 
+  Returns the character ngrams, word frequences and list of files that are 
+  in crubadan but not listed in the ISO code.
+  """
+  import os, zipfile
+  from universalcorpus.miniethnologue import ISO2LANG
+  from collections import defaultdict, Counter
+  crubadanfile = os.path.dirname(__file__) + \
+                     '/../universalcorpus/data/crubadan/' + crubadanfile
+  assert os.path.exists(crubadanfile)
+  
+  charngrams = defaultdict(Counter)
+  wordfreqs = defaultdict(Counter)
+  datalost = set()
+  
+  with zipfile.ZipFile(crubadanfile,'r') as inzipfile:
+    for infile in inzipfile.namelist():
+      path, filename = os.path.split(infile)
+      lang = filename.rpartition('.')[0]
+      if lang in ISO2LANG:
+        print 'crubadan', infile, lang
+        for line in inzipfile.open(infile):
+          key, count = line.strip().split(' ')
+          if 'words' in path: # Updates wordfreq
+            wordfreqs[lang][key] = int(count)
+          if 'chars' in path: # Updates charngrams
+            charngrams[lang][key] = int(count)
+      else:
+        datalost.add(infile)
+  return charngrams, wordfreqs, datalost
+
+'''#Informal Test:
+#extract_feature_from_datasource('crubadan', '.')
+extract_feature_from_datasource('odin', '.')
+extract_feature_from_datasource('omniglot', '.')
+extract_feature_from_datasource('udhr', '.')
+'''
