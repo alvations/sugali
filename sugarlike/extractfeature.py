@@ -4,7 +4,7 @@ import sys; sys.path.append('../') # Access modules from parent dir.
 
 from itertools import chain
 
-def word2ngrams(text, n=3, option='char', with_word_boundary=False, ):
+def word2ngrams(text, n=3, option='char', with_word_boundary=False):
   """ Convert text into character ngrams. """
   text = text.lower()
   if option == 'char':
@@ -118,9 +118,19 @@ def get_features(data_source, language=None, option=None):
     return charngs, wordfqs
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
+
 '''
 #Informal Test:
-x = get_features('odin','xxx','char')
-x = get_features('odin','deu','char')
+x = get_features('odin','xxx','char') # Gets nothing since there is no lang xxx.
+
+x = get_features('odin','deu','char') # Gets feature for 1 language.
 print(x)
+
+y = get_features('odin',option='char') # Gets feature for 1 language.
+for i in y:
+  print(y[i])
 '''
+
+
+
+
