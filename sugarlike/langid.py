@@ -21,16 +21,37 @@ def featurize(text, all_features):
   """ Inputs a sentence string and outputs the np.array() """
   return np.array([Counter(sentence2ngrams(text))[j] for j in all_features])
 
-def sugarlid_mnb(text):
-  from sklearn.naive_bayes import MultinomialNB
-  featureset, tags, allfeatures = features2numpy('omniglot')
-  mnb = MultinomialNB()
-  guess = mnb.fit(featureset, tags).predict_proba(featurize(text, allfeatures))
+def sugarlid_nb(text, nbc='mnb'):
+  """ Generic Naive Bayes sugarlid. """
+  featureset, tags, allfeatures = features2numpy('udhr')
+  if nbc == "mnb":
+    from sklearn.naive_bayes import MultinomialNB
+    nb = MultinomialNB()
+  elif nbc == "gnb":
+    from sklearn.naive_bayes import GaussianNB
+    nb = GaussianNB()
+  elif nbc == 'bnb':
+    from sklearn.naive_bayes import BernoulliNB
+    nb = BernoulliNB()
+  guess = nb.fit(featureset, tags).predict_proba(featurize(text, allfeatures))
   return sorted(zip(guess.tolist()[0], tags), reverse=True)
   
+def sugarlid_mnb(text):
+  """ Ducktype for Multinomial Naive Bayes sugarlid. """
+  return sugarlid_nb(text,'mnb')
+  
+def sugarlid_gnb(text):
+  """ Ducktype for Gaussian Naive Bayes sugarlid. """
+  return sugarlid_nb(text,'gnb')
+
+def sugarlid_bnb(text):
+  """ Ducktype for Bernoulli Naive Bayes sugarlid. """
+  return sugarlid_nb(text,'bnb')
+  
 def sugarlid_cosine(text):
+  """ Cosine Vector based sugarlid. """
   from cosine import cosine_similarity
-  char_ngrams = get_features('omniglot', option='char')
+  char_ngrams = get_features('udhr', option='char')
   query_vector = " ".join(sentence2ngrams(text))
   results = []
   for i in char_ngrams:
@@ -43,4 +64,6 @@ def sugarlid_cosine(text):
   
 t = 'ich bin schwanger'
 print sugarlid_mnb(t)[:10]
+print sugarlid_gnb(t)[:10]
+print sugarlid_bnb(t)[:10]
 print sugarlid_cosine(t)[:10]
