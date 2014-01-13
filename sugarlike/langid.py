@@ -11,10 +11,10 @@ def features2numpy(data_source, option="char"):
   all_tags = [i for i in featureset]
   data, target = [], []
   for lang in featureset:
-    data.append([featureset[i][j] for j in all_features])
+    data.append([featureset[lang][j] for j in all_features])
     target.append(lang)
     # Sanity check
-    #print [(j,character_ngrams[i][j]) for j in all_features if character_ngrams[i][j] > 0]
+    ##print [(j,featureset[lang][j]) for j in all_features if featureset[lang][j] > 0]
   return np.array(data), np.array(target), all_features
 
 def featurize(text, all_features):
@@ -23,15 +23,14 @@ def featurize(text, all_features):
 
 def sugarlid_mnb(text):
   from sklearn.naive_bayes import MultinomialNB
-  featureset, tags, allfeatures = features2numpy('odin')
+  featureset, tags, allfeatures = features2numpy('omniglot')
   mnb = MultinomialNB()
   guess = mnb.fit(featureset, tags).predict_proba(featurize(text, allfeatures))
-  print zip(guess.tolist()[0], tags)
+  return sorted(zip(guess.tolist()[0], tags), reverse=True)
   
 def sugarlid_cosine(text):
   from cosine import cosine_similarity
-  
-  char_ngrams = get_features('odin', option='char')
+  char_ngrams = get_features('omniglot', option='char')
   query_vector = " ".join(sentence2ngrams(text))
   results = []
   for i in char_ngrams:
@@ -40,8 +39,8 @@ def sugarlid_cosine(text):
     score = cosine_similarity(query_vector, lang_vector)
     if score > 0:
       results.append((score,i))
-  print sorted(results, reverse=True)
+  return sorted(results, reverse=True)
   
 t = 'ich bin schwanger'
-sugarlid_mnb(t)
-sugarlid_cosine(t)
+print sugarlid_mnb(t)[:10]
+print sugarlid_cosine(t)[:10]
