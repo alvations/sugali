@@ -34,6 +34,7 @@ def sugarlid_nb(text, nbc='mnb'):
     from sklearn.naive_bayes import BernoulliNB
     nb = BernoulliNB()
   guess = nb.fit(featureset, tags).predict_proba(featurize(text, allfeatures))
+  
   return sorted(zip(guess.tolist()[0], tags), reverse=True)
   
 def sugarlid_mnb(text):

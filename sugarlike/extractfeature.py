@@ -114,10 +114,19 @@ def get_features(data_source, language=None, option=None):
     result = charngs[language] if language else charngs
   elif option == 'word':
     result = wordfqs[language] if language else wordfqs
+  elif 'gram' in option:
+    from collections import Counter, defaultdict
+    _result = charngs[language] if language else charngs
+    result = defaultdict(Counter)
+    for i in _result:
+      result[i] = Counter({j:_result[i][j] for j in _result[i] \
+                           if len(j) == int(option[0])})
   if option == None:
     return charngs, wordfqs
+    
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
+  
 
 '''
 #Informal Test:
@@ -129,6 +138,10 @@ print(x)
 y = get_features('odin',option='char') # Gets feature for 1 language.
 for i in y:
   print(y[i])
+  
+x = get_features('odin',option='3gram')
+for i in x:
+  print(i, x[i])
 '''
 
 
