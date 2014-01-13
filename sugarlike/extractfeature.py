@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 import sys; sys.path.append('../') # Access modules from parent dir.
 
 from itertools import chain
@@ -56,10 +56,8 @@ def extract_feature_from_datasource(data_source, outputpath):
     with codecs.open(outputpath+'/'+data_source+'-word.pk','wb') as fout:
       pickle.dump(wordfreqs, fout)
         
-    return charngrams, wordfreqs, datalost
+  return charngrams, wordfreqs, datalost
     
-  #elif data_source == 'crubadan':
-  #  with ZipFile('crub-131119.zip','r') as myzip:
   
 def crubadan2counters(crubadanfile='crub-131119.zip'):
   """ 
@@ -82,7 +80,7 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
       if lang in ISO2LANG:
-        print 'crubadan', infile, lang
+        ##print 'crubadan', infile, lang
         for line in inzipfile.open(infile):
           key, count = line.strip().split(' ')
           if 'words' in path: # Updates wordfreq
@@ -93,9 +91,36 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
         datalost.add(infile)
   return charngrams, wordfreqs, datalost
 
-'''#Informal Test:
-#extract_feature_from_datasource('crubadan', '.')
-extract_feature_from_datasource('odin', '.')
-extract_feature_from_datasource('omniglot', '.')
-extract_feature_from_datasource('udhr', '.')
+def feature_interface(data_source):
+  """ Unpickle the feature pickles if exists else create them. """
+  import cPickle as pickle
+  import os, io
+  
+  if not os.path.exists(data_source+'-char.pk') or \
+  not os.path.exists(data_source+'-word.pk'):
+    extract_feature_from_datasource(data_source, '.')
+  
+  with io.open(data_source+'-char.pk','rb') as fin:
+    charngrams = pickle.load(fin)
+  with io.open(data_source+'-word.pk','rb') as fin2:
+    wordfreqs = pickle.load(fin2)
+  
+  return charngrams, wordfreqs
+
+def get_features(data_source, language=None, option=None):
+  charngs, wordfqs = feature_interface(data_source)
+  """ Get features given the data_source, language and option"""  
+  if option == 'char':
+    result = charngs[language] if language else charngs
+  elif option == 'word':
+    result = wordfqs[language] if language else wordfqs
+  if option == None:
+    return charngs, wordfqs
+  return result if result else print('%s does not have %s features' \
+                                     % (data_source, language))
+'''
+#Informal Test:
+x = get_features('odin','xxx','char')
+x = get_features('odin','deu','char')
+print(x)
 '''
