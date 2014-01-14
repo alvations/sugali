@@ -58,17 +58,18 @@ print MLEestimate(langMLE,test)
 
 from extractfeature import sentence2ngrams, get_features
 s = "ich bin schwanger"
-test = Counter(sentence2ngrams(s))
+test = Counter(sentence2ngrams(s, with_word_boundary=True))
 print test
 
-trainset = get_features('odin')
+trainset = get_features('odin', option='3gram')
 sgt_results = []
 mle_results = []
 
 for lang in trainset:
   train = trainset[lang]
-  sgt_results.append((SGTestimate(SGT(train), test),lang))
-  mle_results.append((MLEestimate(MLE(train), test),lang))
-  
+  if train: # no data from feature extractor (PLEASE CHECK)
+    sgt_results.append((SGTestimate(SGT(train), test),lang))
+    #mle_results.append((MLEestimate(MLE(train), test),lang))
+
 for i in sorted(sgt_results, reverse=True)[:10]:
   print i

@@ -134,10 +134,6 @@ def get_features(data_source, language=None, option='char'):
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 
-get_features('odin')
-get_features('omniglot')
-get_features('udhr')
-get_features('crubadan')
 
 '''
 #Informal Test:
