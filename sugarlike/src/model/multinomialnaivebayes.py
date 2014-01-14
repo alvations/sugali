@@ -45,9 +45,7 @@ def MLEestimate(language, input, oov=-float('inf')):
       result += oov
   return exp(result)
 
-
 '''
-
 train = Counter({'a':1,'b':5,'c':2})
 test = Counter({'b':1,'a':1})
 
@@ -56,5 +54,4 @@ langMLE = MLE(train)
 
 print SGTestimate(langSGT,test)
 print MLEestimate(langMLE,test)
-
 '''
