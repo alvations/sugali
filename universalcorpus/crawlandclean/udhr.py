@@ -92,7 +92,7 @@ def enumerate_udhr(intarfile):
       languages[lang].append(lang)
   return languages
 
-def documents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+def documents(intarfile=parentddir+'/data/unicode/udhr-unicode.tar', \
               bysentence=False):
   """ Yields UDHR by documents. """
   for infile in read_tarfile(intarfile):
@@ -105,10 +105,10 @@ def documents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
       else:
         yield language, fin.read()
         
-def sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+def sents(intarfile=parentddir+'/data/unicode/udhr-unicode.tar', \
           bysentence=True):
   return documents(intarfile, bysentence)
 
-def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
+def source_sents(intarfile=parentddir+'/data/unicode/udhr-unicode.tar', \
           bysentence=True):
   return sents(intarfile, bysentence)
