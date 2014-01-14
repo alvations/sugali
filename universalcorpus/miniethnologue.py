@@ -8594,6 +8594,8 @@ for i in iso6963.split('\n'):
 def langiso(languagename):
   return getKey(ISO2LANG, languagename)
 
+#TODO: mapping wiki lang code to ISO code.
+
 def macrolang():
   macro2lang = defaultdict(list)
   for i in iso6395.split('\n'):

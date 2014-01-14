@@ -29,6 +29,12 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   if option == 'word':
     from nltk.util import ngrams
     return list(ngrams(text.split(), n))
+  
+  if "gram" in option:
+    n = int(option[0])
+    return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
+                        for i in text.split()]))
+
 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -114,7 +120,8 @@ def feature_interface(data_source):
   
   return charngrams, wordfreqs
 
-def get_features(data_source, language=None, option='char'):
+def get_features(data_source, language=None, option='char', \
+                 with_word_boundary=True):
   charngs, wordfqs = feature_interface(data_source)
   """ Get features given the data_source, language and option"""  
   if option == 'char':
@@ -130,7 +137,10 @@ def get_features(data_source, language=None, option='char'):
                            if len(j) == int(option[0])})
   if option == None:
     return charngs, wordfqs
-    
+  
+  if not with_word_boundary: #TODO: 
+    pass
+  
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 

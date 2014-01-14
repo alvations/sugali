@@ -13,8 +13,6 @@ except:
   from BeautifulSoup import BeautifulSoup # probably not working. Installation of BeautifulSoup 4 necessary
 
 
-
-
 def extract_wikipedia(WIKIDUMP_DIR):
   run_wikiextractor(WIKIDUMP_DIR, WIKITEXTS_DIR='../data/wikipedia/texts/')
   print('Wikipedia texts are extracted.')

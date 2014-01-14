@@ -55,11 +55,12 @@ def sugarlid_cosine(text, option='3gram'):
   char_ngrams = get_features('udhr', option=option)
   ##for i in char_ngrams:
   ##  print char_ngrams[i]
+  #print sentence2ngrams(text, option=option)
   try:
     query_vector = " ".join(sentence2ngrams(text, option=option))
   except TypeError:
     query_vector = " ".join(["_".join(i) for i in \
-                             sentence2ngrams(text, n=2, option=option)])
+                             sentence2ngrams(text, option=option)])
     print query_vector
   results = []
   for i in char_ngrams:
@@ -71,7 +72,7 @@ def sugarlid_cosine(text, option='3gram'):
   return sorted(results, reverse=True)
   
 t = 'ich bin schwanger'
-#print sugarlid_mnb(t, option='2gram')[:10]
-#print sugarlid_gnb(t, option='2gram')[:10]
-#print sugarlid_bnb(t, option='2gram')[:10]
-print sugarlid_cosine(t, option='word')[:10]
+#print sugarlid_mnb(t, option='3gram')[:10]
+#print sugarlid_gnb(t, option='3gram')[:10]
+#print sugarlid_bnb(t, option='3gram')[:10]
+print sugarlid_cosine(t, option='3gram')[:10]
