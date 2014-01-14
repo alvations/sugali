@@ -6,11 +6,11 @@ from nltk import FreqDist
 def SGT(data, vocab=None):
   '''
   Calculates a multinomial model with Simple Good-Turing smoothing.
-  By default, the estimated vocabulary size is twice the observed size.
+  By default, the estimated vocabulary size is twice the observed size, or 10 000, whichever is larger
   Assumes frequencies in the form of a Counter.
   '''
   if vocab == None:
-    vocab = 2 * len(data)
+    vocab = max( 2 * len(data), 10000)
   return SGTdist(FreqDist(data),vocab)
 
 def SGTestimate(language, input):
@@ -65,6 +65,17 @@ trainset = get_features('odin', option='3gram')
 sgt_results = []
 mle_results = []
 
+'''
+german = SGT(trainset['deu'])
+wakawaka = SGT(trainset['wkw'])
+
+for x in test:
+  print x, trainset['deu'][x], SGTestimate(german, Counter({x:1}))
+  print x, trainset['wkw'][x], SGTestimate(wakawaka, Counter({x:1}))
+
+print len(trainset['wkw'])
+
+'''
 for lang in trainset:
   train = trainset[lang]
   if train: # no data from feature extractor (PLEASE CHECK)
