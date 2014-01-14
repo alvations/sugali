@@ -47,7 +47,8 @@ def extract_feature_from_datasource(data_source, outputpath):
 
   if data_source in ['odin','omniglot','udhr']:
     for lang, sent in locals()[data_source].source_sents():
-      print (data_source, lang, 'Creating featuresets, please be patient.')
+      print (data_source, lang, 'Creating feature sets, please be patient...')
+      print (sent)
       if lang in ISO2LANG:
         for n in range(1,5): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
@@ -64,7 +65,6 @@ def extract_feature_from_datasource(data_source, outputpath):
       pickle.dump(wordfreqs, fout)
         
   return charngrams, wordfreqs, datalost
-    
   
 def crubadan2counters(crubadanfile='crub-131119.zip'):
   """ 
@@ -87,7 +87,7 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
       if lang in ISO2LANG:
-        print ('crubadan', infile, lang, 'Creating featuresets, please be patient.')
+        print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
           key, count = line.strip().split(' ')
           if 'words' in path: # Updates wordfreq
@@ -113,10 +113,6 @@ def feature_interface(data_source):
     wordfreqs = pickle.load(fin2)
   
   return charngrams, wordfreqs
-
-feature_interface('odin')
-feature_interface('omniglot')
-feature_interface('udhr')
 
 def get_features(data_source, language=None, option='char'):
   charngs, wordfqs = feature_interface(data_source)
