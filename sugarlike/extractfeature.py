@@ -21,18 +21,14 @@ def word2ngrams(text, n=3, option='char', with_word_boundary=False):
       char_ngrams+=["<"+text[:2],text[-2:]+">"]
     return char_ngrams
 
-  if option == 'word':
-    if n > len(text.split()):
-      n = len(text.split()) 
-    word_ngrams = [j for j in zip(*[text.split()[i:] for i in range(n)])]
-    return word_ngrams
-
 def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   """ Takes a document/sentence, convert into ngrams"""
-  return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
-                      for i in text.split()]))
-
-##print(sentence2ngrams('ich bin schwanger',n=2, option='word'))
+  if option == 'char':
+    return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
+                        for i in text.split()]))
+  if option == 'word':
+    from nltk.util import ngrams
+    return list(ngrams(text.split(), n))
 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -51,7 +47,7 @@ def extract_feature_from_datasource(data_source, outputpath):
 
   if data_source in ['odin','omniglot','udhr']:
     for lang, sent in locals()[data_source].source_sents():
-      ##print data_source, lang
+      print (data_source, lang, 'Creating featuresets, please be patient.')
       if lang in ISO2LANG:
         for n in range(1,5): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
@@ -91,7 +87,7 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
       if lang in ISO2LANG:
-        ##print 'crubadan', infile, lang
+        print ('crubadan', infile, lang, 'Creating featuresets, please be patient.')
         for line in inzipfile.open(infile):
           key, count = line.strip().split(' ')
           if 'words' in path: # Updates wordfreq
@@ -117,6 +113,10 @@ def feature_interface(data_source):
     wordfreqs = pickle.load(fin2)
   
   return charngrams, wordfreqs
+
+feature_interface('odin')
+feature_interface('omniglot')
+feature_interface('udhr')
 
 def get_features(data_source, language=None, option='char'):
   charngs, wordfqs = feature_interface(data_source)
