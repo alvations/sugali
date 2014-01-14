@@ -48,7 +48,7 @@ def extract_feature_from_datasource(data_source, outputpath):
   if data_source in ['odin','omniglot','udhr']:
     for lang, sent in locals()[data_source].source_sents():
       print (data_source, lang, 'Creating feature sets, please be patient...')
-      print (sent)
+      ##print (sent)
       if lang in ISO2LANG:
         for n in range(1,5): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
@@ -133,7 +133,11 @@ def get_features(data_source, language=None, option='char'):
     
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
-  
+
+get_features('odin')
+get_features('omniglot')
+get_features('udhr')
+get_features('crubadan')
 
 '''
 #Informal Test:
