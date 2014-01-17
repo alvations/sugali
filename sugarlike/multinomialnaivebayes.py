@@ -1,16 +1,22 @@
+#!/usr/bin/env python -*- coding: utf-8 -*-
+
+#import sys; sys.path.append('../')
+
 from collections import Counter
 from math import log, exp
 from nltk.probability import SimpleGoodTuringProbDist as SGTdist
 from nltk import FreqDist
 
-def SGT(data, vocab=None):
+import sys; reload(sys); sys.setdefaultencoding("utf-8")
+
+def SGT(data, vocab=None, min=10000):
   '''
   Calculates a multinomial model with Simple Good-Turing smoothing.
   By default, the estimated vocabulary size is twice the observed size, or 10 000, whichever is larger
   Assumes frequencies in the form of a Counter.
   '''
   if vocab == None:
-    vocab = max( 2 * len(data), 10000)
+    vocab = max( 2 * len(data), min)
   return SGTdist(FreqDist(data),vocab)
 
 def SGTestimate(language, input):
@@ -21,7 +27,16 @@ def SGTestimate(language, input):
   result = 0
   for x in input:
     result += language.logprob(x) * input[x]
-  return exp(result)
+  return result
+
+def combined_estimate(classifiers, input):
+  '''
+  Naively combines a set of SGT-smoothed models.
+  '''
+  result = 0
+  for model in classifiers:
+    result += SGTestimate(model, input)
+  return result
 
 def MLE(freq):
   '''
@@ -43,7 +58,7 @@ def MLEestimate(language, input, oov=-float('inf')):
       result += language[x] * input[x]
     except KeyError:  # Out of vocabulary items
       result += oov
-  return exp(result)
+  return result
 
 '''
 train = Counter({'a':1,'b':5,'c':2})
@@ -57,30 +72,21 @@ print MLEestimate(langMLE,test)
 '''
 
 from extractfeature import sentence2ngrams, get_features
-s = "ich bin schwanger"
+s = u"je m'appelle Claude"
 test = Counter(sentence2ngrams(s, with_word_boundary=True))
 print test
 
 trainset = get_features('odin', option='3gram')
 sgt_results = []
-mle_results = []
+#mle_results = []
 
-'''
-german = SGT(trainset['deu'])
-wakawaka = SGT(trainset['wkw'])
 
-for x in test:
-  print x, trainset['deu'][x], SGTestimate(german, Counter({x:1}))
-  print x, trainset['wkw'][x], SGTestimate(wakawaka, Counter({x:1}))
-
-print len(trainset['wkw'])
-
-'''
 for lang in trainset:
   train = trainset[lang]
   if train: # no data from feature extractor (PLEASE CHECK)
-    sgt_results.append((SGTestimate(SGT(train), test),lang))
+    sgt_results.append((SGTestimate(SGT(train, min=3000), test),lang))
     #mle_results.append((MLEestimate(MLE(train), test),lang))
 
 for i in sorted(sgt_results, reverse=True)[:10]:
   print i
+
