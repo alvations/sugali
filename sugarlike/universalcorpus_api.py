@@ -21,12 +21,11 @@ for lang, source, translation in omniglot.phrases():
 for lang, sent in omniglot.source_sents():
   print lang, sent
 
-
 # Example to access UDHR corpus by documents.
 for lang, doc in udhr.documents():
   print lang, doc
 
-# Example to acces UDHR corpy by sentences.
-for lang, sent in udhr.documents():
+# Example to acces UDHR corpus by sentences.
+for lang, sent in udhr.source_sents():
   print lang, sent
   
