@@ -8861,7 +8861,7 @@ def langiso(languagename):
   return getKey(ISO2LANG, languagename)
 
 def wikicode2iso(wikicode):
-  return langiso({i.split()[4]:i.split()[0] \
+  return langiso({i.split('  ')[3]:i.split('  ')[1].lower() \
                   for i in listofwikis.split('\n')}[wikicode].lower())
 
 def macrolang():
