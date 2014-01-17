@@ -3,6 +3,7 @@
 import codecs
 from collections import defaultdict
 
+# from http://www-01.sil.org/iso639-3/download.asp
 iso6963 = """Id  Print_Name  Inverted_Name
 aaa  Ghotuo  Ghotuo
 aab  Alumu-Tesu  Alumu-Tesu
