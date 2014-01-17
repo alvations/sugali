@@ -35,6 +35,9 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
     return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                         for i in text.split()]))
 
+  if "all" in option:
+    return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,5)]))
+
 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -92,9 +95,8 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
     for infile in inzipfile.namelist():
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
+      if '-' in lang: lang = lang.rpartition('-')[0]
       if lang in ISO2LANG:
-        if lang.startswith('fr'):
-          print(lang)
         print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
           key, count = line.strip().split(' ')
@@ -107,7 +109,6 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
         datalost.add(infile)
   return charngrams, wordfreqs, datalost
 
-crubadan2counters()
 
 def feature_interface(data_source):
   """ Unpickle the feature pickles if exists else create them. """
