@@ -8583,6 +8583,272 @@ zho  Chinese  cdo  Min Dong Chinese
 zza  Zaza  diq  Dimli (individual language)
    kiu  Kirmanjki (individual language)""" 
 
+listofwikis = """English Wikipedia  English  English  en  6
+German Wikipedia  German  Latn  de  6
+French Wikipedia  French  Latn  fr  6
+Dutch Wikipedia  Dutch  Latn  nl  6
+Italian Wikipedia  Italian  Latn  it  6
+Spanish Wikipedia  Spanish  Latn  es  6
+Russian Wikipedia  Russian  Cyrl  ru  6
+Swedish Wikipedia  Swedish  Latn  sv  6
+Polish Wikipedia  Polish  Latn  pl  6
+Japanese Wikipedia  Japanese  Jpan  ja  5
+Portuguese Wikipedia  Portuguese  English  pt  6
+Arabic Wikipedia  Arabic  Arab  ar  6
+Chinese Wikipedia  Chinese  Hans/Hant  zh  6
+Ukrainian Wikipedia  Ukrainian  Cyrl  uk  5
+Catalan Wikipedia  Catalan  Latn  ca  5
+Bokmål/Riksmål Wikipedia  Norwegian (Bokmål)  Latn  no  5
+Finnish Wikipedia  Finnish  Latn  fi  5
+Czech Wikipedia  Czech  Latn  cs  5
+Hungarian Wikipedia  Hungarian  Latn  hu  5
+Turkish Wikipedia  Turkish  Latn  tr  5
+Romanian Wikipedia  Romanian  Latn  ro  5
+Swahili Wikipedia  Swahili  English  sw  5
+Korean Wikipedia  Korean  Hang  ko  5
+Kazakh Wikipedia  Kazakh  Cyrl / Latin / Arab  kk  5
+Vietnamese Wikipedia  Vietnamese  Latn  vi  5
+Danish Wikipedia  Danish  Latn  da  5
+Esperanto Wikipedia  Esperanto  Latn  eo  5
+Serbian Wikipedia  Serbian  Cyrl/Latn  sr  5
+Indonesian Wikipedia  Indonesian  Latn  id  5
+Lithuanian Wikipedia  Lithuanian  Latn  lt  5
+Volapük Wikipedia  Volapük  Latn  vo  5
+Slovak Wikipedia  Slovak  Latn  sk  5
+Hebrew Wikipedia  Hebrew  Hebr  he  5
+Persian Wikipedia  Persian  Perso  fa  5
+Bulgarian Wikipedia  Bulgarian  Cyrl  bg  5
+Slovene Wikipedia  Slovene  Latn  sl  5
+Basque Wikipedia  Basque  Latn  eu  5
+Waray-Waray Wikipedia  Waray-Waray  Latn  war  5
+Lombard Wikipedia  Lombard  Latn  lmo  4
+Estonian Wikipedia  Estonian  Latn  et  5
+Croatian Wikipedia  Croatian  Latn  hr  5
+Newar Wikipedia  Newar / Nepal Bhasa  Deva  new  4
+Telugu Wikipedia  Telugu  Telu  te  4
+Nynorsk Wikipedia  Norwegian (Nynorsk)  Latn  nn  4
+Thai Wikipedia  Thai  Thai  th  4
+Galician Wikipedia  Galician  Latn  gl  4
+Greek Wikipedia  Greek  Grek  el  4
+Cebuano Wikipedia  Cebuano  Latn  ceb  4
+Simple English Wikipedia  Simple English  Latn  simple  4
+Malay Wikipedia  Malay  Latn  ms  5
+Haitian Creole Wikipedia  Haitian  Latn  ht  4
+Bosnian Wikipedia  Bosnian  Latn  bs  4
+Bishnupriya Manipuri Wikipedia  Bishnupriya Manipuri  Beng  bpy  4
+Luxembourgish Wikipedia  Luxembourgish  Latn  lb  4
+Georgian Wikipedia  Georgian  Geor  ka  4
+Icelandic Wikipedia  Icelandic  Latn  is  4
+Albanian Wikipedia  Albanian  Latn  sq  4
+Latin Wikipedia  Latin  Latn  la  4
+Breton Wikipedia  Breton  Latn  br  4
+Hindi Wikipedia  Hindi  Deva  hi  5
+Azerbaijani Wikipedia  Azerbaijani  Latn/Arab  az  4
+Bengali Wikipedia  Bengali  Beng  bn  4
+Macedonian Wikipedia  Macedonian  Cyrl  mk  4
+Marathi Wikipedia  Marathi  Deva  mr  4
+Serbo-Croatian Wikipedia  Serbo-Croatian  Latn/Cyrl  sh  4
+Tagalog Wikipedia  Tagalog  Latn  tl  4
+Welsh Wikipedia  Welsh  Latn  cy  4
+Ido Wikipedia  Ido  Latn  io  4
+Piedmontese Wikipedia  Piedmontese  Latn  pms  4
+Latvian Wikipedia  Latvian  Latn  lv  4
+Tamil Wikipedia  Tamil  Taml  ta  4
+Sundanese Wikipedia  Sundanese  Latn  su  4
+Occitan Wikipedia  Occitan  Latn  oc  4
+Javanese Wikipedia  Javanese  Latn  jv  4
+Neapolitan Wikipedia  Neapolitan  Latn  nap  4
+Low Saxon Wikipedia  Low Saxon  Latn  nds  4
+Sicilian Wikipedia  Sicilian  Latn  scn  4
+Belarusian Wikipedia  Belarusian  Cyrl  be  4
+Asturian Wikipedia  Asturian  Latn  ast  4
+Kurdish Wikipedia  Kurdish  Latn/Arab  ku  4
+Walloon Wikipedia  Walloon  Latn  wa  4
+Afrikaans Wikipedia  Afrikaans  Latn  af  4
+Belarusian (Taraškievica) Wikipedia  Belarusian (Taraškievica)  Cyrl  be-x-old  4
+Aragonese Wikipedia  Aragonese  Latn  an  4
+Ripuarian Wikipedia  Ripuarian  Latn  ksh  3
+Silesian Wikipedia  Silesian  Latn  szl  3
+West Frisian Wikipedia  West Frisian  Latn  fy  4
+North Frisian Wikipedia  North Frisian  Latn  frr  3
+Cantonese Wikipedia  Cantonese  Hant  yue  4
+Urdu Wikipedia  Urdu  Arab  ur  4
+Interlingua Wikipedia  Interlingua  Latn/Arab  ia  4
+Irish Wikipedia  Irish  Latn  ga  4
+Yiddish Wikipedia  Yiddish  Hebr  yi  3
+Alemannic Wikipedia  Alemannic  Latn  als  4
+Armenian Wikipedia  Armenian  Armn  hy  4
+Amharic Wikipedia  Amharic  Geez  am  4
+Aromanian Wikipedia  Aromanian  Latn  roa-rup  4
+Banyumasan Wikipedia  Banyumasan  Latn  map-bms  3
+Bihari Wikipedia  Bihari  Deva  bh  3
+Corsican Wikipedia  Corsican  Latn  co  3
+Chuvash Wikipedia  Chuvash  Latn  cv  4
+Divehi Wikipedia  Divehi  Thaa  dv  3
+Dutch Low Saxon Wikipedia  Dutch Low Saxon  Latn  nds-nl  3
+Faroese Wikipedia  Faroese  Latn  fo  3
+Friulian Wikipedia  Friulian  Latn  fur  3
+Gilaki Wikipedia  Gilaki  Perso  glk  3
+Gujarati Wikipedia  Gujarati  Gujr  gu  4
+Ilokano Wikipedia  Ilokano  Latn  ilo  3
+Kannada Wikipedia  Kannada  Knda  kn  4
+Kapampangan Wikipedia  Kapampangan  Latn  pam  3
+Kashubian Wikipedia  Kashubian  Latn  csb  3
+Khmer Wikipedia  Khmer  Khmr  km  3
+Ligurian Wikipedia  Ligurian  Latn  lij  3
+Limburgish Wikipedia  Limburgish  Latn  li  3
+Malayalam Wikipedia  Malayalam  Mlym  ml  4
+Manx Wikipedia  Manx  Latn  gv  3
+Māori Wikipedia  Māori  Latn  mi  3
+Maltese Wikipedia  Maltese  Latn  mt  3
+Nāhuatl Wikipedia  Nāhuatl  Latn  nah  3
+Nepali Wikipedia  Nepali  Deva  ne  4
+Norman Wikipedia  Norman  Latn  nrm  3
+Northern Sami Wikipedia  Northern Sami  Latn  se  3
+Novial Wikipedia  Novial  Latn  nov  3
+Quechua Wikipedia  Quechua  Latn  qu  4
+Ossetian Wikipedia  Ossetian  Cyrl  os  3
+Pali Wikipedia  Pali  Deva  pi  3
+Pangasinan Wikipedia  Pangasinan  Latn  pag  3
+Pashto Wikipedia  Pashto  Arab  ps  3
+Pennsylvania German Wikipedia  Pennsylvania German  Latn  pdc  3
+Romansh Wikipedia[c]  Romansh  Latn  rm  3
+Samogitian Wikipedia  Samogitian  Latn  bat-smg  4
+Sanskrit Wikipedia  Sanskrit  Deva  sa  3
+Scottish Gaelic Wikipedia  Scottish Gaelic  Latn  gd  3
+Scots Wikipedia  Scots  Latn  sco  3
+Sardinian Wikipedia  Sardinian  Latn  sc  3
+Sinhalese Wikipedia  Sinhalese  Sinh  si  3
+Tajik Wikipedia  Tajik  Cyrl  tg  3
+Tarantino Wikipedia  Tarantino  Latn  roa-tara  3
+Tatar Wikipedia  Tatar  Cyrl/Latn  tt  4
+Tongan Wikipedia  Tongan  Latn  to  3
+Turkmen Wikipedia  Turkmen  Latn  tk  3
+Upper Sorbian Wikipedia  Upper Sorbian  Latn  hsb  3
+Uzbek Wikipedia  Uzbek  Latn/Cyrl  uz  3
+Venetian Wikipedia  Venetian  Latn  vec  3
+Voro Wikipedia  Võro  Latn  fiu-vro  3
+Wu Wikipedia  Wu  Hans  wuu  3
+West Flemish Wikipedia  West Flemish  Latn  vls  3
+Yoruba Wikipedia  Yoruba  Latn  yo  4
+Zazaki Wikipedia  Zazaki  Latn  diq  4
+Min Nan Wikipedia  Min Nan  Latn  zh-min-nan  3
+Classical Chinese Wikipedia  Classical Chinese  Hant  zh-classical  3
+Franco-Provençal Wikipedia  Franco-Provençal/Arpitan  Latn  frp  3
+Ladino Wikipedia  Ladino  Latn  lad  3
+Bavarian Wikipedia  Bavarian  Latn  bar  3
+Central Bicolano Wikipedia  Central_Bicolano  Latn  bcl  3
+Cornish Wikipedia  Cornish  Latn  kw  3
+Mongolian Wikipedia  Mongolian  Cyrl  mn  3
+Hawaiian Wikipedia  Hawaiian  Latn  haw  3
+Anglo-Saxon Wikipedia  Anglo-Saxon  Latn  ang  3
+Lingala Wikipedia  Lingala  Latn  ln  3
+Interlingue Wikipedia  Interlingue  Latn  ie  3
+Wolof Wikipedia  Wolof  Latn  wo  3
+Tok Pisin Wikipedia  Tok Pisin  Latn  tpi  3
+Tahitian Wikipedia  Tahitian  Latn  ty  2
+Crimean Tatar Wikipedia  Crimean Tatar  Latn  crh  3
+Lojban Wikipedia  Lojban  Latn  jbo  3
+Aymara Wikipedia  Aymara  Latn  ay  3
+Zealandic Wikipedia  Zealandic  Latn  zea  3
+Emilian-Romagnol Wikipedia  Emilian-Romagnol  Latn  eml  3
+Kyrgyz Wikipedia  Kyrgyz  Cyrl  ky  3
+Igbo Wikipedia  Igbo  Latn  ig  2
+Oriya Wikipedia  Oriya  Orya  or  3
+Malagasy Wikipedia  Malagasy  Latn  mg  4
+Zamboanga Chavacano Wikipedia  Zamboanga Chavacano  Latn  cbk-zam  3
+Kongo Wikipedia  Kongo  Latn  kg  2
+Syriac Wikipedia  Syriac  Syrc  arc  3
+Vlax Romani Wikipedia  Vlax Romani  Latn/Deva  rmy  2
+Guarani Wikipedia  Guarani  Latn  gn  3
+Moldovan Wikipedia  Moldovan  Cyrl  mo (closed)  2
+Somali Wikipedia  Somali  Latn  so  3
+Kabyle Wikipedia  Kabyle  Latn  kab  2
+Kashmiri Wikipedia  Kashmiri  Arab/Deva  ks  2
+Saterland Frisian Wikipedia  Saterland Frisian  Latn  stq  3
+Chechen Wikipedia  Chechen  Cyrl  ce  3
+Udmurt Wikipedia  Udmurt  Cyrl  udm  3
+Mazandarani Wikipedia  Mazandarani  Perso  mzn  3
+Papiamentu Wikipedia  Papiamentu  Latn  pap  3
+Old Church Slavonic Wikipedia  Old Church Slavonic  Cyrs  cu  2
+Sakha Wikipedia  Sakha  Cyrl  sah  3
+Tetum Wikipedia  Tetum  Latn  tet  2
+Sindhi Wikipedia  Sindhi  Arab  sd  2
+Lao Wikipedia  Lao  Laoo  lo  2
+Bashkir Wikipedia  Bashkir  Cyrl  ba  3
+Western Punjabi Wikipedia  Punjabi  Shahmukhi  pnb  4
+Iniktitut Wikipedia  Inuktitut  Cans/Latn  iu  2
+Nauruan Wikipedia  Nauruan  Latn  na  2
+Gothic Wikipedia  Gothic  Goth  got  2
+Tibetan Wikipedia  Tibetan  Tibt  bo  3
+Lower Sorbian Wikipedia  Lower Sorbian  Latn  dsb  2
+Cherokee Wikipedia  Cherokee  Cher  chr  2
+Min Dong Wikipedia  Min Dong  Latn  cdo  2
+Hakka Wikipedia  Hakka  Latn  hak  3
+Oromo Wikipedia  Oromo  Latn  om  2
+Burmese Wikipedia  Burmese  Mymr  my  4
+Samoan Wikipedia  Samoan  Latn  sm  2
+Ewe Wikipedia  Ewe  Latn  ee  2
+Picard Wikipedia  Picard  Latn  pcd  3
+Uyghur Wikipedia  Uyghur  Latn/Arab  ug  3
+Assamese Wikipedia  Assamese  Beng  as  2
+Tigrinya Wikipedia  Tigrinya  Ethi  ti  2
+Avar Wikipedia  Avar  Cyrl  av  3
+Bambara Wikipedia  Bambara  Latn  bm  2
+Zulu Wikipedia  Zulu  Latn  zu  2
+Pontic Wikipedia  Pontic  Grek  pnt  2
+Navajo Wikipedia  Navajo  Latn  nv  3
+Cree Wikipedia  Cree  Cans/Latn  cr  2
+Norfolk Wikipedia  Norfolk  Latn  pih  2
+Swati Wikipedia  Swati  Latn  ss  2
+Venda Wikipedia  Venda  Latn  ve  2
+Bislama Wikipedia  Bislama  Latn  bi  2
+Kinyarwanda Wikipedia  Kinyarwanda  Latn  rw  3
+Chamorro Wikipedia  Chamorro  Latn  ch  2
+Egyptian Arabic Wikipedia  Egyptian Arabic  Arab/Latn  arz  3
+Xhosa Wikipedia  Xhosa  Latn  xh  2
+Greenlandic Wikipedia  Greenlandic  Latn  kl  3
+Inupiak Wikipedia  Inupiak  Latn  ik  2
+Buginese Wikipedia  Buginese  Bugi  bug  4
+Dzongkha Wikipedia  Dzongkha  Tibt  dz  2
+Tsonga Wikipedia  Tsonga  Latn  ts  2
+Tswana Wikipedia  Tswana  Latn  tn  2
+Komi Wikipedia  Komi  Cyrl  kv  3
+Tumbuku Wikipedia  Tumbuka  Latn  tum  2
+Kalmyk Wikipedia  Kalmyk  Cyrl  xal  3
+Sesotho Wikipedia  Sesotho  Latn  st  2
+Twi Wikipedia  Twi  Latn  tw  2
+Buryat (Russia) Wikipedia  Buryat (Russia)  Cyrl  bxr  2
+Akan Wikipedia  Akan  Latn  ak  2
+Abkhazian Wikipedia  Abkhazian  Cyrl  ab  2
+Chichewa Wikipedia  Chichewa  Latn  ny  2
+Fijian Wikipedia  Fijian  Latn  fj  2
+Lak Wikipedia  Lak  Cyrl  lbe  3
+Kikuyu Wikipedia  Kikuyu  Latn  ki  2
+Zhuang Wikipedia  Zhuang  Latn  za  2
+Fula Wikipedia  Fula  Latn  ff  2
+Luganda Wikipedia  Luganda  Latn  lg  2
+Shona Wikipedia  Shona  Latn  sn  2
+Hausa Wikipedia  Hausa  Latn  ha  2
+Sango Wikipedia  Sango  Latn  sg  2
+Sichuan Yi Wikipedia  Sichuan Yi  Yiii  ii  1
+Choctaw Wikipedia  Choctaw  Latn  cho  1
+Kirundi Wikipedia  Kirundi  Latn  rn  2
+Marshallese Wikipedia  Marshallese  Latn  mh  1
+Cheyenne Wikipedia  Cheyenne  Latn  chy  2
+Ndonga Wikipedia  Ndonga  Latn  ng  1
+Kuanyama Wikipedia  Kuanyama  Latn  kj  0
+Hiri Motu Wikipedia  Hiri Motu  Latn  ho  0
+Muscogee Wikipedia  Muscogee  Latn  mus  0
+Kanuri Wikipedia  Kanuri  Latn  kr  0
+Herero Wikipedia  Herero  Latn  hz  0
+Moloko Wikipedia  Moloko  Latn  mwl  2
+Punjabi Wikipedia  Punjabi  Guru  pa  3
+Mingrelian Wikipedia  Mingrelian  Geor  xmf  3
+Lezgi Wikipedia  Lezgian  Cyrl  lez  2
+Champenois Wikipedia  Champenoisian  Latn  chm  2"""
+
+
 def getKey(dic, value):
   return [k for k,v in sorted(dic.items()) if value in v]
 
@@ -8594,7 +8860,9 @@ for i in iso6963.split('\n'):
 def langiso(languagename):
   return getKey(ISO2LANG, languagename)
 
-#TODO: mapping wiki lang code to ISO code.
+def wikicode2iso(wikicode):
+  return langiso({i.split()[4]:i.split()[0] \
+                  for i in listofwikis.split('\n')}[wikicode].lower())
 
 def macrolang():
   macro2lang = defaultdict(list)
@@ -8609,3 +8877,4 @@ def macrolang():
     
 MACRO2LANG = macrolang()
 ##print len(MACRO2LANG)
+

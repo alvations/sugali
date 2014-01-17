@@ -112,3 +112,4 @@ def sents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
 def source_sents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
           bysentence=True):
   return sents(intarfile, bysentence)
+

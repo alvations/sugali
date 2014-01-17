@@ -76,3 +76,7 @@ t = 'ich bin schwanger'
 #print sugarlid_gnb(t, option='3gram')[:10]
 #print sugarlid_bnb(t, option='3gram')[:10]
 print sugarlid_cosine(t, option='3gram')[:10]
+print sugarlid_cosine(t, option='2gram')[:10]
+print sugarlid_cosine(t, option='1gram')[:10]
+print sugarlid_cosine(t, option='4gram')[:10]
+print sugarlid_cosine(t, option='5gram')[:10]

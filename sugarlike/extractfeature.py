@@ -28,7 +28,7 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
                         for i in text.split()]))
   if option == 'word':
     from nltk.util import ngrams
-    return list(ngrams(text.split(), n))
+    return list(ngrams(text.split(), 1))
   
   if "gram" in option:
     n = int(option[0])
@@ -93,9 +93,12 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
       if lang in ISO2LANG:
+        if lang.startswith('fr'):
+          print(lang)
         print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
           key, count = line.strip().split(' ')
+          
           if 'words' in path: # Updates wordfreq
             wordfreqs[lang][key] = int(count)
           if 'chars' in path: # Updates charngrams
@@ -103,6 +106,8 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       else:
         datalost.add(infile)
   return charngrams, wordfreqs, datalost
+
+crubadan2counters()
 
 def feature_interface(data_source):
   """ Unpickle the feature pickles if exists else create them. """
@@ -121,9 +126,9 @@ def feature_interface(data_source):
   return charngrams, wordfreqs
 
 def get_features(data_source, language=None, option='char', \
-                 with_word_boundary=True):
-  charngs, wordfqs = feature_interface(data_source)
-  """ Get features given the data_source, language and option"""  
+                 with_word_boundary=True):  
+  """ Get features given the data_source, language and option"""
+  charngs, wordfqs = feature_interface(data_source)  
   if option == 'char':
     result = charngs[language] if language else charngs
   elif option == 'word':
@@ -160,7 +165,10 @@ x = get_features('odin',option='3gram')
 for i in x:
   print(i, x[i])
 '''
-
-
-
+'''
+x = get_features('crubadan', option='3gram')
+for i in x:
+  for j in x[i]:
+    print (i,j, x[i][j])
+'''
 
