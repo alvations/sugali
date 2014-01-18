@@ -99,7 +99,7 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       if not lang: continue
       ##start = time.time()
       if lang not in ISO2LANG:
-        print(lang, LANG2ISO[lang])
+        print('converting', lang,  'to', LANG2ISO[lang],'...')
         if LANG2ISO[lang][0] in ISO2LANG: 
           lang = LANG2ISO[lang][0] 
       ##print (time.time() -start)
