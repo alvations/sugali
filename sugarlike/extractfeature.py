@@ -58,7 +58,7 @@ def extract_feature_from_datasource(data_source, outputpath):
     for lang, sent in locals()[data_source].source_sents():
       print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
-      if lang in ISO2LANG:
+      if lang in ISO2LANG or lang in MACRO2LANG:
         for n in range(1,5): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
         wordfreqs[lang]+=Counter(sent.split())
@@ -80,8 +80,8 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
   Returns the character ngrams, word frequences and list of files that are 
   in crubadan but not listed in the ISO code.
   """
-  import os, zipfile
-  from universalcorpus.miniethnologue import ISO2LANG
+  import os, zipfile, time
+  from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG, LANG2ISO
   from collections import defaultdict, Counter
   crubadanfile = os.path.dirname(__file__) + \
                      '/../universalcorpus/data/crubadan/' + crubadanfile
@@ -95,7 +95,14 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
     for infile in inzipfile.namelist():
       path, filename = os.path.split(infile)
       lang = filename.rpartition('.')[0]
-      if '-' in lang: lang = lang.rpartition('-')[0]
+      if '-' in lang: lang = lang.partition('-')[0]
+      if not lang: continue
+      ##start = time.time()
+      if lang not in ISO2LANG:
+        print(lang, LANG2ISO[lang])
+        if LANG2ISO[lang][0] in ISO2LANG: 
+          lang = LANG2ISO[lang][0] 
+      ##print (time.time() -start)
       if lang in ISO2LANG:
         print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
@@ -108,7 +115,6 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       else:
         datalost.add(infile)
   return charngrams, wordfreqs, datalost
-
 
 def feature_interface(data_source):
   """ Unpickle the feature pickles if exists else create them. """
