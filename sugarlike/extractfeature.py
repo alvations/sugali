@@ -54,7 +54,7 @@ def extract_feature_from_datasource(data_source, outputpath):
   charngrams = defaultdict(Counter)
   wordfreqs = defaultdict(Counter)
 
-  if data_source in ['odin','omniglot','udhr']:
+  if data_source in ['odin','omniglot','udhr','wiki']:
     for lang, sent in locals()[data_source].source_sents():
       print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
