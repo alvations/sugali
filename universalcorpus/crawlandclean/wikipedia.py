@@ -123,3 +123,26 @@ def clean_wikipedia(wiki_raw_dir):
 
 #extract_wikipedia('/media/ec609cb5-510c-467e-9655-5e72e99c4153/wikidumps/')
 clean_wikipedia('../data/wikipedia/texts/')
+
+def source_sent(cleanedwikidir):
+  """
+  USAGE:
+  >>> cleanwiki = '/media/alvas/E418A6B618A686E0/xling/cleanedwiki/'
+  >>> for i in source_sent(cleanwiki):
+  >>>   print i
+  
+  NOTE:
+  cleanwiki should be a main directory that contains one directory for each
+  language. And every language directory should contain at least one tarballs. 
+  Regardless of how many files each tarballs contain, it extracts the lines.
+  
+  P/S: I know the nest directory pathing is ugly, but i can't find a simpler
+  way to do this =) 
+  """
+  from utils import read_tarfile
+  for lang in os.listdir(cleanedwikidir):
+    for intarfile in os.listdir(cleanedwikidir+lang):
+      for infile in read_tarfile(cleanedwikidir+lang+"/"+intarfile):
+        with codecs.open(infile,'r','utf8') as fin:
+          for line in fin:
+            yield line.strip()
