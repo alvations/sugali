@@ -131,10 +131,37 @@ def feature_interface(data_source):
   
   return charngrams, wordfreqs
 
+def tfidfize(_featureset, data_source, option):
+  """ Normalized the feature with TF-IDF."""
+  from collections import defaultdict
+  import math, os, io
+  import cPickle as pickle
+  
+  tfidf_pickle = ''.join([data_source,'-',option,'-tfidf','.pk'])
+  
+  if os.path.exists(tfidf_pickle): # If feature already tfidfized before.
+    with io.open(tfidf_pickle,'rb') as fin:
+      fs = pickle.load(fin)
+  else:
+    fs = defaultdict(dict) 
+    for lang in _featureset:
+      for gram in _featureset[lang]:
+        tf = _featureset[lang][gram] / float(sum(_featureset[lang].values()))
+        idf = math.log(len(_featureset)) / len([i for i in _featureset if gram in _featureset[i]])
+        fs[lang][gram] = tf * idf
+        print('Calculating TF-IDF for %s please wait patiently...' % data_source)
+        print (lang, gram, _featureset[lang][gram], tf, idf, tf*idf)
+        
+    with io.open(tfidf_pickle,'wb') as fout:
+      pickle.dump(fs, fout)
+      
+  return fs
+    
 def get_features(data_source, language=None, option='char', \
-                 with_word_boundary=True):  
+                 with_word_boundary=True, tfidf=False):  
   """ Get features given the data_source, language and option"""
-  charngs, wordfqs = feature_interface(data_source)  
+  charngs, wordfqs = feature_interface(data_source)
+  
   if option == 'char':
     result = charngs[language] if language else charngs
   elif option == 'word':
@@ -149,23 +176,23 @@ def get_features(data_source, language=None, option='char', \
   if option == None:
     return charngs, wordfqs
   
-  if not with_word_boundary: #TODO: 
+  if tfidf:
+    result = tfidfize(result,data_source, option)
+  
+  if not with_word_boundary: #TODO: to filter features with "<" or ">" 
     pass
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 
-
-'''
-import io
-import cPickle as pickle
-x  = pickle.load(io.open('odin-word.pk','rb'))
-for i in x:
-  print (i,x[i])
-'''
-
 '''
 #Informal Test:
+
+x = get_features('odin',option='char', tfidf=True) # get_features() with tfidf
+for i in x:
+  print(i, x[i])
+
+
 x = get_features('odin','xxx','char') # Gets nothing since there is no lang xxx.
 
 x = get_features('odin','deu','char') # Gets feature for 1 language.
