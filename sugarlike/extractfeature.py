@@ -30,12 +30,12 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
     from nltk.util import ngrams
     return list(ngrams(text.split(), 1))
   
-  if "gram" in option:
+  if "gram" in option and "all" not in option:
     n = int(option[0])
     return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                         for i in text.split()]))
 
-  if "all" in option:
+  if "allgrams" in option:
     return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,5)]))
 
 

@@ -119,9 +119,9 @@ t = 'ich bin schwanger'
 #print sugarlid_gnb(t, option='3gram')[:10]
 #print sugarlid_bnb(t, option='3gram')[:10]
 #print sugarlid_cosine(t, option='char', data_source='odin')[:10]
-x = sugarlid_mnb(t, option='3gram', data_source='udhr', smoothing=0.00001, tfidf=True)[:10]
+x = sugarlid_mnb(t, option='3gram', data_source='crubadan', smoothing=0.00001, tfidf=True)[:10]
 for i in x:
-  print i[0], ISO2LANG[i[1]] 
+  print i[0], i[1], ISO2LANG[i[1]] 
 
 
 #print sugarlid_cosine(t, option='2gram')[:10]
