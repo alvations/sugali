@@ -73,7 +73,7 @@ def extract_feature_from_datasource(data_source, outputpath):
         
   return charngrams, wordfreqs, datalost
   
-def crubadan2counters(crubadanfile='crub-131119.zip'):
+def crubadan2counters(crubadanfile='crub-131119.zip', lower=False):
   """ 
   Returns the character ngrams, word frequences and list of files that are 
   in crubadan but not listed in the ISO code.
@@ -104,6 +104,7 @@ def crubadan2counters(crubadanfile='crub-131119.zip'):
       if lang in ISO2LANG:
         print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
+          if lower: key = key.lower()
           key, count = line.strip().split(' ')
           
           if 'words' in path: # Updates wordfreq
