@@ -27,17 +27,15 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
     return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                         for i in text.split()]))
   if option == 'word':
-    from nltk.util import ngrams
-    return list(ngrams(text.split(), 1))
+    return text.split()
   
   if "gram" in option and "all" not in option:
     n = int(option[0])
     return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
                         for i in text.split()]))
 
-  if "allgrams" in option:
+  if "allgrams" in option or 'all' in option:
     return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,5)]))
-
 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -156,6 +154,14 @@ def get_features(data_source, language=None, option='char', \
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 
+
+'''
+import io
+import cPickle as pickle
+x  = pickle.load(io.open('odin-word.pk','rb'))
+for i in x:
+  print (i,x[i])
+'''
 
 '''
 #Informal Test:
