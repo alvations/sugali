@@ -132,7 +132,7 @@ def feature_interface(data_source):
   return charngrams, wordfreqs
 
 def tfidfize(_featureset, data_source, option):
-  """ Normalized the feature with TF-IDF."""
+  """ Normalized the feature counts with TF-IDF."""
   from collections import defaultdict
   import math, os, io
   import cPickle as pickle
@@ -171,8 +171,10 @@ def get_features(data_source, language=None, option='char', \
     _result = charngs[language] if language else charngs
     result = defaultdict(Counter)
     for i in _result:
-      result[i] = Counter({j:_result[i][j] for j in _result[i] \
+      _tempcounter = Counter({j:_result[i][j] for j in _result[i] \
                            if len(j) == int(option[0])})
+      if len(_tempcounter) > 0: # Ensures that no Counter are empty.
+        result[i] = _tempcounter
   if option == None:
     return charngs, wordfqs
   

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 def tenfold(data_source, randseed=0):
   import random, sys
   from extractfeature import get_features, sentence2ngrams
@@ -11,9 +10,9 @@ def tenfold(data_source, randseed=0):
   totrain = int(len(corpus) * 90 / 100)
   yield corpus[:totrain] # train data
   yield corpus[totrain:] # test data
-  
-import sys  
+
+'''  
 for i in tenfold('odin'):
   for j in i:
     print j
-  
+'''
