@@ -34,9 +34,9 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
     n = int(option[0])
     return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
 
-  if "allgrams" in option or 'all' in option:
-    return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,5)]))
-
+  if "allgrams" in option or 'all' in option: # Extracts 1 to 5 character grams.
+    return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,6)]))
+ 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
   import tarfile, codecs, os
