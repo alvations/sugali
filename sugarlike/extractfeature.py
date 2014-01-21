@@ -4,7 +4,7 @@ import sys; sys.path.append('../') # Access modules from parent dir.
 
 from itertools import chain
 
-def word2ngrams(text, n=3, option='char', with_word_boundary=False):
+def word2ngrams(text, n=3, option='char'):
   """ Convert text into character ngrams. """
   text = text.lower()
 

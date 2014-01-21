@@ -71,7 +71,6 @@ print SGTestimate(langSGT,test)
 print MLEestimate(langMLE,test)
 '''
 
-'''
 from extractfeature import sentence2ngrams, get_features
 s = u"je m'appelle Claude"
 test = Counter(sentence2ngrams(s, with_word_boundary=True))
@@ -89,4 +88,3 @@ for lang in trainset:
 
 for i in sorted(sgt_results, reverse=True)[:10]:
   print i
-'''
