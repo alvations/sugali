@@ -24,7 +24,7 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   (NOTE: word boundary is counted as a character.)
   """
   if with_word_boundary:
-    " ".join(["<"+i+">" for i in text.split()])
+    text = " ".join(["<"+i+">" for i in text.split()])
   
   if option == 'char':
     return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
