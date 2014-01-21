@@ -75,8 +75,14 @@ def evaluator(data_source, option, smoothing=0.00001):
       print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], testsent
     '''
     # Trains the model and test using NLTK MNB
-    for lang, testsent in test:
-      print lang, testsent
+    sgt_results = []
+    featureset = tfidfize(featureset)
+    for lang in :
+       SGT(train, min=3000)
+    #x = SGT(, min=3000)
+    #for lang, testsent in test:
+      
+      
   
 evaluator('odin','3gram')
 #evaluator(1,2)

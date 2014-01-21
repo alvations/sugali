@@ -111,7 +111,7 @@ def sugarlid_cosine(text, option='3gram', data_source='crubadan'):
       results.append((score,i))
   return sorted(results, reverse=True)
   
-
+'''
 from universalcorpus.miniethnologue import ISO2LANG
 t = 'ich bin schwanger'
 #print sugarlid_mnb(t, option='3gram')[:10]
@@ -120,7 +120,8 @@ t = 'ich bin schwanger'
 #print sugarlid_cosine(t, option='char', data_source='odin')[:10]
 x = sugarlid_mnb(t, option='3gram', data_source='crubadan', smoothing=0.00001, tfidf=True)[:10]
 for i in x:
-  print i[0], i[1], ISO2LANG[i[1]] 
+  print i[0], i[1], ISO2LANG[i[1]]
+''' 
 
 
 #print sugarlid_cosine(t, option='2gram')[:10]

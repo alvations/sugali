@@ -14,7 +14,6 @@ def word2ngrams(text, n=3, option='char'):
   if 'gram' in option:
     char_ngrams = ["".join(j) for j in zip(*[text[i:] \
                    for i in range(int(option[0]))])]
-    
     return char_ngrams
 
 def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
@@ -31,7 +30,7 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   if option == 'word':
     return text.split()
   
-  if "gram" in option and "all" not in option:
+  if "gram" in option and "all" not in option and option[0].isdigit():
     n = int(option[0])
     return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
 
