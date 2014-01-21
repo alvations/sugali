@@ -6,8 +6,7 @@ from itertools import chain
 
 def word2ngrams(text, n=3, option='char'):
   """ Convert text into character ngrams. """
-  text = text.lower()
-
+  
   if option == 'char':
     char_ngrams =  ["".join(j) for j in zip(*[text[i:] for i in range(n)])]
     return char_ngrams
