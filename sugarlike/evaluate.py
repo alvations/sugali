@@ -53,6 +53,8 @@ def evaluator(data_source, option, smoothing=0.00001):
   from extractfeature import sentence2ngrams
   from collections import defaultdict, Counter
   
+  from multinomialnaivebayes import SGTestimate, SGT, MLEestimate, MLE
+  
   for fold in tenfold(data_source):
     train, test = fold
     #print len(train), len(test)
@@ -73,8 +75,8 @@ def evaluator(data_source, option, smoothing=0.00001):
       print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], testsent
     '''
     # Trains the model and test using NLTK MNB
-    for i in testsent:
-      print i 
+    for lang, testsent in test:
+      print lang, testsent
   
 evaluator('odin','3gram')
 #evaluator(1,2)

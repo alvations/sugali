@@ -10,29 +10,31 @@ def word2ngrams(text, n=3, option='char', with_word_boundary=False):
 
   if option == 'char':
     char_ngrams =  ["".join(j) for j in zip(*[text[i:] for i in range(n)])]
-    if with_word_boundary:
-      char_ngrams+=["<"+text[:2],text[-2:]+">"]
     return char_ngrams
 
   if 'gram' in option:
     char_ngrams = ["".join(j) for j in zip(*[text[i:] \
                    for i in range(int(option[0]))])]
-    if with_word_boundary:
-      char_ngrams+=["<"+text[:2],text[-2:]+">"]
+    
     return char_ngrams
 
 def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
-  """ Takes a document/sentence, convert into ngrams"""
+  """ 
+  Takes a document/sentence, convert into ngrams.
+  (NOTE: word boundary is counted as a character.)
+  """
+  if with_word_boundary:
+    " ".join(["<"+i+">" for i in text.split()])
+  
   if option == 'char':
-    return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
-                        for i in text.split()]))
+    return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
+  
   if option == 'word':
     return text.split()
   
   if "gram" in option and "all" not in option:
     n = int(option[0])
-    return list(chain(*[word2ngrams(i, n, option, with_word_boundary) \
-                        for i in text.split()]))
+    return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
 
   if "allgrams" in option or 'all' in option:
     return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,5)]))
