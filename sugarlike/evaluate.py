@@ -63,15 +63,18 @@ def evaluator(data_source, option, smoothing=0.00001):
         _tempcounter = Counter(sentence2ngrams(trainsent, option=option))
         if len(_tempcounter) > 0:
           featureset[lang] = _tempcounter
+    '''
     # Trains the model and test using langid.py
     featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
     from sklearn.naive_bayes import MultinomialNB
-    mnb = MultinomialNB(alpha=0.00000000001)
-    
+    mnb = MultinomialNB(alpha=0.00000000001)   
     for lang, testsent in test:
       guess = mnb.fit(featureset, tags).predict_proba(featurize(testsent, allfeatures, option=option))
       print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], testsent
-      
+    '''
+    # Trains the model and test using NLTK MNB
+    for i in testsent:
+      print i 
   
 evaluator('odin','3gram')
 #evaluator(1,2)

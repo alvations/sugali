@@ -81,7 +81,6 @@ trainset = get_features('odin', option='3gram')
 sgt_results = []
 #mle_results = []
 
-
 for lang in trainset:
   train = trainset[lang]
   if train: # no data from feature extractor (PLEASE CHECK)
