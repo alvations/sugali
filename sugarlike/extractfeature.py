@@ -42,7 +42,7 @@ def extract_feature_from_datasource(data_source, outputpath):
   import tarfile, codecs, os
   import cPickle as pickle
   from collections import defaultdict, Counter
-  from universalcorpus.miniethnologue import ISO2LANG
+  from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
   from universalcorpus import odin, omniglot, udhr
   
   assert data_source in ['odin','omniglot','udhr','crubadan','wiki'], \
@@ -193,7 +193,6 @@ def get_features(data_source, language=None, option='char', \
 x = get_features('odin',option='char', tfidf=True) # get_features() with tfidf
 for i in x:
   print(i, x[i])
-
 
 x = get_features('odin','xxx','char') # Gets nothing since there is no lang xxx.
 

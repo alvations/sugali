@@ -46,8 +46,7 @@ def tfidfize(data_source, option='3gram'):
         print lang, gram, _featureset[lang][gram], tf, idf, tf * idf
         
     with io.open(tfidf_pickle,'wb') as fout:
-      pickle.dump(featureset, fout)
-      
+      pickle.dump(featureset, fout)      
   return featureset
 
 def featurize(text, all_features, option="3gram"):
