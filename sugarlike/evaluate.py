@@ -56,7 +56,6 @@ def evaluator(data_source, option, smoothing=0.00001):
   from multinomialnaivebayes import SGTestimate, SGT, MLEestimate, MLE
   
   for fold in tenfold(data_source):
-    accuracy = 0
     train, test = fold
     #print len(train), len(test)
     # Extracts the features.
@@ -86,9 +85,7 @@ def evaluator(data_source, option, smoothing=0.00001):
         sgt = SGT(train, min=3000)
         sgt_results.append((SGTestimate(sgt, testsent),flang))
       best = sorted(sgt_results, reverse=True)[0]
-      print lang, sorted(sgt_results, reverse=True)[0], lang == best[1]
-      
-    
+      print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
 
-evaluator('udhr','2gram')
+evaluator('omniglot','2grams')
 #evaluator(1,2)
