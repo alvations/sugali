@@ -45,14 +45,14 @@ def extract_feature_from_datasource(data_source, outputpath):
   from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
   from universalcorpus import odin, omniglot, udhr
   
-  assert data_source in ['odin','omniglot','udhr','crubadan','wiki'], \
+  assert data_source in ['odin','omniglot','udhr','crubadan','wikipedia'], \
         'Only data from crubadan/odin/ominglot/udhr/wikipedia available.'
   
   datalost = set() # To keep track of which languages not in ISO.
   charngrams = defaultdict(Counter)
   wordfreqs = defaultdict(Counter)
 
-  if data_source in ['odin','omniglot','udhr','wiki']:
+  if data_source in ['odin','omniglot','udhr','wikipedia']:
     for lang, sent in locals()[data_source].source_sents():
       print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
@@ -186,6 +186,8 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
+
+
 
 '''
 #Informal Test:
