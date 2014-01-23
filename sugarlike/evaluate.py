@@ -56,6 +56,7 @@ def evaluator(data_source, option, smoothing=0.00001):
   from multinomialnaivebayes import SGTestimate, SGT, MLEestimate, MLE
   
   for fold in tenfold(data_source):
+    accuracy = 0
     train, test = fold
     #print len(train), len(test)
     # Extracts the features.

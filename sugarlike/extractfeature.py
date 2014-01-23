@@ -187,9 +187,6 @@ def get_features(data_source, language=None, option='char', \
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 
-for i in get_features('wikipedia'):
-  print(i)
-
 '''
 #Informal Test:
 
@@ -215,5 +212,8 @@ x = get_features('crubadan', option='3gram')
 for i in x:
   for j in x[i]:
     print (i,j, x[i][j])
+
+for i in get_features('wikipedia'):
+  print(i)
 '''
 
