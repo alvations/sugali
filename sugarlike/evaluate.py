@@ -75,7 +75,6 @@ def evaluator(data_source, option, smoothing=0.00001):
       print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], testsent
     '''
     # Trains the model and test using NLTK MNB
-    
     x = featureset
     for lang, testsent in test:
       sgt_results = []

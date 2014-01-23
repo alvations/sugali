@@ -16,6 +16,10 @@ def word2ngrams(text, n=3, option='char'):
                    for i in range(int(option[0]))])]
     return char_ngrams
 
+print(word2ngrams('schwanger tag',n=2, option='char'))
+print(word2ngrams('schwanger',option='2gram'))
+print(word2ngrams('tag',option='2gram'))
+
 def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   """ 
   Takes a document/sentence, convert into ngrams.
@@ -186,6 +190,8 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
+
+
 
 '''
 #Informal Test:
