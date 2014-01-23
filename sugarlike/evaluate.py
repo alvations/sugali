@@ -65,16 +65,17 @@ def evaluator(data_source, option, smoothing=0.00001):
         _tempcounter = Counter(sentence2ngrams(trainsent, option=option))
         if len(_tempcounter) > 0:
           featureset[lang] = _tempcounter
-    '''
+    
     # Trains the model and test using langid.py
     featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
     from sklearn.naive_bayes import MultinomialNB
-    mnb = MultinomialNB(alpha=0.00000000001)   
+    mnb = MultinomialNB(alpha=0.01)   
     for lang, testsent in test:
       guess = mnb.fit(featureset, tags).predict_proba(featurize(testsent, allfeatures, option=option))
-      print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], testsent
-    '''
-    # Trains the model and test using NLTK MNB
+      best = sorted(zip(guess.tolist()[0], tags), reverse=True)[0]
+      print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], lang == best[1] # testsent
+    
+    '''# Trains the model and test using NLTK MNB
     x = featureset
     for lang, testsent in test:
       sgt_results = []
@@ -85,7 +86,7 @@ def evaluator(data_source, option, smoothing=0.00001):
         sgt = SGT(train, min=3000)
         sgt_results.append((SGTestimate(sgt, testsent),flang))
       best = sorted(sgt_results, reverse=True)[0]
-      print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
+      print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]'''
 
-evaluator('omniglot','2grams')
+evaluator('udhr','char')
 #evaluator(1,2)
