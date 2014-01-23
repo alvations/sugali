@@ -122,9 +122,9 @@ def clean_wikipedia(wiki_raw_dir):
 
 
 #extract_wikipedia('/media/ec609cb5-510c-467e-9655-5e72e99c4153/wikidumps/')
-clean_wikipedia('../data/wikipedia/texts/')
+#clean_wikipedia('../data/wikipedia/texts/')
 
-def source_sent(cleanedwikidir):
+def source_sents(cleanedwikidir=parentddir+"/data/wikipedia/clean/"):
   """
   USAGE:
   >>> cleanwiki = '/media/alvas/E418A6B618A686E0/xling/cleanedwiki/'
@@ -145,4 +145,8 @@ def source_sent(cleanedwikidir):
       for infile in read_tarfile(cleanedwikidir+lang+"/"+intarfile):
         with codecs.open(infile,'r','utf8') as fin:
           for line in fin:
-            yield line.strip()
+            yield lang, line.strip()
+'''
+for i,j in source_sents():
+  print i,j
+'''

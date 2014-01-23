@@ -88,7 +88,6 @@ def evaluator(data_source, option, smoothing=0.00001):
       print lang, sorted(sgt_results, reverse=True)[0], lang == best[1]
       
     
-      
-  
-evaluator('udhr','char')
+
+evaluator('udhr','2gram')
 #evaluator(1,2)

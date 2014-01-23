@@ -16,10 +16,6 @@ def word2ngrams(text, n=3, option='char'):
                    for i in range(int(option[0]))])]
     return char_ngrams
 
-print(word2ngrams('schwanger tag',n=2, option='char'))
-print(word2ngrams('schwanger',option='2gram'))
-print(word2ngrams('tag',option='2gram'))
-
 def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   """ 
   Takes a document/sentence, convert into ngrams.
@@ -47,7 +43,7 @@ def extract_feature_from_datasource(data_source, outputpath):
   import cPickle as pickle
   from collections import defaultdict, Counter
   from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
-  from universalcorpus import odin, omniglot, udhr
+  from universalcorpus import odin, omniglot, udhr, wikipedia
   
   assert data_source in ['odin','omniglot','udhr','crubadan','wikipedia'], \
         'Only data from crubadan/odin/ominglot/udhr/wikipedia available.'
@@ -191,7 +187,8 @@ def get_features(data_source, language=None, option='char', \
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
 
-
+for i in get_features('wikipedia'):
+  print(i)
 
 '''
 #Informal Test:
