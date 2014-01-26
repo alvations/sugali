@@ -59,7 +59,7 @@ def extract_feature_from_datasource(data_source, outputpath):
       print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
       if lang in ISO2LANG or lang in MACRO2LANG:
-        for n in range(1,5): # Generates 1-5character ngrams.
+        for n in range(1,6): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))
         wordfreqs[lang]+=Counter(sent.split())
       else:
