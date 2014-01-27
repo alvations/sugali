@@ -88,8 +88,9 @@ def crubadan2counters(crubadanfile='crub-131119.zip', lower=False):
   import os, zipfile, time
   from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG, LANG2ISO
   from collections import defaultdict, Counter
-  crubadanfile = os.path.dirname(__file__) + \
-                     '/../universalcorpus/data/crubadan/' + crubadanfile
+  thisdir = os.path.dirname(__file__) if os.path.dirname(__file__) \
+            is not "" else "."
+  crubadanfile =  thisdir + '/../universalcorpus/data/crubadan/' + crubadanfile
   assert os.path.exists(crubadanfile)
   
   charngrams = defaultdict(Counter)
@@ -198,8 +199,6 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
-
-
 
 '''
 #Informal Test:
