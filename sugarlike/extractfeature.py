@@ -46,7 +46,7 @@ def extract_feature_from_datasource(data_source, outputpath):
   import tarfile, codecs, os
   import cPickle as pickle
   from collections import defaultdict, Counter
-  from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
+  from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG, wikicode2iso
   from universalcorpus import odin, omniglot, udhr, wikipedia
   
   assert data_source in ['odin','omniglot','udhr','crubadan','wikipedia'], \
@@ -58,6 +58,8 @@ def extract_feature_from_datasource(data_source, outputpath):
 
   if data_source in ['odin','omniglot','udhr','wikipedia']:
     for lang, sent in locals()[data_source].source_sents():
+      if data_source == 'wikipedia':
+        lang = wikicode2iso(lang)
       if not shutup:
         print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
@@ -196,6 +198,8 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
+
+
 
 '''
 #Informal Test:
