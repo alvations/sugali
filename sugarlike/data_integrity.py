@@ -8,6 +8,7 @@ def check_data_integrity(data_source="all", remove=True):
   """
   import os, glob
   from extractfeature import get_features
+  from universalcorpus import odin, omniglot, udhr, wikipedia
   if remove:
     # Remove all/selected pickled files
     toremove = '*.pk' if data_source == "all" else data_source+"*"
@@ -20,7 +21,11 @@ def check_data_integrity(data_source="all", remove=True):
   for i in torebuild:
     print "Accessing features from %s, please wait ..." % (i)
     charngrams,wordfreq = get_features(i, option=None, shutup=True)
-    print "%s-word.pk contains data for %d Languages.\n" % (i,len(wordfreq)) 
+    print "%s-word.pk contains data for %d Languages." % (i,len(wordfreq))
+    print "Original source contains data for %d Languages" % \
+          locals()[i].num_languages()
+    missing = set(wordfreq.keys()) - set(locals()[i].languages())
+    print "Thrown languages:",missing, "\n"
 
 def feature_count():
   """

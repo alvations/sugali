@@ -4,6 +4,9 @@ import sys; sys.path.append('../') # Access modules from parent dir.
 
 from itertools import chain
 
+global shutup   # To shut the console prints up, i.e. 
+shutup = False  # "Creating feature sets, please be patient..."
+
 def word2ngrams(text, n=3, option='char'):
   """ Convert text into character ngrams. """
   
@@ -55,7 +58,8 @@ def extract_feature_from_datasource(data_source, outputpath):
 
   if data_source in ['odin','omniglot','udhr','wikipedia']:
     for lang, sent in locals()[data_source].source_sents():
-      print (data_source, lang, 'Creating feature sets, please be patient...')
+      if not shutup:
+        print (data_source, lang, 'Creating feature sets, please be patient...')
       ##print (sent)
       if lang in ISO2LANG or lang in MACRO2LANG:
         for n in range(1,6): # Generates 1-5character ngrams.
@@ -103,7 +107,9 @@ def crubadan2counters(crubadanfile='crub-131119.zip', lower=False):
           lang = LANG2ISO[lang][0] 
       ##print (time.time() -start)
       if lang in ISO2LANG:
-        print ('crubadan', infile, lang, 'Creating feature sets, please be patient...')
+        if not shutup:
+          print ('crubadan', infile, lang, \
+                 'Creating feature sets, please be patient...')
         for line in inzipfile.open(infile):
           if lower: key = key.lower()
           key, count = line.strip().split(' ')
@@ -159,8 +165,10 @@ def tfidfize(_featureset, data_source, option):
   return fs
     
 def get_features(data_source, language=None, option='char', \
-                 with_word_boundary=True, tfidf=False):  
+                 with_word_boundary=True, tfidf=False, shutup=False):  
   """ Get features given the data_source, language and option"""
+  
+  globals()['shutup'] = shutup # To shut the console prints up
   charngs, wordfqs = feature_interface(data_source)
   
   if isinstance(option, str):
@@ -219,3 +227,10 @@ for i in get_features('wikipedia'):
   print(i)
 '''
 
+'''
+# To view the features.
+x = get_features('odin',option='3gram')
+for i in x:
+  for j in x[i]:
+    print (i, j, x[i][j])
+'''
