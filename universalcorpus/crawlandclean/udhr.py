@@ -115,7 +115,8 @@ def source_sents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
 
 def languages():
   """ Returns a list of available languages from original data source. """
-  langs = enumerate_udhr(intarfile=parentddir+ '/data/udhr/udhr-unicode.tar')
+  langs = [i.partition('-')[2].partition('.')[0] for i in \
+           enumerate_udhr(intarfile=parentddir+ '/data/udhr/udhr-unicode.tar')]
   return langs
 
 def num_languages():
