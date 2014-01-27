@@ -221,3 +221,12 @@ def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
             onlysource=True):
   """ Yield clean sentences from the clean Omniglot tarball. """
   return phrases(intarfile, onlysource)
+
+def languages():
+  """ Returns the number of languages available from original data source. """
+  return [i for i in tarfile.open(parentddir+ '/data/omniglot/omniglotphrases.tar')]
+
+def num_languages():
+  """ Returns the number of languages available from original data source. """
+  return len(languages())
+  

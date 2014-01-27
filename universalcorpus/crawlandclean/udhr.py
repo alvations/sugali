@@ -69,7 +69,7 @@ def enumerate_udhr(intarfile):
   dialects/registers in the UDHR, len(enumerate_udhr(intarfile)[lang]) > 1 .
   
   # USAGE:
-  >>> ls = count_udhr('../data/udhr/udhr-unicode.tar')
+  >>> ls = enumerate_udhr('../data/udhr/udhr-unicode.tar')
   >>> for i in sorted(ls):
   >>>   print i, ls[i]
   >>> print len(ls) # Number of languages
@@ -113,3 +113,11 @@ def source_sents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
           bysentence=True):
   return sents(intarfile, bysentence)
 
+def languages():
+  """ Returns a list of available languages from original data source. """
+  langs = enumerate_udhr(intarfile=parentddir+ '/data/udhr/udhr-unicode.tar')
+  return langs
+
+def num_languages():
+  """ Returns the number of languages available from original data source. """
+  return len(languages())

@@ -31,3 +31,13 @@ def read_tarfile(intarfile):
   
   for infile in os.listdir(TEMP_DIR):
     yield TEMP_DIR+'/'+infile
+    
+class Suppress_print(object):
+  """ Suppress prints from function. """
+  def __init__(self):
+    pass
+  def __enter__(self):
+    self.stdout = sys.stdout
+    sys.stdout = StringIO.StringIO()
+  def __exit__(self, *args):
+    sys.stdout = self.stdout

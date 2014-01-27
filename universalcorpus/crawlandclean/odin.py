@@ -33,7 +33,7 @@ def get_odin_igts(ODINFILE=parentddir+'/data/odin/odin-full.tar'):
   for infile in tar:
     if '.xml' in infile.name: # there's a rogue file in the tar that is not xml.
       lang = infile.name[:-4].lower()
-      print lang
+      ##print lang
       # Find the <igt>...</igt> in the xml.
       odinfile = tar.extractfile(infile).read()
       igts = bs(odinfile).findAll('igt')
@@ -150,3 +150,11 @@ def source_sents(intarfile=parentddir+'/data/odin/odin-cleanest.tar'):
       for line in fin.readlines():
         sentence = line.strip().split('\t')[0]
         yield language, sentence
+        
+def languages():
+  """Returns the number of languages available from original data source."""
+  return [i for i in tarfile.open(parentddir+'/data/odin/odin-full.tar')]
+
+def num_languages():
+  """ Returns the number of languages available from original data source. """
+  return len(languages())
