@@ -24,7 +24,7 @@ def check_data_integrity(data_source="all", remove=True):
     print "%s-word.pk contains data for %d Languages." % (i,len(wordfreq))
     print "Original source contains data for %d Languages" % \
           locals()[i].num_languages()
-    missing = set(wordfreq.keys()) - set(locals()[i].languages())
+    missing = set(locals()[i].languages()) - set(wordfreq.keys()) 
     print "Thrown languages:",missing, "\n"
 
 def feature_count():
