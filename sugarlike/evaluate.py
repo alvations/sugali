@@ -137,7 +137,7 @@ def evaluator(data_source, option, smoothing=0.00001):
   print
   print "Ten-fold MRRs (only in top10):", ten_fold_mrrpos
   print "Average ten-fold MRR (only in top10):", \
-        "%0.6f"%(sum(ten_fold_mrr)/float(10))
+        "%0.6f"%(sum(ten_fold_mrrpos)/float(10))
   
   
 
