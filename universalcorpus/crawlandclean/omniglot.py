@@ -224,7 +224,9 @@ def source_sents(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
 
 def languages():
   """ Returns the number of languages available from original data source. """
-  return [i for i in tarfile.open(parentddir+ '/data/omniglot/omniglotphrases.tar')]
+  return [str(i.name).partition('-')[2].partition('.')[0] 
+          for i in tarfile.open(parentddir+ \
+          '/data/omniglot/omniglotphrases.tar') if i.name != ""]
 
 def num_languages():
   """ Returns the number of languages available from original data source. """

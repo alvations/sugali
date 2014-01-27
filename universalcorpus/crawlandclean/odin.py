@@ -153,7 +153,8 @@ def source_sents(intarfile=parentddir+'/data/odin/odin-cleanest.tar'):
         
 def languages():
   """Returns the number of languages available from original data source."""
-  return [i for i in tarfile.open(parentddir+'/data/odin/odin-full.tar')]
+  return [str(i.name).partition('.')[0] \
+          for i in tarfile.open(parentddir+'/data/odin/odin-full.tar')]
 
 def num_languages():
   """ Returns the number of languages available from original data source. """
