@@ -79,7 +79,7 @@ def extract_feature_from_datasource(data_source, outputpath):
       pickle.dump(wordfreqs, fout)
         
   return charngrams, wordfreqs, datalost
-  
+
 def crubadan2counters(crubadanfile='crub-131119.zip', lower=False):
   """ 
   Returns the character ngrams, word frequences and list of files that are 

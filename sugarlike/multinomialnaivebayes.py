@@ -92,6 +92,22 @@ def MLEestimate(language, input, oov=-float('inf')):
       result += oov
   return result
 
+''' INFORMAL TEST for SGT object:
+from extractfeature import get_features, sentence2ngrams
+
+s = u"ich bin schwanger"
+s = u"je suis enceinte"
+test = Counter(sentence2ngrams(s, with_word_boundary=True, option='allgrams'))
+
+trainset = get_features('odin', option='char')
+results = []
+for lang in trainset: 
+  classifier = SGT(trainset[lang])
+  results.append((classifier.estimate(test), lang))
+  
+print sorted(results, reverse=True)[:10]
+'''
+
 '''
 train = Counter({'a':500,'b':200,'c':1})
 test = [Counter({'a':1}),

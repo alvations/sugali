@@ -49,13 +49,24 @@ def tfidfize(_featureset):
   return featureset
  
 def evaluator(data_source, option, smoothing=0.00001):
+  """
+  Segments the data into 90-10 portions using tenfold(), 
+  then trains a model using 90% of the data and evaluated the remaining 10%.
+  """
   from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
   from extractfeature import sentence2ngrams
   from collections import defaultdict, Counter
   
-  from multinomialnaivebayes import SGTestimate, SGT, MLEestimate, MLE
+  from multinomialnaivebayes import SGT
+  import time
   
+  fold_counter = 0
+  ten_fold_accuracies = []
+  ten_fold_mrr = []
+  ten_fold_mrrpos = []
   for fold in tenfold(data_source):
+    start = time.time()
+    fold_counter+=1
     train, test = fold
     #print len(train), len(test)
     # Extracts the features.
@@ -77,16 +88,58 @@ def evaluator(data_source, option, smoothing=0.00001):
     '''
     # Trains the model and test using NLTK MNB
     x = featureset
+    fold_results = Counter() # for accuracy calculation
+    rr = [] # Mean Reciprocal Rank, top 10.
+    print "Calculating Fold", fold_counter, ", please wait patiently..."
     for lang, testsent in test:
       sgt_results = []
       testsent = Counter(sentence2ngrams(testsent))
       for flang in x:
         train = featureset[flang]
         ##print train
-        sgt = SGT(train, min=3000)
-        sgt_results.append((SGTestimate(sgt, testsent),flang))
+        sgt = SGT(train)
+        sgt_results.append((sgt.estimate(testsent),flang))
       best = sorted(sgt_results, reverse=True)[0]
-      print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
+      ##print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
+      fold_results[lang == best[1]]+=1
+      top10 = [i[1] for i in sorted(sgt_results, reverse=True)[:10]]
+      if lang in top10:
+        ##print 1/float(top10.index(lang)+1)
+        rr.append(1/float(top10.index(lang)+1))
+      else:
+        rr.append(0)
+    
+    accuracy = fold_results[True] / float(sum(fold_results.values()))
+    print "Accuracy:", "%0.6f" % (accuracy*100), "%"
+    ten_fold_accuracies.append(accuracy)
+    
+    mrr = sum(rr)/len(rr)
+    print "Mean Reciprocal Rank:", "%0.6f" % mrr
+    ten_fold_mrr.append(mrr)
+    
+    rrpos = [i for i in rr if i != 0] # Only counts results in top10
+    mrrpos = sum(rrpos)/len(rrpos)
+    print "Mean Reciprocal Rank (only positive):", \
+          "%0.4f" % mrrpos 
+    ten_fold_mrrpos.append(mrrpos)
+    
+    end = time.time() - start
+    print str(end), "seconds to evaluation Fold-"+ str(fold_counter), \
+          ", evaluated", str(sum(fold_results.values())), "test sentences"
+    print
+  
+  print "=============================================="
+  print "Ten-fold Accuracies:", ten_fold_accuracies
+  print "Average ten-fold accuracies:", "%0.6f"% (sum(ten_fold_accuracies)/float(10))
+  print
+  print "Ten-fold MRRs:", ten_fold_mrr
+  print "Average ten-fold MRR:", "%0.6f"%(sum(ten_fold_mrr)/float(10))
+  print
+  print "Ten-fold MRRs (only in top10):", ten_fold_mrrpos
+  print "Average ten-fold MRR (only in top10):", \
+        "%0.6f"%(sum(ten_fold_mrr)/float(10))
+  
+  
 
-evaluator('udhr','char')
+evaluator('omniglot','char')
 #evaluator(1,2)
