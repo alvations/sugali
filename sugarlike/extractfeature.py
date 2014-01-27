@@ -37,7 +37,6 @@ def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
   if "allgrams" in option or 'all' in option: # Extracts 1 to 5 character grams.
     return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,6)]))
 
-  
  
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -164,20 +163,21 @@ def get_features(data_source, language=None, option='char', \
   """ Get features given the data_source, language and option"""
   charngs, wordfqs = feature_interface(data_source)
   
-  if option == 'char':
-    result = charngs[language] if language else charngs
-  elif option == 'word':
-    result = wordfqs[language] if language else wordfqs
-  elif 'gram' in option:
-    from collections import Counter, defaultdict
-    _result = charngs[language] if language else charngs
-    result = defaultdict(Counter)
-    for i in _result:
-      _tempcounter = Counter({j:_result[i][j] for j in _result[i] \
-                           if len(j) == int(option[0])})
-      if len(_tempcounter) > 0: # Ensures that no Counter are empty.
-        result[i] = _tempcounter
-  if option == None:
+  if isinstance(option, str):
+    if option == 'char':
+      result = charngs[language] if language else charngs
+    elif option == 'word':
+      result = wordfqs[language] if language else wordfqs
+    elif 'gram' in option:
+      from collections import Counter, defaultdict
+      _result = charngs[language] if language else charngs
+      result = defaultdict(Counter)
+      for i in _result:
+        _tempcounter = Counter({j:_result[i][j] for j in _result[i] \
+                             if len(j) == int(option[0])})
+        if len(_tempcounter) > 0: # Ensures that no Counter are empty.
+          result[i] = _tempcounter
+  elif None == option:
     return charngs, wordfqs
   
   if tfidf:
