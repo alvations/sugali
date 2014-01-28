@@ -137,6 +137,8 @@ def pickle2plaintext(testing=False,option='cleanest'):
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
 
+pickle2plaintext(option="all")
+
 def igts():
   """ Yields IGTs from ODIN. """
   for lang, examples in load_odin_pickle():
