@@ -62,7 +62,7 @@ def extract_feature_from_datasource(data_source, outputpath):
         lang = wikicode2iso(lang)
       if not shutup:
         print (data_source, lang, 'Creating feature sets, please be patient...')
-      ##print (sent)
+      print (lang, sent)
       if lang in ISO2LANG or lang in MACRO2LANG:
         for n in range(1,6): # Generates 1-5character ngrams.
           charngrams[lang]+= Counter(sentence2ngrams(sent, n, 'char', True))

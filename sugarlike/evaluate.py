@@ -158,6 +158,7 @@ def evaluator(data_source, option, smoothing=0.00001, model="sgt",tfidf=False):
           rr.append(1/float(top10.index(lang)+1))
         else:
           rr.append(0)
+          
     elif model == "sklearn":
       featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
       from sklearn.naive_bayes import MultinomialNB
@@ -230,3 +231,4 @@ def evaluator(data_source, option, smoothing=0.00001, model="sgt",tfidf=False):
   
 evaluator('omniglot',option='char', model='cosine',tfidf=True)
 #evaluator(1,2)
+
