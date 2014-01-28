@@ -11,7 +11,7 @@ def tenfold(data_source, randseed=0):
   corpus = sorted(iter(corpus), key=lambda k: random.random())
   totrain = int(len(corpus)/10)
   
-  for i in range(1,10):
+  for i in range(1,11):
     ##print i*totrain
     yield corpus[:(i-1)*totrain] + corpus[i*totrain:], \
           corpus[(i-1)*totrain:i*totrain] # yield train, test
@@ -64,6 +64,7 @@ def evaluator(data_source, option, smoothing=0.00001):
   ten_fold_accuracies = []
   ten_fold_mrr = []
   ten_fold_mrrpos = []
+  average_positions = []
   for fold in tenfold(data_source):
     start = time.time()
     fold_counter+=1
@@ -90,6 +91,7 @@ def evaluator(data_source, option, smoothing=0.00001):
     x = featureset
     fold_results = Counter() # for accuracy calculation
     rr = [] # Mean Reciprocal Rank, top 10.
+    positions = [] #position of the language
     print "Calculating Fold", fold_counter, ", please wait patiently..."
     for lang, testsent in test:
       sgt_results = []
@@ -103,6 +105,14 @@ def evaluator(data_source, option, smoothing=0.00001):
       ##print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
       fold_results[lang == best[1]]+=1
       top10 = [i[1] for i in sorted(sgt_results, reverse=True)[:10]]
+
+
+      # calculate position/rank of the gold language in sgt_results
+      if lang in [i[1] for i in sorted(sgt_results, reverse=True)]:
+        print(lang, str([i[1] for i in sorted(sgt_results, reverse=True)].index(lang)+1))
+        position = [i[1] for i in sorted(sgt_results, reverse=True)].index(lang)+1
+        positions.append(position)
+
       if lang in top10:
         ##print 1/float(top10.index(lang)+1)
         rr.append(1/float(top10.index(lang)+1))
@@ -122,6 +132,9 @@ def evaluator(data_source, option, smoothing=0.00001):
     print "Mean Reciprocal Rank (only positive):", \
           "%0.4f" % mrrpos 
     ten_fold_mrrpos.append(mrrpos)
+
+    average_positions.append((sum(positions)/float(len(positions))))
+    print('Average rank: '+str((sum(positions)/float(len(positions)))))
     
     end = time.time() - start
     print str(end), "seconds to evaluation Fold-"+ str(fold_counter), \
@@ -138,8 +151,11 @@ def evaluator(data_source, option, smoothing=0.00001):
   print "Ten-fold MRRs (only in top10):", ten_fold_mrrpos
   print "Average ten-fold MRR (only in top10):", \
         "%0.6f"%(sum(ten_fold_mrrpos)/float(10))
+  print
+  print('Average Positions: ' + str(average_positions))
+  print('Average position: ' + str(sum(average_positions)/float(10)))
   
   
 
-evaluator('omniglot','char')
+evaluator('udhr','word')
 #evaluator(1,2)
