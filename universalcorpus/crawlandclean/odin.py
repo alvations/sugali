@@ -137,14 +137,12 @@ def pickle2plaintext(testing=False,option='cleanest'):
   # Remove the udhr-utf8 directory.
   shutil.rmtree(TEMPODIN_DIR)
 
-pickle2plaintext(option="all")
-
 def igts():
   """ Yields IGTs from ODIN. """
   for lang, examples in load_odin_pickle():
     yield lang, examples
     
-def source_sents(intarfile=parentddir+'/data/odin/odin-cleanest.tar'):
+def source_sents(intarfile=parentddir+'/data/odin/odin-all.tar'):
   """ Yield clean sentences from the clean ODIN tarball. """
   for infile in sorted(read_tarfile(intarfile)):
     language = infile.split('/')[-1].split('-')[1].split('.')[0].split('_')[0]
