@@ -47,8 +47,53 @@ def tfidfize(_featureset):
       idf = math.log(len(_featureset)) / len([i for i in _featureset if gram in _featureset[i]])
       featureset[lang][gram] = tf * idf
   return featureset
- 
-def evaluator(data_source, option, smoothing=0.00001):
+
+def sugarlid_cosine(trainfeatures, text, option, tfidf=False):
+  """ Cosine Vector based sugarlid. """
+  from cosine import cosine_similarity
+  from extractfeature import sentence2ngrams
+  try:
+    query_vector = " ".join(sentence2ngrams(text, option=option))
+  except TypeError:
+    query_vector = " ".join(["_".join(i) for i in \
+                             sentence2ngrams(text, option=option)])
+    ##print query_vector
+  results = []
+  for i in sorted(trainfeatures):
+    if tfidf:
+      lang_vector = " ".join([str(j+" ")*int(trainfeatures[i][j]*10000) \
+                              for j in trainfeatures[i]])
+    else:
+      lang_vector = " ".join([str(j+" ")*int(trainfeatures[i][j]) \
+                              for j in trainfeatures[i]])
+    score = cosine_similarity(query_vector, lang_vector)
+    ##print i, score
+    if score > 0:
+      results.append((score,i))
+  return sorted(results, reverse=True)
+
+'''
+from extractfeature import get_features
+s = 'ich bin schwanger'
+x = get_features('omniglot')
+print sugarlid_cosine(x,s,'char')
+'''
+
+def tfidfize2(_featureset):
+  from collections import defaultdict
+  import math
+  fs = defaultdict(dict) 
+  print 'Calculating TF-IDF, please wait patiently...'
+  for lang in _featureset:
+    for gram in _featureset[lang]:
+      tf = _featureset[lang][gram] / float(sum(_featureset[lang].values()))
+      idf = math.log(len(_featureset)) / len([i for i in _featureset if \
+                                              gram in _featureset[i]])
+      fs[lang][gram] = tf * idf
+      ##print lang, gram, _featureset[lang][gram], tf, idf, tf*idf
+  return fs
+
+def evaluator(data_source, option, smoothing=0.00001, model="sgt",tfidf=False):
   """
   Segments the data into 90-10 portions using tenfold(), 
   then trains a model using 90% of the data and evaluated the remaining 10%.
@@ -72,6 +117,7 @@ def evaluator(data_source, option, smoothing=0.00001):
     # Extracts the features.
     featureset = defaultdict(Counter)
     for lang, trainsent in train:
+      ##print lang, trainsent
       if lang in ISO2LANG or lang in MACRO2LANG:
         _tempcounter = Counter(sentence2ngrams(trainsent, option=option))
         if len(_tempcounter) > 0:
@@ -86,28 +132,62 @@ def evaluator(data_source, option, smoothing=0.00001):
       best = sorted(zip(guess.tolist()[0], tags), reverse=True)[0]
       print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], lang == best[1] # testsent
     '''
-    # Trains the model and test using NLTK MNB
-    x = featureset
+          
     fold_results = Counter() # for accuracy calculation
     rr = [] # Mean Reciprocal Rank, top 10.
     print "Calculating Fold", fold_counter, ", please wait patiently..."
-    for lang, testsent in test:
-      sgt_results = []
-      testsent = Counter(sentence2ngrams(testsent))
-      for flang in x:
-        train = featureset[flang]
-        ##print train
-        sgt = SGT(train)
-        sgt_results.append((sgt.estimate(testsent),flang))
-      best = sorted(sgt_results, reverse=True)[0]
-      ##print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
-      fold_results[lang == best[1]]+=1
-      top10 = [i[1] for i in sorted(sgt_results, reverse=True)[:10]]
-      if lang in top10:
-        ##print 1/float(top10.index(lang)+1)
-        rr.append(1/float(top10.index(lang)+1))
-      else:
-        rr.append(0)
+    if model == "sgt": # Trains the model and test using NLTK MNB
+      x = featureset    
+      for lang, testsent in test:
+        sgt_results = []
+        testsent = Counter(sentence2ngrams(testsent))
+        for flang in x:
+          train = featureset[flang]
+          ##print train
+          sgt = SGT(train)
+          sgt_results.append((sgt.estimate(testsent),flang))
+        best = sorted(sgt_results, reverse=True)[0]
+        ##print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
+        fold_results[lang == best[1]]+=1
+        top10 = [i[1] for i in sorted(sgt_results, reverse=True)[:10]]
+        if lang in top10:
+          ##print 1/float(top10.index(lang)+1)
+          rr.append(1/float(top10.index(lang)+1))
+        else:
+          rr.append(0)
+    elif model == "sklearn":
+      featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
+      from sklearn.naive_bayes import MultinomialNB
+      mnb = MultinomialNB(alpha=1)   
+      for lang, testsent in test:
+        guess = mnb.fit(featureset, tags).predict_proba(featurize(testsent, \
+                                                  allfeatures, option=option))
+        sklearn_results = sorted(zip(guess.tolist()[0], tags), reverse=True)
+        best = sklearn_results[0]
+        fold_results[lang == best[1]]+=1
+        top10 = [i[1] for i in sklearn_results[:10]]
+        if lang in top10:
+          ##print 1/float(top10.index(lang)+1)
+          rr.append(1/float(top10.index(lang)+1))
+        else:
+          rr.append(0)
+    elif model == "cosine":
+      x = tfidfize2(featureset) if tfidf else featureset
+      print "Calculating cosine for language id..."
+      for lang, testsent in test:
+        cosine_results = sugarlid_cosine(x,testsent,option=option, tfidf=tfidf)
+        if cosine_results:
+          best = cosine_results[0]
+          fold_results[lang == best[1]]+=1
+          top10 = [i[1] for i in cosine_results[:10]]
+          if lang in top10:
+            ##print 1/float(top10.index(lang)+1)
+            rr.append(1/float(top10.index(lang)+1))
+          else:
+            rr.append(0)
+        elif cosine_results:
+          fold_results[False]+=1
+          rr.append(0)
     
     accuracy = fold_results[True] / float(sum(fold_results.values()))
     print "Accuracy:", "%0.6f" % (accuracy*100), "%"
@@ -139,7 +219,6 @@ def evaluator(data_source, option, smoothing=0.00001):
   print "Average ten-fold MRR (only in top10):", \
         "%0.6f"%(sum(ten_fold_mrrpos)/float(10))
   
-  
 
-evaluator('omniglot','char')
+evaluator('omniglot',option='char', model='cosine',tfidf=True)
 #evaluator(1,2)
