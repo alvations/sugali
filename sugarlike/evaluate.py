@@ -1,234 +1,179 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 import sys; sys.path.append('../') # Access modules from parent dir.
+from math import sqrt
 
 def tenfold(data_source, randseed=0):
-  """ Randomly split data in 90-10 portions. """
+  """
+  Randomly split data in 90-10 portions.
+  randseed can be used for different random partitions.
+  """
   import random, sys
   from extractfeature import get_features, sentence2ngrams
   from universalcorpus import odin, omniglot, udhr
   random.seed(randseed)
   corpus = list(locals()[data_source].source_sents())
   corpus = sorted(iter(corpus), key=lambda k: random.random())
-  totrain = int(len(corpus)/10)
+  totrain = len(corpus)/10
   
   for i in range(1,11):
     ##print i*totrain
-    yield corpus[:(i-1)*totrain] + corpus[i*totrain:], \
-          corpus[(i-1)*totrain:i*totrain] # yield train, test
+    yield corpus[:int((i-1)*totrain)] + corpus[int(i*totrain):], \
+          corpus[int((i-1)*totrain):int(i*totrain)] # yield train, test
 
-def featurize(text, all_features, option="3gram"):
-  """ Inputs a sentence string and outputs the np.array() """
-  import numpy as np
-  from collections import Counter
-  from extractfeature import sentence2ngrams
-  return np.array([Counter(sentence2ngrams(text, option=option))[j] \
-                   for j in all_features])
-
-def features2numpy(featureset):
-  """ Converts a feature counter in numpy arrays. """  
-  from itertools import chain
-  import numpy as np
-  all_features = list(set(chain(*[i.keys() for i in featureset.values()])))
-  all_tags = [i for i in featureset]
-  data, target = [], []
-  for lang in featureset:
-    data.append([featureset[lang][j] if j in featureset[lang] else 0 \
-                 for j in all_features])
-    target.append(lang)
-  return np.array(data), np.array(target), all_features
- 
 def tfidfize(_featureset):
-  from collections import defaultdict, Counter
-  import math
-  featureset = defaultdict(Counter)
-  for lang in _featureset:
-    for gram in _featureset[lang]:
-      tf = _featureset[lang][gram] / float(sum(_featureset[lang].values()))
-      idf = math.log(len(_featureset)) / len([i for i in _featureset if gram in _featureset[i]])
-      featureset[lang][gram] = tf * idf
-  return featureset
-
-def sugarlid_cosine(trainfeatures, text, option, tfidf=False):
-  """ Cosine Vector based sugarlid. """
-  from cosine import cosine_similarity
-  from extractfeature import sentence2ngrams
-  try:
-    query_vector = " ".join(sentence2ngrams(text, option=option))
-  except TypeError:
-    query_vector = " ".join(["_".join(i) for i in \
-                             sentence2ngrams(text, option=option)])
-    ##print query_vector
-  results = []
-  for i in sorted(trainfeatures):
-    if tfidf:
-      lang_vector = " ".join([str(j+" ")*int(trainfeatures[i][j]*10000) \
-                              for j in trainfeatures[i]])
-    else:
-      lang_vector = " ".join([str(j+" ")*int(trainfeatures[i][j]) \
-                              for j in trainfeatures[i]])
-    score = cosine_similarity(query_vector, lang_vector)
-    ##print i, score
-    if score > 0:
-      results.append((score,i))
-  return sorted(results, reverse=True)
-
-'''
-from extractfeature import get_features
-s = 'ich bin schwanger'
-x = get_features('omniglot')
-print sugarlid_cosine(x,s,'char')
-'''
-
-def tfidfize2(_featureset):
+  """
+  Convert frequencies to tf-idf.
+  """
   from collections import defaultdict
   import math
   fs = defaultdict(dict) 
-  print 'Calculating TF-IDF, please wait patiently...'
   for lang in _featureset:
     for gram in _featureset[lang]:
-      tf = _featureset[lang][gram] / float(sum(_featureset[lang].values()))
-      idf = math.log(len(_featureset)) / len([i for i in _featureset if \
-                                              gram in _featureset[i]])
-      fs[lang][gram] = tf * idf
-      ##print lang, gram, _featureset[lang][gram], tf, idf, tf*idf
+      fs[lang][gram] /= len([i for i in _featureset if gram in _featureset[i]])
   return fs
 
-def evaluator(data_source, option, smoothing=0.00001, model="sgt",tfidf=False):
+def cosine_similarity(featureset, sentfeat):
+  """
+  Calculate the cosine similarity of a sentence and all languages seen in training
+  Note that the dot product is not normalised according to the length of the sentence vector;
+  however, the classification remains the same
+  """
+  results = []
+  for langcode in featureset:
+    langfeat = featureset[langcode]
+    dotprod = 0
+    for x in sentfeat:
+      if x in langfeat:
+        dotprod += sentfeat[x] * langfeat[x]
+    results.append((dotprod, langcode))
+  return results
+
+def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=0):
   """
   Segments the data into 90-10 portions using tenfold(), 
-  then trains a model using 90% of the data and evaluated the remaining 10%.
+  then trains a model using 90% of the data and evaluates on the remaining 10%.
   """
   from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG
   from extractfeature import sentence2ngrams
   from collections import defaultdict, Counter
-  
   from multinomialnaivebayes import SGT
-  import time
+  from time import time
+  
+  ### Choose the function that will be called when identifying a sentence
+  if model == "cosine":
+    identify = cosine_similarity
+  else:
+    print "Sorry, the model '{}' isn't available!".format(model)
+    return None
+  
+  ### Get ready to record these statistics
+  ten_fold_accuracy = []
+  ten_fold_mrr = []
+  ten_fold_precision = []
+  ten_fold_recall = []
+  ten_fold_fscore = []
   
   fold_counter = 0
-  ten_fold_accuracies = []
-  ten_fold_mrr = []
-  ten_fold_mrrpos = []
-  average_positions = []
-  for fold in tenfold(data_source):
-    start = time.time()
-    fold_counter+=1
-    train, test = fold
+  
+  ### Set up the tenfold cross-validation, then evaluate on each fold 
+  for train, test in tenfold(data_source, randseed=seed):
+    fold_counter += 1
+    print "Loading fold {}...".format(fold_counter)
+    start = time()
     #print len(train), len(test)
-    # Extracts the features.
+    ### Extract the features
     featureset = defaultdict(Counter)
     for lang, trainsent in train:
-      ##print lang, trainsent
+      #print lang, trainsent
       if lang in ISO2LANG or lang in MACRO2LANG:
-        _tempcounter = Counter(sentence2ngrams(trainsent, option=option))
-        if len(_tempcounter) > 0:
-          featureset[lang] = _tempcounter
+        trainsentcount = Counter(sentence2ngrams(trainsent, option=option))
+        if len(trainsentcount) > 0:
+          featureset[lang].update(trainsentcount)
     
-    '''# Trains the model and test using langid.py
-    featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
-    from sklearn.naive_bayes import MultinomialNB
-    mnb = MultinomialNB(alpha=0.01)   
+    if tfidf:
+      print "Calculating tf-idf..."
+      featureset = tfidfize(featureset)
+    
+    if model == "cosine":
+      print "Normalising to unit length..."
+      for lang in featureset:
+        norm = sqrt(sum([x**2 for x in featureset[lang].values()]))
+        for feat in featureset[lang]:
+          featureset[lang][feat] /= norm
+    
+    print "Evaluating..."
+    fold_results = Counter()  # Records the number of times the correct language is at a specific rank 
+    macro_true = defaultdict(int)  # These three are to calculate precision, recall, and f-score for each language
+    macro_fpos = defaultdict(int)
+    macro_fneg = defaultdict(int) 
+    
+    ### Identify each sentence in the test data
     for lang, testsent in test:
-      guess = mnb.fit(featureset, tags).predict_proba(featurize(testsent, allfeatures, option=option))
-      best = sorted(zip(guess.tolist()[0], tags), reverse=True)[0]
-      print lang, sorted(zip(guess.tolist()[0], tags), reverse=True)[0], lang == best[1] # testsent
-    '''
-          
-    fold_results = Counter() # for accuracy calculation
-    rr = [] # Mean Reciprocal Rank, top 10.
-    positions = [] #position of the language
-    print "Calculating Fold", fold_counter, ", please wait patiently..."
-
-    if model == "sgt": # Trains the model and test using NLTK MNB
-      x = featureset    
-      for lang, testsent in test:
-        sgt_results = []
-        testsent = Counter(sentence2ngrams(testsent))
-        for flang in x:
-          train = featureset[flang]
-          ##print train
-          sgt = SGT(train)
-          sgt_results.append((sgt.estimate(testsent),flang))
-        best = sorted(sgt_results, reverse=True)[0]
-        ##print lang, sorted(sgt_results, reverse=True)[:3], lang == best[1]
-        fold_results[lang == best[1]]+=1
-        top10 = [i[1] for i in sorted(sgt_results, reverse=True)[:10]]
-        if lang in top10:
-          ##print 1/float(top10.index(lang)+1)
-          rr.append(1/float(top10.index(lang)+1))
-        else:
-          rr.append(0)
-          
-    elif model == "sklearn":
-      featureset, tags, allfeatures = features2numpy(tfidfize(featureset)) 
-      from sklearn.naive_bayes import MultinomialNB
-      mnb = MultinomialNB(alpha=1)   
-      for lang, testsent in test:
-        guess = mnb.fit(featureset, tags).predict_proba(featurize(testsent, \
-                                                  allfeatures, option=option))
-        sklearn_results = sorted(zip(guess.tolist()[0], tags), reverse=True)
-        best = sklearn_results[0]
-        fold_results[lang == best[1]]+=1
-        top10 = [i[1] for i in sklearn_results[:10]]
-        if lang in top10:
-          ##print 1/float(top10.index(lang)+1)
-          rr.append(1/float(top10.index(lang)+1))
-        else:
-          rr.append(0)
-    elif model == "cosine":
-      x = tfidfize2(featureset) if tfidf else featureset
-      print "Calculating cosine for language id..."
-      for lang, testsent in test:
-        cosine_results = sugarlid_cosine(x,testsent,option=option, tfidf=tfidf)
-        if cosine_results:
-          best = cosine_results[0]
-          fold_results[lang == best[1]]+=1
-          top10 = [i[1] for i in cosine_results[:10]]
-          if lang in top10:
-            ##print 1/float(top10.index(lang)+1)
-            rr.append(1/float(top10.index(lang)+1))
-          else:
-            rr.append(0)
-        elif cosine_results:
-          fold_results[False]+=1
-          rr.append(0)
-  
-    accuracy = fold_results[True] / float(sum(fold_results.values()))
-    print "Accuracy:", "%0.6f" % (accuracy*100), "%"
-    ten_fold_accuracies.append(accuracy)
+      ### Extract features
+      sentfeat = Counter(sentence2ngrams(testsent, option=option))
+      if len(sentfeat) == 0:
+        print "*** No features for: {}".format(testsent)
+        continue
+      
+      ### Predict the language
+      results = identify(featureset, sentfeat)
+      result_list = [code for score, code in sorted(results, reverse=True)]
+      try:
+        rank = result_list.index(lang) + 1  # Compare the prediction with the answer
+      except ValueError:  # If the language was not seen in training
+        rank = float('inf')
+      #print rank
+      
+      ### Note the result
+      fold_results[rank] += 1
+      if rank == 1:
+        macro_true[lang] += 1
+      else:
+        macro_fneg[lang] += 1
+        macro_fpos[result_list[0]] += 1
     
-    mrr = sum(rr)/len(rr)
-    print "Mean Reciprocal Rank:", "%0.6f" % mrr
+    ### Calculate statistics for this fold
+    accuracy = fold_results[1] / sum(fold_results.values())
+    print "Accuracy: {}".format(accuracy)
+    ten_fold_accuracy.append(accuracy)
+    
+    mrr = sum([count/rank for rank, count in fold_results.items()]) / sum(fold_results.values())
+    print "Mean Reciprocal Rank: {}".format(mrr)
     ten_fold_mrr.append(mrr)
     
-    rrpos = [i for i in rr if i != 0] # Only counts results in top10
-    mrrpos = sum(rrpos)/len(rrpos)
-    print "Mean Reciprocal Rank (only positive):", \
-          "%0.4f" % mrrpos 
-    ten_fold_mrrpos.append(mrrpos)
-
-    average_positions.append((sum(positions)/float(len(positions))))
-    print('Average rank: '+str((sum(positions)/float(len(positions)))))
+    langset = set(macro_true.keys()) & set(macro_fpos.keys()) & set(macro_fneg.keys()) 
+    precision = {lang : macro_true[lang] / (macro_true[lang] + macro_fpos[lang]) for lang in langset}
+    recall = {lang : macro_true[lang] / (macro_true[lang] + macro_fneg[lang]) for lang in langset}
+    fscore = {lang : 2*precision[lang]*recall[lang]/(precision[lang]+recall[lang]) for lang in langset}
     
-    end = time.time() - start
-    print str(end), "seconds to evaluation Fold-"+ str(fold_counter), \
-          ", evaluated", str(sum(fold_results.values())), "test sentences"
-    print
+    average_precision = sum(precision.values()) / len(langset)
+    average_recall = sum(recall.values()) / len(langset)
+    average_fscore = sum(fscore.values()) / len(langset)
+    
+    print "Macro precision: {}".format(average_precision)
+    print "Macro recall: {}".format(average_recall)
+    print "Macro f-score: {}".format(average_fscore)
+    
+    ten_fold_precision.append(average_precision)
+    ten_fold_recall.append(average_recall)
+    ten_fold_fscore.append(average_fscore)
+    
+    end = time() - start
+    print "{} seconds to evaluate {} sentences in fold {}\n".format(end, sum(fold_results.values()), fold_counter)
+  
+  ### Average over all folds
+  overall_accuracy = sum(ten_fold_accuracy)/10
+  overall_mrr = sum(ten_fold_mrr)/10
+  overall_precision = sum(ten_fold_precision)/10
+  overall_recall = sum(ten_fold_recall)/10
+  overall_fscore = sum(ten_fold_fscore)/10
   
   print "=============================================="
-  print "Ten-fold Accuracies:", ten_fold_accuracies
-  print "Average ten-fold accuracies:", "%0.6f"% (sum(ten_fold_accuracies)/float(10))
-  print
-  print "Ten-fold MRRs:", ten_fold_mrr
-  print "Average ten-fold MRR:", "%0.6f"%(sum(ten_fold_mrr)/float(10))
-  print
-  print "Ten-fold MRRs (only in top10):", ten_fold_mrrpos
-  print "Average ten-fold MRR (only in top10):", \
-        "%0.6f"%(sum(ten_fold_mrrpos)/float(10))
-  print
-  print('Average Positions: ' + str(average_positions))
-  print('Average position: ' + str(sum(average_positions)/float(10)))
-  
-evaluator('omniglot',option='char', model='cosine',tfidf=True)
-#evaluator(1,2)
+  print "Average accuracy: {}".format(overall_accuracy)
+  print "Average MRR: {}".format(overall_mrr)
+  print "Average macro precision: {}".format(overall_precision)
+  print "Average macro recall: {}".format(overall_recall)
+  print "Average macro f-score: {}".format(overall_fscore)
 
+evaluator('odin', option='allgrams', model='cosine', tfidf=False, seed=0)

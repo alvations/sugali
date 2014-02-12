@@ -87,9 +87,9 @@ class SGT(SimpleGoodTuringProbDist):
   
   def estimate(self, test):
     '''
-    Calculates the normalised probability of generating a sample sequence.
+    Calculates the normalised log probability of generating a sample sequence.
     (Technically speaking, this function accepts input as a bag of samples,
-     not a sequence, but the probability of all permutations are the same.)
+     not a sequence, but the probability of any permutation is the same.)
     '''
     value = 0.0
     for sample in test:
@@ -165,7 +165,7 @@ def evaluate_crubadan_odin(filename):
       f.write(wordresult+'\n')
   print "Done!"
   
-def sort_results(inputfilename, charfilename, wordfilename, combfilename):
+def sort_results(inputfilename, charfilename, wordfilename, combfilename, weight=1):
   print "Loading data..."
   data = []
   with open(inputfilename,'r') as f:
@@ -184,12 +184,13 @@ def sort_results(inputfilename, charfilename, wordfilename, combfilename):
         wordprob = None
       else:
         wordprob = [float.fromhex(x) for x in rest.split()]
-        combprob = [charprob[i]+wordprob[i] for i in range(N)]
+        combprob = [charprob[i]+weight*wordprob[i] for i in range(N)]
         for i in range(N):
           datachar[i].append((charprob[i], code))
           dataword[i].append((wordprob[i], code))
           datacomb[i].append((combprob[i], code))
   print "Sorting data..."
+  '''
   with open(charfilename,'w') as f:
     for i in range(N):
       print answer[i]
@@ -200,6 +201,7 @@ def sort_results(inputfilename, charfilename, wordfilename, combfilename):
       print answer[i]
       ordered = [lang for prob, lang in sorted(dataword[i], reverse=True)]
       f.write('{}: {}\n'.format(answer[i], ' '.join(ordered)))
+  '''
   with open(combfilename,'w') as f:
     for i in range(N):
       print answer[i]
@@ -258,3 +260,6 @@ def calculate_statistics(inputfilename, outputfilename):
     print "filtered:", filterfirst, filtertopten, filteraverage
     f.write("average: {} {} {}\n".format(sumfirst,sumtopten,sumaverage))
     f.write("filtered: {} {} {}".format(filterfirst,filtertopten,filteraverage))
+
+#sort_results('newresults.txt', 'bla', 'bla', 'sorted-scrap.txt', 2**10)
+#calculate_statistics('sorted-scrap.txt','summary-scrap.txt')
