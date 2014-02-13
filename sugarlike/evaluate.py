@@ -2,6 +2,7 @@
 from __future__ import division
 import sys; sys.path.append('../') # Access modules from parent dir.
 from math import sqrt
+from collections import Counter
 
 def tenfold(data_source, randseed=0):
   """
@@ -36,7 +37,7 @@ def tfidfize(_featureset):
 def dot_product(featureset, sentfeat):
   """
   Calculates the dot product of a sentence's features with the feature weights
-  for each each language.
+  for each language.
   """
   results = []
   for langcode in featureset:
@@ -48,7 +49,38 @@ def dot_product(featureset, sentfeat):
     results.append((dotprod, langcode))
   return results
 
-def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_boundary=True, seed=0):
+def combined_dp(featureset, sentfeat):
+  """
+  Calculates the dot product of a sentence's features with the feature weights
+  for each language, when there are different sets of features
+  [Hang on, this isn't properly normalised, so we shouldn't just add components...]
+  """
+  results = []
+  for langcode in featureset:
+    langfeat = featureset[langcode]
+    dotprod = 0
+    for i in range(6):
+      for x in sentfeat[i]:
+        if x in langfeat[i]:
+          dotprod += sentfeat[i][x] * langfeat[i][x]
+    results.append((dotprod, langcode))
+  return results
+
+class MultiCounter(list):
+  def __init__(self, data=["","","","","",""]):
+    for x in data:
+      self.append(Counter(x))
+  
+  def update(self, data):
+    i = 0
+    for x in data:
+      self[i].update(x)
+      i += 1
+  
+  def __len__(self):
+    return sum([len(x) for x in self])
+
+def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_boundary=True, seed=0, warnings=False):
   """
   Segments the data into 90-10 portions using tenfold(), 
   then trains a model using 90% of the data and evaluates on the remaining 10%.
@@ -59,9 +91,16 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
   from multinomialnaivebayes import SGT
   from time import time
   
-  ### Choose the function that will be called when identifying a sentence
+  ### Choose the data structure to record features, and the function that will be called when identifying a sentence
   if model == "cosine":
+    DataStr = Counter
     identify = dot_product  # The sentence feature vectors will not be normalised, to save time. This does not affect classification.
+  
+  elif model == "cosine-combined":
+    DataStr = MultiCounter
+    identify = combined_dp
+    option = "separate"
+    
   else:
     print "Sorry, the model '{}' isn't available!".format(model)
     return None
@@ -80,26 +119,37 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
     fold_counter += 1
     print "Loading fold {}...".format(fold_counter)
     start = time()
-    #print len(train), len(test)
+    
     ### Extract the features
-    featureset = defaultdict(Counter)
+    featureset = defaultdict(DataStr)
     for lang, trainsent in train:
-      #print lang, trainsent
       if lang in ISO2LANG or lang in MACRO2LANG:
-        trainsentcount = Counter(sentence2ngrams(trainsent, option=option, with_word_boundary=with_word_boundary))
+        trainsentcount = DataStr(sentence2ngrams(trainsent, option=option, with_word_boundary=with_word_boundary))
         if len(trainsentcount) > 0:
           featureset[lang].update(trainsentcount)
+        elif warnings:
+          print("*** No features for: {}".format(trainsent))
+      elif warnings:
+        print("*** {} not recognised!".format(lang))
     
-    if tfidf:
-      print "Calculating tf-idf..."
-      featureset = tfidfize(featureset)
-    
+    ### Process the features to produce weights
     if model == "cosine":
       print "Normalising to unit length..."
       for lang in featureset:
         norm = sqrt(sum([x**2 for x in featureset[lang].values()]))
         for feat in featureset[lang]:
           featureset[lang][feat] /= norm
+      if tfidf:
+        print "Calculating tf-idf..."
+        featureset = tfidfize(featureset)
+    
+    elif model == "cosine-combined":
+      print "Normalising components to unit length..."
+      for lang in featureset:
+        for i in range(6):
+          norm = sqrt(sum([x**2 for x in featureset[lang][i].values()]))
+          for feat in featureset[lang][i]:
+            featureset[lang][i][feat] /= norm
     
     print "Evaluating..."
     fold_results = Counter()  # Records the number of times the correct language is at a specific rank 
@@ -110,7 +160,7 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
     ### Identify each sentence in the test data
     for lang, testsent in test:
       ### Extract features
-      sentfeat = Counter(sentence2ngrams(testsent, option=option, with_word_boundary=with_word_boundary))
+      sentfeat = DataStr(sentence2ngrams(testsent, option=option, with_word_boundary=with_word_boundary))
       if len(sentfeat) == 0:
         print "*** No features for: {}".format(testsent)
         continue
@@ -174,5 +224,7 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
   print "Average macro precision: {}".format(overall_precision)
   print "Average macro recall: {}".format(overall_recall)
   print "Average macro f-score: {}".format(overall_fscore)
+  
+  return (overall_accuracy, overall_mrr, overall_precision, overall_recall, overall_fscore)
 
-evaluator('omniglot', option='all', model='cosine', tfidf=False, with_word_boundary=True, seed=0)
+evaluator('udhr', model='cosine-combined', with_word_boundary=True, seed=0)
