@@ -33,11 +33,10 @@ def tfidfize(_featureset):
       fs[lang][gram] /= len([i for i in _featureset if gram in _featureset[i]])
   return fs
 
-def cosine_similarity(featureset, sentfeat):
+def dot_product(featureset, sentfeat):
   """
-  Calculate the cosine similarity of a sentence and all languages seen in training
-  Note that the dot product is not normalised according to the length of the sentence vector;
-  however, the classification remains the same
+  Calculates the dot product of a sentence's features with the feature weights
+  for each each language.
   """
   results = []
   for langcode in featureset:
@@ -49,7 +48,7 @@ def cosine_similarity(featureset, sentfeat):
     results.append((dotprod, langcode))
   return results
 
-def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=0):
+def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_boundary=True, seed=0):
   """
   Segments the data into 90-10 portions using tenfold(), 
   then trains a model using 90% of the data and evaluates on the remaining 10%.
@@ -62,7 +61,7 @@ def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=
   
   ### Choose the function that will be called when identifying a sentence
   if model == "cosine":
-    identify = cosine_similarity
+    identify = dot_product  # The sentence feature vectors will not be normalised, to save time. This does not affect classification.
   else:
     print "Sorry, the model '{}' isn't available!".format(model)
     return None
@@ -87,7 +86,7 @@ def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=
     for lang, trainsent in train:
       #print lang, trainsent
       if lang in ISO2LANG or lang in MACRO2LANG:
-        trainsentcount = Counter(sentence2ngrams(trainsent, option=option))
+        trainsentcount = Counter(sentence2ngrams(trainsent, option=option, with_word_boundary=with_word_boundary))
         if len(trainsentcount) > 0:
           featureset[lang].update(trainsentcount)
     
@@ -111,7 +110,7 @@ def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=
     ### Identify each sentence in the test data
     for lang, testsent in test:
       ### Extract features
-      sentfeat = Counter(sentence2ngrams(testsent, option=option))
+      sentfeat = Counter(sentence2ngrams(testsent, option=option, with_word_boundary=with_word_boundary))
       if len(sentfeat) == 0:
         print "*** No features for: {}".format(testsent)
         continue
@@ -176,4 +175,4 @@ def evaluator(data_source, option="allgrams", model="cosine", tfidf=False, seed=
   print "Average macro recall: {}".format(overall_recall)
   print "Average macro f-score: {}".format(overall_fscore)
 
-evaluator('odin', option='allgrams', model='cosine', tfidf=False, seed=0)
+evaluator('omniglot', option='all', model='cosine', tfidf=False, with_word_boundary=True, seed=0)

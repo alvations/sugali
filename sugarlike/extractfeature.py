@@ -30,7 +30,7 @@ def sentence2ngrams(text, n=3, option='char', with_word_boundary=False):
     return list(chain(*[word2ngrams(x, n) for x in words]))
   
   elif option == 'allgrams' or option == 'all':  # Extracts 1 to 5 character n-grams.
-    return list(chain(*[list(chain(*[word2ngrams(x, n) for x in words])) for i in range(1,6)]))
+    return list(chain(*[list(chain(*[word2ngrams(x, i) for x in words])) for i in range(1,6)]))
 
 
 def extract_feature_from_datasource(data_source, outputpath):
@@ -228,4 +228,18 @@ x = get_features('odin',option='3gram')
 for i in x:
   for j in x[i]:
     print (i, j, x[i][j])
+'''
+
+'''
+# Testing speed
+from time import time
+
+start = time()
+
+for i in range(100000):
+  x = sentence2ngrams("this is a reasonably long sentence because of the extra padding", option="allgrams", with_word_boundary=True)
+  
+end = time()
+print(end-start)
+print(x)
 '''
