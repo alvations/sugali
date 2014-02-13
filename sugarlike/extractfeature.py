@@ -7,40 +7,32 @@ from itertools import chain
 global shutup   # To shut the console prints up, i.e. 
 shutup = False  # "Creating feature sets, please be patient..."
 
-def word2ngrams(text, n=3, option='char'):
+def word2ngrams(text, n=3, exact=True):
   """ Convert text into character ngrams. """
-  
-  if option == 'char':
-    char_ngrams =  ["".join(j) for j in zip(*[text[i:] for i in range(n)])]
-    return char_ngrams
+  return [text[i:i+n] for i in range(0, len(text)+1-n)]
 
-  if 'gram' in option:
-    char_ngrams = ["".join(j) for j in zip(*[text[i:] \
-                   for i in range(int(option[0]))])]
-    return char_ngrams
-
-def sentence2ngrams(text,n=3, option='char', with_word_boundary=False):
+def sentence2ngrams(text, n=3, option='char', with_word_boundary=False):
   """ 
   Takes a document/sentence, convert into ngrams.
   (NOTE: word boundary is counted as a character.)
   """
   if with_word_boundary:
-    text = " ".join(["<"+i+">" for i in text.split()])
-  
-  if option == 'char': # Extracts 1 to n character grams.
-    return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
+    words = ["<"+x+">" for x in text.split()]
+  else:
+    words = text.split()
   
   if option == 'word':
-    return text.split()
+    return words
   
-  if "gram" in option and "all" not in option and option[0].isdigit():
-    n = int(option[0])
-    return list(chain(*[word2ngrams(i, n, option) for i in text.split()]))
+  elif option == 'char' or option[1:5] == 'gram':  # Extracts character n-grams.
+    if option[0].isdigit():
+      n = int(option[0])
+    return list(chain(*[word2ngrams(x, n) for x in words]))
+  
+  elif option == 'allgrams' or option == 'all':  # Extracts 1 to 5 character n-grams.
+    return list(chain(*[list(chain(*[word2ngrams(x, n) for x in words])) for i in range(1,6)]))
 
-  if "allgrams" in option or 'all' in option: # Extracts 1 to 5 character grams.
-    return list(chain(*[sentence2ngrams(text,n=i) for i in range(1,6)]))
 
- 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
   import tarfile, codecs, os
