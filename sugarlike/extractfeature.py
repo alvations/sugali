@@ -34,6 +34,10 @@ def sentence2ngrams(text, n=3, option='char', with_word_boundary=False):
   
   elif option == 'separate':
     return [text.split()] + [list(chain(*[word2ngrams(x, i) for x in words])) for i in range(1,6)]
+  
+  else:
+    print("The option '{}' is not recognised!".format(option))
+    raise ValueError(option)
 
 def extract_feature_from_datasource(data_source, outputpath):
   """ Returns a Counter object with the ngrams/word counts. """
@@ -177,6 +181,7 @@ def get_features(data_source, language=None, option='char', \
       from collections import Counter, defaultdict
       _result = charngs[language] if language else charngs
       result = defaultdict(Counter)
+      # BUG: the following loop doesn't work if a language is given. Do we really need the option to specify a language here, anyway?
       for i in _result:
         _tempcounter = Counter({j:_result[i][j] for j in _result[i] \
                              if len(j) == int(option[0])})

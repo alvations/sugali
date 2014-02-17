@@ -22,17 +22,46 @@ def tenfold(data_source, randseed=0):
     yield corpus[:int((i-1)*totrain)] + corpus[int(i*totrain):], \
           corpus[int((i-1)*totrain):int(i*totrain)] # yield train, test
 
-def tfidfize(_featureset):
+def tfidfize(featureset):
   """
   Convert frequencies to tf-idf.
   """
   from collections import defaultdict
-  import math
+  import math.log
   fs = defaultdict(dict) 
-  for lang in _featureset:
-    for gram in _featureset[lang]:
-      fs[lang][gram] /= len([i for i in _featureset if gram in _featureset[i]])
+  for lang in featureset:
+    for gram in featureset[lang]:
+      fs[lang][gram] /= log(len([i for i in featureset if gram in featureset[i]]))
   return fs
+
+class MultiCounter(list):
+  """
+  Six counters combined (to record words and 1-5 grams)
+  """
+  def __init__(self, data=["","","","","",""]):
+    for x in data:
+      self.append(Counter(x))
+  
+  def update(self, data):
+    i = 0
+    for x in data:
+      self[i].update(x)
+      i += 1
+  
+  def __len__(self):
+    return sum([len(x) for x in self])
+
+def normalise(featurevector, length=1):
+  """
+  Normalises a feature vector to a specific length.
+  Zero vectors are left zero.
+  """
+  try:
+    norm = length / sqrt(sum([x**2 for x in featurevector.values()]))
+  except ZeroDivisionError:
+    return
+  for feat in featurevector:
+    featurevector[feat] *= norm
 
 def dot_product(featureset, sentfeat):
   """
@@ -52,8 +81,7 @@ def dot_product(featureset, sentfeat):
 def combined_dp(featureset, sentfeat):
   """
   Calculates the dot product of a sentence's features with the feature weights
-  for each language, when there are different sets of features
-  [Hang on, this isn't properly normalised, so we shouldn't just add components...]
+  for each language, when there are different sets of features.
   """
   results = []
   for langcode in featureset:
@@ -66,21 +94,16 @@ def combined_dp(featureset, sentfeat):
     results.append((dotprod, langcode))
   return results
 
-class MultiCounter(list):
-  def __init__(self, data=["","","","","",""]):
-    for x in data:
-      self.append(Counter(x))
-  
-  def update(self, data):
-    i = 0
-    for x in data:
-      self[i].update(x)
-      i += 1
-  
-  def __len__(self):
-    return sum([len(x) for x in self])
+def sum_cosine(featureset, sentfeat):
+  """
+  Sums the cosines between a sentence's features and each set of feature weights,
+  for each language.
+  """
+  for x in sentfeat:
+    normalise(x)
+  return combined_dp(featureset, sentfeat)
 
-def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_boundary=True, seed=0, warnings=False):
+def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_boundary=True, seed=0, warnings=False, weight=None):
   """
   Segments the data into 90-10 portions using tenfold(), 
   then trains a model using 90% of the data and evaluates on the remaining 10%.
@@ -98,8 +121,10 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
   
   elif model == "cosine-combined":
     DataStr = MultiCounter
-    identify = combined_dp
+    identify = sum_cosine
     option = "separate"
+    if not weight:
+      weight = [1,1,1,1,1,1]
     
   else:
     print "Sorry, the model '{}' isn't available!".format(model)
@@ -136,26 +161,22 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
     if model == "cosine":
       print "Normalising to unit length..."
       for lang in featureset:
-        norm = sqrt(sum([x**2 for x in featureset[lang].values()]))
-        for feat in featureset[lang]:
-          featureset[lang][feat] /= norm
+        normalise(featureset[lang])
       if tfidf:
         print "Calculating tf-idf..."
         featureset = tfidfize(featureset)
     
     elif model == "cosine-combined":
-      print "Normalising components to unit length..."
+      print "Normalising and re-weighting components..."
       for lang in featureset:
         for i in range(6):
-          norm = sqrt(sum([x**2 for x in featureset[lang][i].values()]))
-          for feat in featureset[lang][i]:
-            featureset[lang][i][feat] /= norm
+          normalise(featureset[lang][i], weight[i])
     
     print "Evaluating..."
     fold_results = Counter()  # Records the number of times the correct language is at a specific rank 
     macro_true = defaultdict(int)  # These three are to calculate precision, recall, and f-score for each language
     macro_fpos = defaultdict(int)
-    macro_fneg = defaultdict(int) 
+    macro_fneg = defaultdict(int)
     
     ### Identify each sentence in the test data
     for lang, testsent in test:
@@ -227,4 +248,5 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
   
   return (overall_accuracy, overall_mrr, overall_precision, overall_recall, overall_fscore)
 
-evaluator('udhr', model='cosine-combined', with_word_boundary=True, seed=0)
+if __name__ == "__main__":
+  evaluator('odin', model='cosine-combined', with_word_boundary=True, weight=[3,1,2,3,4,5], seed=7)
