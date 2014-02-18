@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import sys; sys.path.append('../') # Access modules from parent dir.
-from math import sqrt
+from math import sqrt, log
 from collections import Counter
 
 def tenfold(data_source, randseed=0):
@@ -26,13 +26,16 @@ def tfidfize(featureset):
   """
   Convert frequencies to tf-idf.
   """
-  from collections import defaultdict
-  import math.log
-  fs = defaultdict(dict) 
+  total = len(featureset)
+  docfreq = Counter()
   for lang in featureset:
-    for gram in featureset[lang]:
-      fs[lang][gram] /= log(len([i for i in featureset if gram in featureset[i]]))
-  return fs
+    docfreq.update(featureset[lang].keys())
+  idf = dict()
+  for feat in docfreq:
+    idf[feat] = log(total/docfreq[feat]) 
+  for lang in featureset:
+    for feat in featureset[lang]:
+      featureset[lang][feat] *= idf[feat] 
 
 class MultiCounter(list):
   """
@@ -164,7 +167,7 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
         normalise(featureset[lang])
       if tfidf:
         print "Calculating tf-idf..."
-        featureset = tfidfize(featureset)
+        tfidfize(featureset)
     
     elif model == "cosine-combined":
       print "Normalising and re-weighting components..."
@@ -249,4 +252,4 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
   return (overall_accuracy, overall_mrr, overall_precision, overall_recall, overall_fscore)
 
 if __name__ == "__main__":
-  evaluator('odin', model='cosine-combined', with_word_boundary=True, weight=[3,1,2,3,4,5], seed=7)
+  evaluator('odin', model='cosine', option='allgrams', with_word_boundary=True, tfidf=True, seed=7)
