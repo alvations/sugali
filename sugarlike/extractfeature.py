@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import sys; sys.path.append('../') # Access modules from parent dir.
+#import sys; sys.path.append('../') # Access modules from parent dir.
+import os
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+import sys; sys.path.append(parentddir)
 
 from itertools import chain
 
@@ -250,7 +253,7 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
-get_features('wikipedia')
+
 '''
 #Informal Test:
 
