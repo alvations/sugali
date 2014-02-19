@@ -54,10 +54,8 @@ def extract_feature_from_datasource(data_source, outputpath):
   charngrams = defaultdict(Counter)
   wordfreqs = defaultdict(Counter)
 
-  if data_source in ['odin','omniglot','udhr','wikipedia']:
+  if data_source in ['odin','omniglot','udhr']:
     for lang, sent in locals()[data_source].source_sents():
-      if data_source == 'wikipedia':
-        lang = wikicode2iso(lang)
       if not shutup:
         print (data_source, lang, 'Creating feature sets, please be patient...')
       print (lang, sent)
@@ -69,6 +67,8 @@ def extract_feature_from_datasource(data_source, outputpath):
         datalost.add((data_source, lang))
   elif data_source == 'crubadan':
     charngrams, wordfreqs, datalost = crubadan2counters()
+  elif data_source == 'wikipedia':
+    charngrams, wordfreqs, datalost = wiki2counters('wikipedia')
     
   if outputpath and os.path.exists(outputpath):
     with codecs.open(outputpath+'/'+data_source+'-char.pk','wb') as fout:
@@ -76,6 +76,58 @@ def extract_feature_from_datasource(data_source, outputpath):
     with codecs.open(outputpath+'/'+data_source+'-word.pk','wb') as fout:
       pickle.dump(wordfreqs, fout)
         
+  return charngrams, wordfreqs, datalost
+
+
+def wiki2counters(data_source='wikipedia'):
+  '''Extract features from wikipedia. This is not Wikipedia specific. It requires the data to be structured (one language after another). Much faster than other extract_feature_from_datasource.'''
+
+  from universalcorpus.miniethnologue import ISO2LANG, MACRO2LANG, LANG2ISO, WIKI2ISO, wikicode2iso
+  from collections import defaultdict, Counter
+  from universalcorpus import odin, omniglot, udhr, wikipedia
+
+  datalost = set() # To keep track of which languages not in ISO.
+  charngrams = defaultdict(Counter)
+  wordfreqs = defaultdict(Counter)
+
+  if data_source == 'wikipedia':
+     lang_old = None
+     d_chars = dict()
+     d_words = Counter()
+
+     for lang, sent in locals()[data_source].source_sents():
+      if data_source == 'wikipedia':
+       try:
+         lang = WIKI2ISO[lang]
+       except KeyError:
+         lang = wikicode2iso(lang)
+       if lang == None:
+          datalost.add((data_source, lang))
+          continue 
+       if lang_old != lang and lang_old != None:
+         charngrams[lang_old] = d_chars
+         wordfreqs[lang_old] = d_words
+         print('next language: ' + str(lang))
+         d_chars = Counter()
+         d_words = Counter()
+       if lang in ISO2LANG or lang in MACRO2LANG:
+          for gram in sentence2ngrams(sent, option='allgrams', with_word_boundary=True):
+             try:
+               d_chars[gram] += 1
+             except KeyError:
+               d_chars[gram] = 1
+          for word in sent.split():
+           try:
+             d_words[word] += 1
+           except KeyError:
+             d_words[word] = 1
+         #d_chars += Counter(sentence2ngrams(sent, option='allgrams', with_word_boundary=True))
+         #d_words += Counter(sent.split())
+       else:
+         datalost.add((data_source, lang))
+       lang_old = lang
+     charngrams[lang_old] = d_chars
+  #print(charngrams)
   return charngrams, wordfreqs, datalost
 
 def crubadan2counters(crubadanfile='crub-131119.zip', lower=False):
@@ -198,7 +250,7 @@ def get_features(data_source, language=None, option='char', \
   
   return result if result else print('%s does not have %s features' \
                                      % (data_source, language))
-
+get_features('wikipedia')
 '''
 #Informal Test:
 

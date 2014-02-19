@@ -8570,11 +8570,10 @@ fiu-vro vro
 roa-rup rup
 map-bms jv
 sh hbs
-simple en
 zh-classical lzh
 zh-min-nan nan
 zh-yue yue
-mo ron"""
+mo ron""" #simple en
 
 iso6395 = """aka  Akan  fat  Fanti
    twi  Twi
@@ -9025,6 +9024,7 @@ zho  Chinese  cdo  Min Dong Chinese
 zza  Zaza  diq  Dimli (individual language)
    kiu  Kirmanjki (individual language)""" 
 
+# listofwikis is incomplete!
 listofwikis = """English Wikipedia  English  English  en  6
 German Wikipedia  German  Latn  de  6
 French Wikipedia  French  Latn  fr  6
@@ -11212,6 +11212,15 @@ def wikicode2iso(wikicode):
       return wikicode
     else:
       return None
+
+WIKI2ISO = defaultdict()
+for i in listofwikis.split('\n'):
+  wikicode = i.split('  ')[-2].split()[0]
+  #print(wikicode, wikicode2iso(wikicode))
+  WIKI2ISO[wikicode] = wikicode2iso(wikicode)
+
+#print(WIKI2ISO['aa'])
+#print(wikicode2iso('aa'))
 
 
 def macrolang():
