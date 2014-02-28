@@ -1,0 +1,238 @@
+\documentclass[11pt]{article}
+\usepackage{eacl2014}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\usepackage{listings}
+\usepackage{fancyvrb}
+
+\usepackage{color}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{orange}{rgb}{1,0.5,0}
+
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  showstringspaces=false,
+  commentstyle=\color{gray}\upshape
+}
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type}% list your attributes here
+}
+
+\special{papersize=210mm,297mm} % to avoid having to use "-t a4" with dvips 
+%\setlength\titlebox{6.5cm}  % You can expand the title box if you really have to
+
+\title{uniWaC: Compiling the Foundation Text for the WaCky Universal Corpus}
+
+\author{Susanne Fertmann\textsuperscript{$\alpha$}, Guy Emerson\textsuperscript{$\beta$}, Liling Tan\textsuperscript{$\alpha$}, Alexis Palmer\textsuperscript{$\alpha$} and Michaela Regneri\textsuperscript{$\alpha$} \\
+  Universit{\"a}t des Saarlandes\textsuperscript{$\alpha$} / Campus, 66123 Saarbrücken, Germany \\
+  Deutsches Forschungszentrum f{\"u}r Künstliche Intelligenz (DFKI)\textsuperscript{$\beta$} / \\ Stuhlsatzenhausweg 3, 66123 Saarbrücken, Germany \\
+  {\tt s9sufert@stud.uni-saarland.de, emerson@coli.uni-saarland.de,} \\
+  {\tt liling.tan@uni-saarland.de}}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+A grand aim of linguistics is to seek a universal theory of human language and the opposing relativist view of linguistics seek to prove otherwise. To accomplish either goal, the compilation of a Universal Corpus with significant data from a large variety of languages is necessary. The Web contains vast amounts of linguistic data however it is largely saturated by English content (\textgreater50\%). Nonetheless, there are websites that contains small amount of data in a large number of languages. To build the foundation text for a Universal Corpus, we crawled and cleaned texts from several web sources that contains linguistic data from multiple languages and merge them with existing corpora collections.This paper describes the progress of compiling, cleaning and standardizing the foundation texts for the Universal Corpus (\texttt{uniWaC}) and briefly describes the ongoing work to merge our compilation with existing corpora collections.
+\end{abstract}
+
+\section{Introduction}
+Abney and Bird (2010) posed a grand challenge to build a Universal Corpus that will include as many of the world's languages as possible, in a consistent structure that permits crosslingual processing and analysis. Ideally, the Universal Corpus would be a complete digitization of every human language. To empirically prove or disprove the existence of a universal theory of human languages, a Universal Corpus is necessary. 
+
+Currently multilingual corpora efforts have limited coverage in number of languages and the number of language families the corpora represents; for instance, the OPUS corpus covers over 90 languages (Tiedemann, 2012), i.e. 1.27\% of the total number of languages in the world; Leipzig Corpora
+Collection\footnote{corpora.uni-leipzig.de} contains corpora in 230 languages, 3.24\% of 7105 living languages (Biemann et al. 2007). Even corpora that boast of linguistic diversity lack in language families’ coverage; e.g. the linguistically diverse NTU-Multilingual Corpus covers only 7 out of 136 language families (Tan and Bond, 2011). The quintessential solution towards a Universal Corpus is to merge all existing corpora and provide an ubiquitous access interface. To compile the foundation text for the Universal Corpus (uniWaC), we crawled and cleaned web data that contains multilingual texts and merge them with existing corpora collections to form the foundation text for the Universal Corpus.
+
+\subsection{WaCky Corpora}
+
+Baroni and Bernardini (2004) introduced the BootCaT toolkit to bootstrap specialized corpora and terms from the web. Then, Sharoff (2006) built corpora in various languages by issuing queries for random combinations of frequent words to create a balanced corpus not unlike the British National Corpus. Later, Ferraresi (2007) introduced and discussed the notion of compiling Web as Corpus \emph{"properly"} with the inaugural ukWaC using web-crawled data from a list of seed words. Thereafter, the Crúbadán corpora was created for a large number of under-resourced languages (Scannell, 2007). Following which the deWaC (German), itWaC (Italian) and frWaC (French) were compiled (Baroni et al. 2008). 
+
+Subsequently, Brunello (2009) stressed the notion of building free corpora from the web using documents released under Creative Commons licenses. To build better quality WaCky corpora, Versley and Panchenko (2012) introduced the notion content-sensitive boilerplate detection in cleaning web corpora. 
+
+The initial wave of monolingual WaCky corpora (Baroni et al. 2008) inspired more domain specific WaCky corpora, such as the Korean Web Learner's Corpus (Dickinson et al. 2013) and the Feed Corpus (Minocha et al. 2013). Meanwhile, Web-driven corpora compilations also focused on building large  multilingual resources, e.g. Leipzig Corpora Collection (\texttt{LCC}) (Biemann et al. 2007), the COrpora from the Web (\texttt{COW}) project (Schaefer and Bildhauer, 2012).
+
+Different from previous WaCs built under the Web as Corpus kool ynitiative (WaCky), we did not perform seed query web-searching or web crawling to achieve a balanced resource. Instead the foundation text for uniWaC was built using dedicated site crawling and/or site-dependent cleaning from four data sources, viz. (i) \emph{Online Database of Interlinear Text} (ODIN), (ii) \emph{Omniglot} website, (iii) \emph{Universal Declaration of Human Rights} (UDHR) and (iv) \emph{Wikipedia} dumps. Our emphasis for the uniWaC is based on based on \textbf{\emph{universality}}; covering as many languages as possible is the first priority.
+
+\section{Crawling and Cleaning}
+
+Although data size matters in general NLP (Banko and Brill, 2001), \emph{universality} is the utmost priority in NLP for the Universal Corpus initiative (aka Human Language Project; Abney and Bird, 2010; 2011). Hence, the uniWaC approach to data collection is based on focused/dedicated crawling unlike previous WaC word/URL list seeding. We manually selected sites that contains texts from a large variety of languages and wrote scripts to crawl and clean specific pages from the different data sources. The crawling and cleaning was done simultaneously. 
+
+The resulting files were saved as plaintext file with \texttt{UTF-8} encoding. One directory for each data source and one file per language. The parallel data (from ODIN and Omniglot) are saved as tab-delimited files, one line per sentence, one column per language. The monolingual data (from UDHR and Wikipedia) are saved as newline delimited plaintext file, each line denoting a paragraph or sentence and each document separated by an empty line. The files are saved with the following naming convention to allow easy access, the filename contains the data source and its ISO 639-3 code, e.g. \texttt{odin-iii.txt} contains the \emph{ODIN} data for the \emph{Nuosu} language.
+
+\subsection{ODIN}
+
+The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the Interlinerized Glossed Texts (IGTs) are encoded in the \texttt{<igt><example>...</example></igt>} tags. Each XML file is saved under a filename that matches the respective language code. While cleaning the data, filenames that does not adhere to ISO 639-3\footnote{http://www-01.sil.org/iso639-3} were excluded in the uniWaC compilation.
+
+\begin{minipage}{\columnwidth}
+
+a. \quad o lesu mai \\
+\indent \qquad 2sg return here \\
+\indent \qquad `\emph{You return here.}' \\
+
+\centerline{Figure 1: IGT adhering to Leipzig Glossing Rule.}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+\begin{lstlisting}[language=XML]
+<igt>
+  <example>
+    <line>a. o lesu mai</line>
+    <line>2sg return here</line>
+    <line>`You return here.'</line>
+  </example>
+</igit>
+\end{lstlisting} 
+\centerline{Figure 2: An IGT in ODIN's XML format.}
+\end{minipage}
+\\ \\
+\noindent The IGTs from a web document usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
+\begin{minipage}{\columnwidth}
+\begin{lstlisting}[language=XML]
+<igt>
+  <example>
+    <line>(69) na-Na-tmi-kwalca-t 
+    (Foley 1991)</line>
+    <line>3sgA-1sgO-say-rise-PERF
+    </line>
+    <line>`She woke me up' 
+    (by verbal action)</line>
+  </example>
+</igit>
+\end{lstlisting} 
+\smallskip
+\centerline{Figure 3: Another IGT in ODIN's XML format.}
+\end{minipage}
+\\ \\
+\noindent The primary problem in extracting the source text is lack of consistency of the IGTs from the ODIN data. For instance, Figure 2 uses an alphabet bullet convention, i.e. `\emph{a.}', whereas the IGT in Figure 3 uses a bracketed number indexing convention, i.e. `\emph{(69)}'. In addition, the source line in Figure 3 included the citation to the example, which would be considered as noise to corpus.
+
+Lewis and Xia (2010) noted that it is not uncommon for IGT found in documents to deviant from one uniform convention; when compiling the ODIN data, they attempted a regex based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness':
+\\ \\
+\begin{minipage}{\columnwidth}
+\begin{itemize}
+\item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
+\begin{itemize}
+\item[(i)]
+\begin{Verbatim}
+^(?\s?\w{1,5}\s*[):.]\s*
+\end{Verbatim}
+\item[(ii)] 
+\begin{Verbatim}
+[\[\(].{1,}[\]\)]
+\end{Verbatim}
+\end{itemize}
+\item \emph{Cleanest}: Accepts only source lines without any punctuation.
+\end{itemize}
+\end{minipage}
+\\ \\
+\noindent The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages. The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 693-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing. 
+
+\subsection{Omniglot}
+
+The Omniglot crawling and cleaning required more tact and after manual inspection of the www.omniglot.com website, only the \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} pages were consistent in their HTML markups that allows easy cleaning. We wrote a crawler script that downloads pages with that contains the following in their URLs:
+
+\begin{itemize}[noitemsep]
+\item \url{www.omniglot.com/language/phrases/*} 
+\item \url{www.omniglot.com/babel/*}
+\end{itemize}
+
+\noindent The \emph{`Useful foreign phrases'} page contains parallel phrases in embedded within the \texttt{<th><tr>...</tr><th>} tags. The English phrase and foreign language phrase are encoded separately with \texttt{<td>...</td>} tags. Figure 4 shows an instance of an Omniglot \emph{Useful foreign phrase} page. Since the HTML page was designed as WYSIWYG, several pages have non-textual elements within the \texttt{<tr>...</tr>} tags for aesthetics. For example, the non-breaking space, \texttt{<td>\&nbsp;</td>} in Fig. 4; the extracted text was properly converted into plaintext format using the HTMLParser\footnote{http://docs.python.org/2/library/htmlparser.html} module, during which the non textual elements would have been cleaned. 
+
+The same process of crawling URLs and cleaning was performed on the \emph{`Tower of Babel'} pages and the only difference was that the texts were embedded in a \texttt{<ol><li>...</li></ol>} tags instead.
+
+\begin{minipage}{\columnwidth}
+\begin{lstlisting}[language=XML]
+<th>
+  ...
+  <tr>
+    <td>I don't understand</td>
+    <td>No appo cumpresu nutta</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>I don't understand</td>
+    <td>Non d'isco</td>
+    <td>&nbsp;</td>
+  </tr>
+  ...
+<th>
+\end{lstlisting} 
+\centerline{Figure 4: A \emph{Useful Foreign Phrase} page}
+\end{minipage}
+\smallskip
+
+\noindent The primary problem of the Omniglot data is that to the only information about the language of the data on the page is given in the title of the HTML and its URL. Additionally, only the name of the language was given not the ISO 639-3 code. Even though Omniglot pages contain language meta data in XHTML markup attributes, most pages are encoded with the \texttt{lang="en"} attribute because the pages are catered for English speaking audience and the boilerplates (e.g. navigation bar, site banner and footer) on the pages are in English. This causes a problem in file storage and access since it is necessary to save the files in the naming convention, e.g. \texttt{omniglot-smo.txt} but the language code is not found any where on the page. To resolve the problem of standardizing, we have written a conversion script using the code to language mappings from \url{http://www-01.sil.org/iso639-3/iso-639-3.tab}
+
+\subsection{Universal Declaration of Human Rights}
+
+Although there was a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution was laden with encoding problems during their conversion from pdf to plaintext format. Originally, we tried to resolve the encoding problems by automatically identifying the encoding and decoding the textfiles using the \texttt{libmagic} library\footnote{http://linux.die.net/man/3/libmagic} and then re-encoding them to \texttt{UTF-8} whenever possible. 
+
+However the better solution was found when we chanced upon the UDHR site\footnote{http://unicode.org/udhr/d/} from the \url{unicode.org} domain. The UDHR textfiles found on the site was free of encoding problem but there was a boilerplate at the start of each file which records it metadata. It was simply clean by skipping the first four lines of each file. 
+
+Although the redistribution of previous compiled data is not scientifically attractive but redistribution/recompilation of data to improve the usability and quality of the data is worth mentioning. For instance, the SETimes corpus first compiled by Tyers and Alperen (2010) was cleaned and redistributed by Ljubesic and Agic (2013).
+
+\subsection{Wikipedia Dumps}
+
+Tapping on the crowd-sourced Wikipedia articles for NLP forms a crucial part of developing data-driven NLP tools and application ({\color{red}{citation neeeded}}). To automatically download the Wikipedia dumps, we have scripted the \texttt{wget} with ISO 639-2 language code as a variable (\texttt{\$I}) in a shell script, as such:
+
+\smallskip
+\noindent \texttt{\$ wget http://download.wikimedia.
+org/\$Iwiki/latest/itwiki-latest-
+pages-articles.xml.bz2}
+\medskip
+
+\noindent One major issue with using the Wikipedia dump is the sheer size and extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool.
+
+After converting them into textfiles, we used the following regexes to delete residual Wikipedia markups and magic words\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+
+\section{Access and Copyrights}
+
+
+
+\section{Representation and Universality}
+This is we report the counts and size of corpus.
+
+
+
+\section{Ongoing Work}
+
+Currently, the uniWaC project is continually adding more data from the LCC Leipzig Corpora. Finally, the first phase of the uniWaC will end with the implementation of unsupervised tokenizer (e.g. Chung and Gildea, 2009) such that initial experiments on crosslingual analysis can be carried out to advance the grand aim of a unified linguistic theory.
+
+
+
+% TODO: use proper bibtex !!!!
+\section*{References}
+Steven Abney and Steven Bird. 2010. The Human Language Project: Building a Universal Corpus of the World’s Languages. In Proceedings of the 48th Annual Meeting of the Association for Computational Linguistics. Uppsala, Sweden.
+\\\\
+Steven Abney and Steven Bird. 2011. Towards a data model for the Universal Corpus. In Proceedings of the 4th Workshop on Building and Using Comparable Corpora: Comparable Corpora and the Web. Portland, Oregon.
+\\\\
+Michele Banko and Eric Brill. 2001. Michele Banko and Eric Brill. 2001. Scaling to very very large corpora for natural language disambiguation. In Proceedings of the 39th Annual Meeting on Association for Computational Linguistics (ACL '01). Association for Computational Linguistics, Stroudsburg, PA, USA, 26-33.
+\\\\
+Marco Baroni, Silvia Bernardini, Adriano Ferraresi and Eros Zanchetta. (2008). The WaCky wide web: A collection of very large linguistically processed web-crawled corpora. Language Resources and Evaluation, 43(3), 209–231.
+\\\\
+Tagyoung Chung and Daniel Gildea. 2009. Unsupervised tokenization for machine translation. In Proceedings of the 2009 Conference on Empirical Methods in Natural Language Processing: Volume 2 - Volume 2 (EMNLP '09), Vol. 2. Association for Computational Linguistics, Stroudsburg, PA, USA, 718-726.
+\\\\
+Adriano Ferraresi. 2007. Building a very large corpus of English obtained by Web crawling: ukWaC. Master Thesis, University of Bologna
+\\\\
+Jörg Tiedemann. 2012. Parallel Data, Tools and Interfaces in OPUS. In Proceedings of the 8th International Conference on Language Resources and Evaluation. Istanbul, Turkey.
+\\\\
+Liling Tan and Francis Bond. 2011. Building and Annotating the Linguistically Diverse NTU-MC (NTU-Multilingual Corpus). In Proceedings of The 25th Pacific Asia Conference on Language, Information, and Computation. Singapore, Singapore.
+
+\end{document}
