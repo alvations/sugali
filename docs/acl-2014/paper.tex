@@ -6,6 +6,8 @@
 
 \bibliographystyle{acl}
 
+\usepackage[utf8]{inputenc}
+
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{fancyvrb}
@@ -39,8 +41,8 @@
 \title{Getting the Ball Rolling: Producing a Foundation Text for a Universal Corpus of the World's Languages}
 
 \author{Liling Tan, Guy Emerson, Susanne Fertmann, Alexis Palmer and Michaela Regneri \\
-  Universit{\"a}t des Saarlandes \\
-  Campus, 66123 Saarbr{\"u}cken, Germany \\
+  Universität des Saarlandes \\
+  Campus, 66123 Saarbrücken, Germany \\
   {\tt s9sufert@stud.uni-saarland.de, emerson@coli.uni-saarland.de,} \\
   {\tt liling.tan@uni-saarland.de}}
 
@@ -56,11 +58,14 @@ The study of endangered languages is limited by a lack of data. Existing corpora
 
 \newcite{abneybird2010} posed the grand challenge of building a Universal Corpus, including all of the world's languages, in a consistent structure.
 
+7105 living languages.
+
 
 \section{Related Work}
 
-Currently multilingual corpora efforts have limited coverage in number of languages and the number of language families the corpora represents; for instance, the OPUS corpus covers over 90 languages (Tiedemann, 2012), i.e. 1.27\% of the total number of languages in the world; Leipzig Corpora
-Collection\footnote{corpora.uni-leipzig.de} contains corpora in 230 languages, 3.24\% of 7105 living languages (Biemann et al. 2007). Even corpora that boast of linguistic diversity lack in language families’ coverage; e.g. the linguistically diverse NTU-Multilingual Corpus covers only 7 out of 136 language families (Tan and Bond, 2011). The quintessential solution towards a Universal Corpus is to merge all existing corpora and provide an ubiquitous access interface. To compile the foundation text for the Universal Corpus (uniWaC), we crawled and cleaned web data that contains multilingual texts and merge them with existing corpora collections to form the foundation text for the Universal Corpus.
+[...]
+Currently, multilingual corpora efforts have limited coverage in the number of languages and the number of language families represented. For instance, the OPUS corpus (Tiedemann, 2012) covers over 90 languages, only 1.27\% of the world's languages; The Leipzig Corpora Collection\footnote{corpora.uni-leipzig.de} (???Biemann et al., 2007) contains corpora and dictionaries in 230 languages, 3.24\% of the world's languages. Even corpora that boast of linguistic diversity include only a small number of language families, e.g. the linguistically diverse NTU-Multilingual Corpus (Tan and Bond, 2011) covers only 7 out of 136 language families. Producing a universal corpus requires the linguistic community to merge existing corpora and provide an ubiquitous access interface. To compile the foundation text for the Universal Corpus (uniWaC), we crawled and cleaned web data that contains multilingual texts and merged them with existing corpora collections to form the foundation text for the Universal Corpus.
+
 
 \subsection{WaCky Corpora}
 
@@ -73,11 +78,27 @@ The initial wave of monolingual WaCky corpora (Baroni et al. 2008) inspired more
 Different from previous WaCs built under the Web as Corpus kool ynitiative (WaCky), we did not perform seed query web-searching or web crawling to achieve a balanced resource. Instead the foundation text for uniWaC was built using dedicated site crawling and/or site-dependent cleaning from four data sources, viz. (i) \emph{Online Database of Interlinear Text} (ODIN), (ii) \emph{Omniglot} website, (iii) \emph{Universal Declaration of Human Rights} (UDHR) and (iv) \emph{Wikipedia} dumps. Our emphasis for the uniWaC is based on based on \textbf{\emph{universality}}; covering as many languages as possible is the first priority.
 
 
-\section{Crawling and Cleaning}
+
+\section{Data Structure}
+
+\newcite{abneybird2011} describe the data structure in more detail, distinguishing between \textbf{aligned texts} and \textbf{analysed texts}: the former consists of multiple parallel texts, aligned at the document, sentence, or word level; the latter contains more detailed annotations including parts of speech, morphological information, and syntactic relations. In our work, we have strived to maintain a data structure consistent with their recommendations for aligned texts.
+
+However, we disagree that analysed texts should be accommodated in this way. If such a universal corpus is to succeed at all, it must enjoy support from the entire linguistics community, and doing this requires complete theory-neutrality. Although their data structure is fairly lightwight, it is not theory neutral, explicitly encoding support for dependency grammars but not constituency grammars, and positing a specific list of relevant features which should be used to annotate words. Other linguists might wish to use a different set of properties, which could threaten to fragment a universal corpus before it truly gets off the ground. More fundamentally, they assume that the corpus should be segmented into words, but Haspelmath [ref] argues that there is no cross-linguistically valid definition of "word", which would render such an endeavour impossible from the start.
+
+It is not within the scope of this paper to resolve these theoretical concerns. Instead, we suggest that the data structure for a universal corpus should be even more lightweight than Abney and Bird suggest. We agree with their characterisation of aligned texts, but propose an alternative for analysed texts. To motivate the role of parallel texts in a universal corpus, they propose using translations into a high-resource language as a convenient surrogate of meaning. By the same reasoning, we can use the glosses in an IGT to provide a more detailed surrogate of meaning. We propose that, just as we can align texts at the document, sentence, and word levels, we can also align texts at the morpheme level, as recommended by the Leipzig Glossing Rules [ref]. The only difference here is that a text is aligned with descriptions in a metalanguage,\footnote{While we would urge researchers to keep such annotations simple, as usually done in IGTs, there is nothing in principle to stop someone from using a complex metalanguage capable of encoding the full set of properties proposed by Abney and Bird, or even more complicated data structures.} rather than a natural language. The benefits, however, are that we can use the same data structure to represent both aligned and analysed texts, and the representation is simple enough that linguistic controversies cannot be raised. We admit that highly detailed annotations, such as in treebanks and dependency banks, are more awkward to encode, but such resources are unlikely to be available in more than a small handful of languages, and will remain outside the scope of a universal corpus, at least for the foreseeable future.
+
+
+\section{Data Sources}
 
 Although data size matters in general NLP (Banko and Brill, 2001), \emph{universality} is the utmost priority in NLP for the Universal Corpus initiative (aka Human Language Project; Abney and Bird, 2010; 2011). Hence, the uniWaC approach to data collection is based on focused/dedicated crawling unlike previous WaC word/URL list seeding. We manually selected sites that contains texts from a large variety of languages and wrote scripts to crawl and clean specific pages from the different data sources. The crawling and cleaning was done simultaneously. 
 
 The resulting files were saved as plaintext file with \texttt{UTF-8} encoding. One directory for each data source and one file per language. The parallel data (from ODIN and Omniglot) are saved as tab-delimited files, one line per sentence, one column per language. The monolingual data (from UDHR and Wikipedia) are saved as newline delimited plaintext file, each line denoting a paragraph or sentence and each document separated by an empty line. The files are saved with the following naming convention to allow easy access, the filename contains the data source and its ISO 639-3 code, e.g. \texttt{odin-iii.txt} contains the \emph{ODIN} data for the \emph{Nuosu} language.
+
+API which allows access according to Abney and Bird.  However, maintaining a plain text file ensures that the data will be easily accessible, even if the surrounding infrastructure changes. [Seven dimensions]
+
+Our resulting corpus runs the full gamut of texts outlined by Abney and Bird, from single-language text (Wikipedia) to parallel text (UDHR and Omniglot) to IGTs (ODIN). ...
+
+In the follow subsections, we describe the preprocessing required to convert each data source into a standardised form.
 
 \subsection{ODIN}
 
