@@ -43,8 +43,8 @@
 \author{Liling Tan, Guy Emerson, Susanne Fertmann, Alexis Palmer and Michaela Regneri \\
   Universität des Saarlandes \\
   Campus, 66123 Saarbrücken, Germany \\
-  {\tt s9sufert@stud.uni-saarland.de, emerson@coli.uni-saarland.de,} \\
-  {\tt liling.tan@uni-saarland.de}}
+  {\tt liling.tan@uni-saarland.de, emerson@coli.uni-saarland.de,} \\
+  {\tt susfert@coli.uni-saarland.de}}
 
 \date{}
 
@@ -60,9 +60,9 @@ At the time of writing, 7105 living languages are documented in Ethnologue\footn
 
 Although there have been some previous attempts to produce cross-linguistic resources, there are few which both cover a wide range of languages, and are also machine-readable. We survey existing efforts in section \ref{sec:related}, and discuss their limitations in more detail.
 
-Abney and Bird \shortcite{abney2010universal,abney2011data} posed the grand challenge of building a Universal Corpus, calling it the Human Language Project. Such a corpus would include all of the world's languages, in a consistent structure, facilitating large-scale cross-linguistic processing. They propose a specific data structure, which we describe and discuss in section \ref{sec:structure}. We have accepted their challenge, and have begun converting existing resources into a format consistent with their specifications for a universal corpus. We have drawn on four [or five?] web sources, cleaning and standardising them as described in section \ref{sec:sources}, to produce a seed corpus for the Human Language Project. In sections \ref{sec:stats} and \ref{sec:copyright}, we respetively give a summary of the data contained, and discuss copyright and distribution.
+Abney and Bird \shortcite{abney2010universal,abney2011data} posed the grand challenge of building a Universal Corpus, calling it the Human Language Project. Such a corpus would include all of the world's languages, in a consistent structure, facilitating large-scale cross-linguistic processing. They propose a specific data structure, which we describe and discuss in section \ref{sec:structure}. We have accepted their challenge, and have begun converting existing resources into a format consistent with their specifications for a universal corpus. We have drawn on four [or five?] web sources, cleaning and standardising them as described in section \ref{sec:sources}, to produce a seed corpus for the Human Language Project. In sections \ref{sec:stats} and \ref{sec:copyright}, we respectively give a summary of the data contained, and discuss copyright and distribution.
 
-[Note: remove this section if we don't do the work!] We believe the resulting corpus is the first of its kind: large enough and consistent enough to allow language processing on a grand scale. In section \ref{sec:cluster}, we give an example application of this corpus: language clustering. We use the frequencies of character n-grams and words to estimate the similarity of two languages. Despite this approach being hightly dependent on orthography, we are able to reconstruct substantial parts of several language families, demonstrating the utility of this resource in cross-linguistic research. Finally, we discuss future work in secion \ref{sec:future}, and conclude in section \ref{sec:conclusion}.
+[Note: remove this section if we don't do the work!] We believe the resulting corpus is the first of its kind: large enough and consistent enough to allow language processing on a grand scale. In section \ref{sec:cluster}, we give an example application of this corpus: language clustering. We use the frequencies of character n-grams and words to estimate the similarity of two languages. Despite this approach being highly dependent on orthography, we are able to reconstruct substantial parts of several language families, demonstrating the utility of this resource in cross-linguistic research. Finally, we discuss future work in section \ref{sec:future}, and conclude in section \ref{sec:conclusion}.
 
 
 \section{Related Work} \label{sec:related}
@@ -225,17 +225,19 @@ The Universal Declaration of Human Rights (UDHR) is a document released by the U
 
 \subsection{Wikipedia}
 
-Tapping on the crowd-sourced Wikipedia articles for NLP forms a crucial part of developing data-driven NLP tools and application ({\color{red}{citation neeeded}}). [It might be popular, but it's not crucial...] To automatically download the Wikipedia dumps, we have scripted the \texttt{wget} with ISO 639-2 language code as a variable (\texttt{\$I}) in a shell script, as such: [This is too technical]
+Tapping on the crowd-sourced Wikipedia articles for NLP forms a crucial part of developing data-driven NLP tools and application ({\color{red}{citation needed}}). [It might be popular, but it's not crucial...] To automatically download the Wikipedia dumps, we used the wp-download\footnote{https://github.com/babilen/wp-download} tool, adapted to an expanded set of languages.
 
-\smallskip
-\noindent \texttt{\$ wget http://download.wikimedia.
-org/\$Iwiki/latest/itwiki-latest-
-pages-articles.xml.bz2}
-\medskip
+%To automatically download the Wikipedia dumps, we have scripted the \texttt{wget} with ISO 639-2 language code as a variable (\texttt{\$I}) in a shell script, as such: [This is too technical][Such script has not been implemented]
 
-\noindent One major issue with using the Wikipedia dump is the sheer size and extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool.
+%\smallskip
+%\noindent \texttt{\$ wget http://download.wikimedia.
+%org/\$Iwiki/latest/itwiki-latest-
+%pages-articles.xml.bz2}
+%\medskip
 
-After converting them into textfiles, we used the following [missing information] regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+\noindent One major issue with using the Wikipedia dumps is the sheer size and extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor\footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After the conversion into textfiles, we used the following [missing information] regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+
+Wikipedia uses its own set of language codes, most of which are in ISO 639-1 or ISO 639-2/3. We automatically converted all of them into ISO~639-3.
 
 \subsection{Leipzig Corpora Collection}
 
@@ -266,7 +268,7 @@ Specific suggestions on how to work on resources mentioned in section \ref{sec:r
 
 \section{Conclusion} \label{sec:conclusion}
 
-In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
+In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
 
 
 \bibliography{references}
