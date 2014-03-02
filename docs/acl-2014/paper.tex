@@ -56,7 +56,7 @@ The study of endangered languages is constrained by a lack of data. Existing cor
 
 \section{Introduction}
 
-XXX living languages are documented in Ethnologue [ref], but [ref] estimated that by the end of the century, as many as XX\% of these will go extinct. However, only a fraction of these are well documented, and even fewer have machine-readable resources [ref](Maxwell and Hughes, 2006?), so the time to work on compiling these resources is now.
+At the time of writing, 7105 living languages are documented in Ethnologue\footnote{http://www.ethnologue.com/}, but \newcite{krauss1992crisis} estimated 50\% of these are not being learnt by new generations of speakers, and risk extinction by the end of the century. However, only a fraction of the world's languages are well documented, fewer have machine-readable resources, and fewer again have resources with linguistic annotations \cite{maxwell2006annotation} - so the time to work on compiling these resources is now.
 
 Although there have been some previous attempts to produce cross-linguistic resources, there are few which both cover a wide range of languages, and are also machine-readable. We survey existing efforts in section \ref{sec:related}, and discuss their limitations in more detail.
 
@@ -92,7 +92,7 @@ It is not within the scope of this paper to resolve these theoretical concerns. 
 
 Then, only difference between analysed and aligned texts is that the text is aligned with descriptions in a metalanguage,\footnote{While we would urge researchers to keep such annotations simple, as usually done in IGTs, there is nothing in principle to stop someone from using a complex metalanguage capable of encoding the full set of properties proposed by Abney and Bird, or even more complicated data structures.} rather than a natural language. The benefits, however, are that we can use the same data structure to represent both aligned and analysed texts, and the representation is simple enough that linguistic controversies are difficult to raise. We admit that highly detailed annotations, such as trees and dependency graphs, are more awkward to encode, but such resources are unlikely to be available in more than a small handful of languages, and will remain outside the scope of a universal corpus, at least for the foreseeable future. To make it indicate what reference language is being used, we propose prefixing \texttt{gloss-} to the language code of the reference language - for example \texttt{gloss-eng} and \texttt{gloss-eng} if a text has been glossed into English or Spanish, respectively. Using a prefix rather than a suffix makes it clear that this is not a subvariety of the given language.
 
-Finally, it is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. [ref - seven dimensions] describes a set of best practices for maintaining portability of digital information. [more detail] For these reasons, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. An API then allows access to this data according to the guidelines of Abney and Bird, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
+Finally, it is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining "seven dimensions" along which this can vary. [more detail?] Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. We have written an API to allow access to this data according to the guidelines of Abney and Bird, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
 
 
 \section{Data Sources} \label{sec:sources}
@@ -246,6 +246,8 @@ Do we want to mention this?
 
 Creative Commons Licence, etc.
 
+We have made all our resources publically available.\footnote{To maintain anonymity, we have removed details, but, if accepted for publication, instructions will be included in the print version of this paper.}
+
 
 \section{Representation and Universality} \label{sec:stats}
 
@@ -259,12 +261,12 @@ This would be an example application, if we have time...
 
 \section{Future Work} \label{sec:future}
 
-Other corpora we could work on...
+Specific suggestions on how to work on resources mentioned in section \ref{sec:related}...
 
 
 \section{Conclusion} \label{sec:conclusion}
 
-In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices of [ref - seven dimensions]. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
+In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
 
 
 \bibliography{references}
