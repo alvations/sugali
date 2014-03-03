@@ -84,6 +84,7 @@ def get_phrases(with_mp3=False,testing=False):
       # Get name of language in the particular language.
       langname2 = bs(str(soup.findAll('th')[1])).text
       all_phrases = defaultdict(list)
+      
       # Each <tr>...</tr> is a phrase in the table.
       phrasetable = soup.findAll('tr')
       for phrases in phrasetable:
