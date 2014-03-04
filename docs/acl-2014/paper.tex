@@ -43,77 +43,90 @@
 \author{Liling Tan, Guy Emerson, Susanne Fertmann, Alexis Palmer and Michaela Regneri \\
   Universität des Saarlandes \\
   Campus, 66123 Saarbrücken, Germany \\
-  {\tt s9sufert@stud.uni-saarland.de, emerson@coli.uni-saarland.de,} \\
-  {\tt liling.tan@uni-saarland.de}}
+  {\tt liling.tan@uni-saarland.de, emerson@coli.uni-saarland.de,} \\
+  {\tt susfert@coli.uni-saarland.de}}
 
 \date{}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-The study of endangered languages is limited by a lack of data. Existing corpora collections are limited in the range of languages covered, in standardisation, or in machine-readability. This makes the situation even worse for the computational linguist, especially one who would like to take a cross-linguistic or typological approach. We first survey existing efforts to compile cross-linguistic resources, then describe our own approach and give an example application - language clustering. To build the foundation text for a Universal Corpus, we crawled and cleaned texts from several web sources that contain data from a large number languages, and converted them into a standardised form consistent with the guidelines set out by \newcite{abney2010universal}. The resulting corpus is more easily-accessible and machine-readable than any of the underlying data sources, and represents a significant base corpus for researchers to draw on and add to in the future.
+The study of endangered languages is constrained by a lack of data. Existing corpora collections are limited in the range of languages covered, in standardisation, or in machine-readability. This makes the situation even worse for the computational linguist, especially one who would like to take a cross-linguistic or typological approach. We first survey existing efforts to compile cross-linguistic resources, then describe our own approach and give an example application - language clustering. To build the foundation text for a Universal Corpus, we crawled and cleaned texts from several web sources that contain data from a large number languages, and converted them into a standardised form consistent with the guidelines set out by \newcite{abney2010universal}. The resulting corpus is more easily-accessible and machine-readable than any of the underlying data sources, and represents a significant base corpus for researchers to draw on and add to in the future.
 \end{abstract}
 
 \section{Introduction}
 
-\newcite{abney2010universal} posed the grand challenge of building a Universal Corpus, including all of the world's languages, in a consistent structure.
+At the time of writing, 7105 living languages are documented in Ethnologue\footnote{http://www.ethnologue.com}, but \newcite{krauss1992crisis} estimated 50\% of these are not being learnt by new generations of speakers, and risk extinction by the end of the century. However, only a fraction of the world's languages are well documented, fewer have machine-readable resources, and fewer again have resources with linguistic annotations \cite{maxwell2006annotation} - so the time to work on compiling these resources is now.
 
-7105 living languages.
+Although there have been some previous attempts to produce cross-linguistic resources, there are few which both cover a wide range of languages, and are also machine-readable. We survey existing efforts in section \ref{sec:related}, and discuss their limitations in more detail.
+
+Abney and Bird \shortcite{abney2010universal,abney2011data} posed the grand challenge of building a Universal Corpus, calling it the Human Language Project. Such a corpus would include all of the world's languages, in a consistent structure, facilitating large-scale cross-linguistic processing. They propose a specific data structure, which we describe and discuss in section \ref{sec:structure}. We have accepted their challenge, and have begun converting existing resources into a format consistent with their specifications for a universal corpus. We have drawn on four [or five?] web sources, cleaning and standardising them as described in section \ref{sec:sources}, to produce a seed corpus for the Human Language Project. In sections \ref{sec:stats} and \ref{sec:copyright}, we respectively give a summary of the data contained, and discuss copyright and distribution.
+
+[Note: remove this section if we don't do the work!] We believe the resulting corpus is the first of its kind: large enough and consistent enough to allow language processing on a grand scale. In section \ref{sec:cluster}, we give an example application of this corpus: language clustering. We use the frequencies of character n-grams and words to estimate the similarity of two languages. Despite this approach being highly dependent on orthography, we are able to reconstruct substantial parts of several language families, demonstrating the utility of this resource in cross-linguistic research. Finally, we discuss future work in section \ref{sec:future}, and conclude in section \ref{sec:conclusion}.
 
 
-\section{Related Work}
+\section{Related Work} \label{sec:related}
 
-[...]
+[There is a lot more stuff to be added here...]
 Currently, multilingual corpora efforts have limited coverage in the number of languages and the number of language families represented. For instance, the OPUS corpus \cite{tiedemann2012opus} covers over 90 languages, only 1.27\% of the world's languages; The Leipzig Corpora Collection\footnote{corpora.uni-leipzig.de} \cite{biemann2007leipzig} contains corpora and dictionaries in 230 languages, 3.24\% of the world's languages. Even corpora that boast of linguistic diversity include only a small number of language families, e.g. the linguistically diverse NTU-Multilingual Corpus \cite{tan2011ntu} covers only 7 out of 136 language families. Producing a universal corpus requires the linguistic community to merge existing corpora and provide an ubiquitous access interface. To compile the foundation text for the Universal Corpus, we crawled and cleaned web data that contains multilingual texts and merged them with existing corpora collections to form the foundation text for the Universal Corpus.
 
 
 \subsection{Web as Corpus}
 
-\newcite{baroni2004bootcat} introduced the BootCaT toolkit to bootstrap specialized corpora and terms from the web. Then, \newcite{sharoff2006search} built corpora in various languages by issuing queries for random combinations of frequent words to create a balanced corpus not unlike the British National Corpus. Later, \newcite{ferraresi2008ukwac} introduced and discussed the notion of compiling Web as Corpus \emph{"properly"} with the inaugural ukWaC using web-crawled data from a list of seed words. Thereafter, the Crúbadán corpora was created for a large number of under-resourced languages \cite{scannell2007crubadan}. Following which the deWaC (German), itWaC (Italian) and frWaC (French) were compiled \cite{baroni2009wacky}. 
+In recent years, there has been increasing interesting in crawling websites to produce corpora. For example, \newcite{baroni2004bootcat} introduced the BootCaT toolkit to bootstrap specialised corpora, and \newcite{sharoff2006search} built corpora in various languages by issuing queries for random combinations of frequent words to create a balanced corpus not unlike the British National Corpus. \newcite{ferraresi2008ukwac} produced ukWaC, a large-scale English corpus, and \cite{baroni2009wacky} applied a similar method to produce corpora in German, Italian, and French. To build better quality web corpora, \newcite{versley2012quality} introduced the notion of content-sensitive boilerplate detection for cleaning data.
 
-Subsequently, \newcite{brunello2009free} stressed the notion of building free corpora from the web using documents released under Creative Commons licenses. To build better quality WaCky corpora, \newcite{versley2012quality} introduced the notion of content-sensitive boilerplate detection in cleaning web corpora. 
+However, despite the amount of text they include, such corpora are usually limited in the number of languages represented. Some projects have emerged which strive for language diversity, such as the Leipzig Corpora Collection (LCC) \cite{biemann2007leipzig}, and COrpora from the Web (COW) \cite{schaefer2012cow}. The LCC currently offers free download of corpora in 117 languages, and dictionaries in many others, bringing the total number of languages up to 230. COW includes corpora in [XX] languages. These collections are certainly commendable, but they currently still fall short of universality - 230 languages represents only 3.3% of the world's languages [check figure].
 
-The initial wave of monolingual WaCky corpora \cite{baroni2009wacky} inspired more domain specific WaCky corpora, such as the Korean Web Learner's Corpus \cite{dickinson2010korean} and the Feed Corpus \cite{minocha2013feed}. Meanwhile, Web-driven corpora compilations also focused on building large  multilingual resources, e.g. The Leipzig Corpora Collection (\texttt{LCC}) \cite{biemann2007leipzig}, and the COrpora from the Web (\texttt{COW}) project \cite{schaefer2012cow}.
+\newcite{scannell2007crubadan} describes the Crúbadán Project, an attempt to crawl the web for data in a much larger range of languages, including endangered ones. At the time of writing, the number of languages represented has grown to [XXX] However, due to copyright issues, not all of the data is freely available. Motivated by similar copyright concerns, \newcite{brunello2009free} stressed the notion of building free corpora from the web using documents released under Creative Commons licenses.
 
-Unlike previous WaCs built under the Web as Corpus kool ynitiative (WaCky), we did not perform seed query web-searching or web crawling to achieve a balanced resource. Instead, the foundation text for uniWaC was built using dedicated site crawling and/or site-dependent cleaning from four data sources, viz. (i) \emph{Online Database of Interlinear Text} (ODIN), (ii) \emph{Omniglot} website, (iii) \emph{Universal Declaration of Human Rights} (UDHR) and (iv) \emph{Wikipedia} dumps. Our emphasis for the uniWaC is based on based on \textbf{\emph{universality}}; covering as many languages as possible is the first priority.
-
-
-
-\section{Data Structure}
-
-\newcite{abney2011data} describe the data structure they envisage for the universal corpus in more detail, distinguishing between \textbf{aligned texts} and \textbf{analysed texts}: the former consists of multiple parallel texts, aligned at the document, sentence, or word level; the latter contains more detailed annotations including parts of speech, morphological information, and syntactic relations. In our work, we have strived to maintain a data structure consistent with their recommendations for aligned texts.
-
-However, we disagree that analysed texts should be accommodated in this way. If such a universal corpus is to succeed at all, it must enjoy support from the entire linguistics community, and doing this requires complete theory-neutrality. Although their data structure is fairly lightwight, it is not theory neutral, explicitly encoding support for dependency grammars but not constituency grammars, and positing a specific list of relevant features which should be used to annotate words. Other linguists might wish to use a different set of properties, which could threaten to fragment a universal corpus before it truly gets off the ground. More fundamentally, they assume that the corpus should be segmented into words, but \newcite{haspelmath2011segment} argues that there is no cross-linguistically valid definition of "word", which would render such an endeavour impossible from the start.
-
-It is not within the scope of this paper to resolve these theoretical concerns. Instead, we suggest that the data structure for a universal corpus should be even more lightweight than Abney and Bird suggest. We agree with their characterisation of aligned texts, but propose an alternative for analysed texts. To motivate the role of parallel texts in a universal corpus, they propose using translations into a high-resource language as a convenient surrogate of meaning. By the same reasoning, we can use the glosses in an IGT to provide a more detailed surrogate of meaning. We propose that, just as we can align texts at the document, sentence, and word levels, we can also align texts at the morpheme level, as recommended by the Leipzig Glossing Rules.\footnote{http://www.eva.mpg.de/lingua/resources/glossing-rules.php} The only difference here is that a text is aligned with descriptions in a metalanguage,\footnote{While we would urge researchers to keep such annotations simple, as usually done in IGTs, there is nothing in principle to stop someone from using a complex metalanguage capable of encoding the full set of properties proposed by Abney and Bird, or even more complicated data structures.} rather than a natural language. The benefits, however, are that we can use the same data structure to represent both aligned and analysed texts, and the representation is simple enough that linguistic controversies cannot be raised. We admit that highly detailed annotations, such as in treebanks and dependency banks, are more awkward to encode, but such resources are unlikely to be available in more than a small handful of languages, and will remain outside the scope of a universal corpus, at least for the foreseeable future.
+Unlike the above efforts, we have not performed seed-query web-searching or web-crawling to achieve a balanced resource. Instead, we have focused on a small number of sources which contain data in a wide variety of languages, as described in section \ref{sec:sources}. However, these sources represent a variety of data types which a linguist might encounter, ranging from single-language text with significant non-linguistic markup (Wikipedia) to structured data with detailed linguistic annotations (ODIN).
 
 
-\section{Data Sources}
+\section{Data Structure} \label{sec:structure}
 
-Although data size matters in general NLP \cite{banko2001scaling}, \emph{universality} is the utmost priority in NLP for the Universal Corpus initiative (aka Human Language Project; Abney and Bird, 2010; 2011). Hence, the uniWaC approach to data collection is based on focused/dedicated crawling unlike previous WaC word/URL list seeding. We manually selected sites that contains texts from a large variety of languages and wrote scripts to crawl and clean specific pages from the different data sources. The crawling and cleaning was done simultaneously. 
+\newcite{abney2011data} describe the data structure they envisage for the universal corpus in more detail, distinguishing between \textbf{aligned texts} and \textbf{analysed texts}: the former consists of multiple parallel texts, aligned at the document, sentence, or word level [add more detail]; the latter contains more detailed annotations including parts of speech, morphological information, and syntactic relations. In our work, we have strived to maintain a data structure consistent with their recommendations for aligned texts.
 
-The resulting files were saved as plaintext file with \texttt{UTF-8} encoding. We used one directory for each data source and one file per language. The parallel data (from ODIN and Omniglot) are saved as tab-delimited files, one line per sentence, one column per language. The monolingual data (from UDHR and Wikipedia) are saved as newline delimited plaintext file, each line denoting a paragraph or sentence and each document separated by an empty line. The files are saved with the following naming convention to allow easy access, the filename contains the data source and its ISO 639-3 code, e.g. \texttt{odin-iii.txt} contains the \emph{ODIN} data for the \emph{Nuosu} language. [File structure is not relevant.]
+However, we disagree that analysed texts should be accommodated in this way. If such a universal corpus is to succeed at all, it must enjoy support from a substantial part, if not all, of the linguistics community, and doing this requires theory-neutrality. Although their data structure is fairly lightwight, it is not theory neutral, explicitly encoding support for dependency grammars but not constituency grammars, and positing a specific list of relevant features which should be used to annotate words. Other linguists might wish to use a different set of properties, which could threaten to fragment a universal corpus before it truly gets off the ground. More fundamentally, they assume that the corpus should be segmented into words, but \newcite{haspelmath2011segment} argues that there is no cross-linguistically valid definition of "word", which would render such an endeavour impossible from the start.
 
-API which allows access according to Abney and Bird.  However, maintaining a plain text file ensures that the data will be easily accessible, even if the surrounding infrastructure changes. [Seven dimensions]
+It is not within the scope of this paper to resolve these theoretical concerns. Instead, we suggest that the data structure for a universal corpus should be even more lightweight than Abney and Bird suggest. We agree with their characterisation of aligned texts, but propose an alternative for analysed texts. To motivate the role of parallel texts in a universal corpus, they propose using translations into a high-resource reference language as a convenient surrogate of meaning. By the same reasoning, we can use the glosses in an IGT to provide a more detailed surrogate of meaning. We propose that, just as we can align texts at the document, sentence, and word levels, we can also align texts at the morpheme level, as recommended by the Leipzig Glossing Rules,\footnote{http://www.eva.mpg.de/lingua/resources/glossing-rules.php} and as practised by documentary linguists.
 
-Our resulting corpus runs the full gamut of texts outlined by Abney and Bird, from single-language text (Wikipedia) to parallel text (UDHR and Omniglot) to IGTs (ODIN). ...
+Then, only difference between analysed and aligned texts is that the text is aligned with descriptions in a metalanguage,\footnote{While we would urge researchers to keep such annotations simple, as usually done in IGTs, there is nothing in principle to stop someone from using a complex metalanguage capable of encoding the full set of properties proposed by Abney and Bird, or even more complicated data structures.} rather than a natural language. The benefits, however, are that we can use the same data structure to represent both aligned and analysed texts, and the representation is simple enough that linguistic controversies are difficult to raise. We admit that highly detailed annotations, such as trees and dependency graphs, are more awkward to encode, but such resources are unlikely to be available in more than a small handful of languages, and will remain outside the scope of a universal corpus, at least for the foreseeable future. To make it indicate what reference language is being used, we propose prefixing \texttt{gloss-} to the language code of the reference language - for example \texttt{gloss-eng} and \texttt{gloss-eng} if a text has been glossed into English or Spanish, respectively. Using a prefix rather than a suffix makes it clear that this is not a subvariety of the given language.
 
-In the follow subsections, we describe the preprocessing required to convert each data source into a standardised form.
+Finally, it is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining "seven dimensions" along which this can vary. [more detail?] Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. We have written an API to allow access to this data according to the guidelines of Abney and Bird, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
+
+
+\section{Data Sources} \label{sec:sources}
+
+Although data size matters in general NLP \cite{banko2001scaling} [is this the best reference?], \emph{universality} is the utmost priority for a universal corpus. We chose to focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured):
+
+\begin{enumerate}
+\item The Online Database of Interlinear Text (ODIN)
+\item The Omniglot website
+\item The Universal Declaration of Human Rights (UDHR)
+\item Wikipedia
+\item The Leipzig Corpora Collection (LCC) [do we include this?]
+\end{enumerate}
+
+In the following subsections, we describe each source, and the processing required to convert the data into a standardised form. Our resulting corpus runs the full gamut of text types outlined by Abney and Bird, ranging from single-language text (Wikipedia and LCC) to parallel text (UDHR and Omniglot) to IGTs (ODIN).
 
 \subsection{ODIN}
 
 ODIN (The Online Database of Interlinear Text) is a repository of IGTs extracted from scholarly documents \cite{lewis2006odin,lewis2010odin}.  Compared to other resources, it is notable for the breadth of languages included, and the level of linguistic annotation; however, the data requires further processing to bring it in line with the proposed format for a universal corpus.
 
 The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the Interlinear Glossed Texts (IGTs) are encoded in the \texttt{<igt><example>...</example></igt>} tags. Each XML file is saved under a filename that matches the respective language code. While cleaning the data, filenames that does not adhere to ISO 639-3\footnote{http://www-01.sil.org/iso639-3} were excluded in the uniWaC compilation. [Huh? Should this really happen? - the codes are given on their website and look valid to me...]
-
+\\ \\
 \begin{minipage}{\columnwidth}
 
-a. \quad o lesu mai \\
-\indent \qquad 2sg return here \\
-
-\indent \qquad `\emph{You return here.}' \\
-\centerline{Figure 1: IGT from ODIN.}
+\quad 21 a.\quad o lesu mai \\
+\indent \qquad\qquad 2sg return here \\
+\indent \qquad\qquad `\emph{You return here.}' \\
+\centerline{Figure 1: Fijian IGT from ODIN.}
 \end{minipage}
+
+%%
+% Is there a reason we need to use minipages rather than figures? This doesn't seem to allow automatic numbering.
+% Also, some of the lines go outside of the column!!
+%%
 
 \begin{minipage}{\columnwidth}
 \begin{lstlisting}[language=XML]
@@ -123,12 +136,12 @@ a. \quad o lesu mai \\
     <line>2sg return here</line>
     <line>`You return here.'</line>
   </example>
-</igit>
+</igt>
 \end{lstlisting} 
-\centerline{Figure 2: Fijian IGT from ODIN.}
+\centerline{Figure 2: Fijian IGT in ODIN's XML format.}
 \end{minipage}
 \\ \\
-\noindent The IGTs from a web document usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
+\noindent The IGTs from an academic publication usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
 \begin{minipage}{\columnwidth}
 \begin{lstlisting}[language=XML]
 <igt>
@@ -143,12 +156,14 @@ a. \quad o lesu mai \\
 </igit>
 \end{lstlisting} 
 \smallskip
-\centerline{Figure 3: Yimas IGT from ODIN.}
+\centerline{Figure 3: Yimas IGT in ODIN's XML format.}
 \end{minipage}
 \\ \\
 \noindent The primary problem in extracting the source text is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes the language name, and a citation for the example, which introduces noise into the corpus.
 
-Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents to deviate from the standard convention; when compiling the ODIN data, they attempted a regex-based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness': [Have we considered that the number of elements in the source line and gloss line should match...?]
+Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents to deviate from the standard convention; when compiling the ODIN data, they attempted a regex-based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness':
+
+[This hasn't been implemented, but I think we could try this: Split source and gloss lines into tokens according to whitespace. Check the source has more tokens. Count the number of hyphens and equal signs in each token (since they denote morphemes). Match the gloss line with a substring of the source line, according to numbers of hyphens and equal signs. If there's exactly one match, keep it, and discard tokens at the ends of the line. If there's more than one match, look for other punctuation in the initial and final tokens.]
 \\ \\
 \begin{minipage}{\columnwidth}
 \begin{itemize}
@@ -172,59 +187,61 @@ Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents t
 
 \subsection{Omniglot}
 
-The Omniglot website\footnote{htp://www.omniglot.com/} is an online encyclopedia of writing systems and languages. We chose to extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us a parallel data in a reasonably large number of languages.
-
-[The following discussion is far too technical.]
+The Omniglot website\footnote{htp://www.omniglot.com} is an online encyclopedia of writing systems and languages. We chose to extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us a parallel data in a reasonably large number of languages. The urls for these resources are:
 
 \begin{itemize}[noitemsep]
 \item \url{www.omniglot.com/language/phrases/*} 
 \item \url{www.omniglot.com/babel/*}
 \end{itemize}
 
-\noindent One problem with this data is that only the language name is given, not the ISO 639-3 code. To resolve this issue, we converted language names to codes using information from the SIL website.\footnote{http://www-01.sil.org/iso639-3/iso-639-3.tab}
+\noindent One problem with this data is that only the language name is given, not the ISO 639-3 code. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{http://www-01.sil.org/iso639-3/iso-639-3.tab}
 
 \subsection{Universal Declaration of Human Rights}
 
-The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations, which has been translated into a wide variety of languages. Although there was a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution was laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d/}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR.
+The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations, which has been translated into a wide variety of languages. Although there was a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution was laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR. This dataset was extremely clean, and simply required segmentation into sentences.
 
 \subsection{Wikipedia}
 
-Wikipedia contains 30.8 million articles in 287 languages and the text dump can be downloaded from \url{www.dumps.wikimedia.org}. \noindent One major issue with using the Wikipedia dump is the sheer size and extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After converting them into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+At the time of writing, Wikipedia contains 30.8 million articles in 287 languages, which provides a sizeable amount of clean monolingual text in a fairly wide range of languages. Text dumps are made regularly, and can be downloaded from \url{www.dumps.wikimedia.org}. One major issue with using the Wikipedia dump extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After conversion into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
 
-\section{Copyright Issues}
+Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or ISO~639-2/3. We converted all of them into ISO~639-3, following documentation from the Wikimedia Foundation.\footnote{http://meta.wikimedia.org/wiki/Special\_language\_codes}
 
-Corpora copyright remains a grey area and a hobglobin for corpora compilation and distribution (Kilgariff, 2002). Often, free access to language data online does not imply the right to download, retain, remix and redistribute. 
 
-ODIN refers itself as a database of IGTs that are returned as a result of querying from the source documents. As such, only the links to the documents and the appropriate citations and not the copies of the source documents are maintained on the ODIN site (Lewis and Xia, 2010). However, the ODIN developers have left the users with no specific license/copyrights restriction for readaptation or redistribution. 
+\section{Copyright Issues} \label{sec:copyright}
 
-The Omniglot phrases are free to be used for non-commercial purposes as stated in the FAQ page but the rights of the Tower of Babel snippets from different bible sources remains iffy. For example, Omniglot cited www.bibles.org as one of its sources for the Tower of Babel chapter but the bibles.org site stated in fine print that `\emph{Except expressly permitted herein, you may not modify, copy, distribute, decompile, disassemble, reverse engineer, create derivative works, or otherwise use or manipulate the Site or any of its content without our prior written consent}'\footnote{http://bibles.org/pages/legal\#copyright}.
+Corpora copyright remains a grey area and a hobglobin for corpora compilation and distribution (Kilgarriff, 2002)[@Li, please add this reference to the bibliography file]. Often, free access to language data online does not imply the right to download, retain, remix and redistribute. 
 
-The UDHR copyrights remains questionable. Although users are free to use, copy, modify, merge, publish and distribute Unicode Data Files, there is no explicit ownership of the UDHR textfiles from the Unicode website. However, the original source of the UDHR documents from the Office of the High Commissioner for Human Rights clearly states that `\emph{None of the materials provided on this web site may be used, reproduced or transmitted, in whole or in part}'\footnote{http://www.un.org/en/aboutun/copyright/}.  
+ODIN refers itself as a database of IGTs that are returned as a result of querying from the source documents. As such, only the links to the documents and the appropriate citations and not the copies of the source documents are maintained on the ODIN site. However, the ODIN developers have left the users with no specific license/copyrights restriction for readaptation or redistribution.
 
-The Wikipedia texts are licensed under Creative Commons Attribution Share-like\footnote{http://creativecommons.org/licenses/by-sa/3.0/legalcode}, which allows redistribution and adaptation. Hence the clean Wikipedia texts we have compiled can be freely redistributed without infringing any copyrights. 
+The Omniglot phrases are free to be used for non-commercial purposes as stated in the FAQ page\footnote{http://www.omniglot.com/faqs.htm} but the rights of the Tower of Babel snippets from different bible sources remains iffy. For example, Omniglot cited www.bibles.org as one of its sources for the Tower of Babel chapter but the bibles.org site stated in fine print that `\emph{Except expressly permitted herein, you may not modify, copy, distribute, decompile, disassemble, reverse engineer, create derivative works, or otherwise use or manipulate the Site or any of its content without our prior written consent}'\footnote{http://bibles.org/pages/legal\#copyright}. [Ga: actually, about copying information, Omniglot says: \emph{'If you would like to copy or re-use any of the language-related articles, please ask the authors for permission. Contact details of the authors can be found at the bottom of the articles in most cases, if they're not there, please contact me, and I'll try to find them for you.'} - I suspect Adger has been given permission for each translation, and I think we would have to ask every single author if we want to re-distribute the data.  For the tower of babel translations, this could end up a nightmare...]
+
+Although users are free to use, copy, modify, merge, publish and distribute Unicode Data Files, [Ga: Do we have a reference for this? Particularly distribution] there is no explicit ownership of the UDHR textfiles from the Unicode website. However, the original source of the UDHR documents from the Office of the High Commissioner for Human Rights clearly states that `\emph{None of the materials provided on this web site may be used, reproduced or transmitted, in whole or in part, in any form or by any means, electronic or mechanical, including photocopying, recording or the use of any information storage and retrieval system, except as provided for in the Terms and Conditions of Use of United Nations Web Sites, without permission in writing from the publisher.}'\footnote{http://www.un.org/en/aboutun/copyright/}. [Ga: Actually, it's not quite so bad - if we look at the terms and conditions, it says: \emph{'The United Nations grants permission to Users to visit the Site and to download and copy the information, documents and materials (collectively, “Materials”) from the Site for the User’s personal, non-commercial use, without any right to resell or redistribute them or to compile or create derivative works therefrom, subject to the terms and conditions outlined below, and also subject to more specific restrictions that may apply to specific Material within this Site.'}\footnote{http://www.un.org/en/aboutun/terms/} Specifically for the UDHR, it says: \emph{'If UDHR translations or materials are reproduced, users should make reference to this website as a source by providing a link.'}\footnote{http://www.ohchr.org/EN/UDHR/Pages/Introduction.aspx}  So, it looks like we're okay to use the UDHR as we currently are, but if we want to redistribute it, we need to get their permission in writing.]
+
+The Wikipedia texts are licensed under Creative Commons Attribution Share-like\footnote{http://creativecommons.org/licenses/by-sa/3.0/legalcode}, which allows redistribution and adaptation. Hence the clean Wikipedia texts we have compiled can be freely redistributed without infringing any copyrights.  We have made this resource publically available.\footnote{To maintain anonymity, we do not give details of how to access the data, but, if accepted for publication, instructions will be included in the print version of this paper.}
 
 %%
 %To avoid any copyrights infringement, ... After surveying the rights for so many days, there is no way to redistribute the corpus unless we jumble up the sentences, but if we do that, the "document" level will be lost and that will not be a "good" resource to do NLP for LRL since data is already sparse.
 %%
 
-\section{Representation and Universality}
+
+\section{Representation and Universality} \label{sec:stats}
 
 Number of languages, size of corpus, etc.
 
 
-\section{Language Clustering}
+\section{Language Clustering} \label{sec:cluster}
 
 This would be an example application, if we have time...
 
 
-\section{Future Work}
+\section{Future Work} \label{sec:future}
 
-Other corpora we could work on...
+Specific suggestions on how to work on resources mentioned in section \ref{sec:related}...
 
 
-\section{Conclusion}
+\section{Conclusion} \label{sec:conclusion}
 
-Summarise what we've done!
+In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
 
 
 \bibliography{references}
