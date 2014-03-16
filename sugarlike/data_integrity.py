@@ -34,6 +34,14 @@ def feature_count():
   pass
 
 
-check_data_integrity('odin', remove=False)
-check_data_integrity('omniglot', remove=False)
-check_data_integrity('udhr', remove=False)
+#check_data_integrity('odin', remove=False)
+#check_data_integrity('omniglot', remove=False)
+#check_data_integrity('udhr', remove=False)
+
+import os
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+import sys; sys.path.append(parentddir)
+from universalcorpus.miniethnologue import ISO2LANG
+from universalcorpus import odin
+print len(set([lang for lang, igts in odin.igts() if lang in ISO2LANG]))
+  

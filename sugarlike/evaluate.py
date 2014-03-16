@@ -58,6 +58,7 @@ def normalise(featurevector, length=1):
   """
   Normalises a feature vector to a specific length.
   Zero vectors are left zero.
+  NOTE: featurevector will be updated with normalized count.
   """
   try:
     norm = length / sqrt(sum([x**2 for x in featurevector.values()]))
@@ -164,16 +165,16 @@ def evaluator(data_source, option="all", model="cosine", tfidf=False, with_word_
     if model == "cosine":
       print "Normalising to unit length..."
       for lang in featureset:
-        normalise(featureset[lang])
+        normalise(featureset[lang]) # Updates featureset.
       if tfidf:
         print "Calculating tf-idf..."
-        tfidfize(featureset)
+        tfidfize(featureset) # Updates featureset.
     
     elif model == "cosine-combined":
       print "Normalising and re-weighting components..."
       for lang in featureset:
         for i in range(6):
-          normalise(featureset[lang][i], weight[i])
+          normalise(featureset[lang][i], weight[i]) # Updates featureset.
     
     print "Evaluating..."
     fold_results = Counter()  # Records the number of times the correct language is at a specific rank 
