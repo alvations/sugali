@@ -101,7 +101,8 @@ def documents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
     with codecs.open(infile,'r','utf8') as fin:
       if bysentence:
         for sentence in fin.readlines():
-          yield language, sentence
+          if sentence:
+            yield language, sentence
       else:
         yield language, fin.read()
         

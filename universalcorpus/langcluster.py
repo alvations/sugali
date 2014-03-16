@@ -34,7 +34,7 @@ def generate_ngrams(data_source):
         ##print data_source, num, _counter
         ngrams[lang]+= _counter
     x = normalize(Counter(sent.split()))
-    if not x: print sent.split(), Counter(sent.split()) 
+    if x == None: print data_source, sent.split(), normalize(Counter(sent.split()))
     ngrams[lang]+=normalize(Counter(sent.split()))
   print data_source
   return ngrams
