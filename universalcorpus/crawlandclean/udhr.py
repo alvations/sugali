@@ -102,7 +102,7 @@ def documents(intarfile=parentddir+'/data/udhr/udhr-unicode.tar', \
       if bysentence:
         for sentence in fin.readlines():
           if sentence:
-            yield language, sentence
+            yield language, sentence.strip()
       else:
         yield language, fin.read()
         

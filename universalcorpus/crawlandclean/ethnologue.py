@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import codecs, urllib2, re, os
+import codecs, urllib2, re, os, sys
 from collections import defaultdict
 import cPickle as pickle
+
+parentddir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
 ETHNOLOGUE_DOMAIN = "http://www.ethnologue.com/"
 LANG_FAMILY_TAG = '''<div class="views-field views-field-name">'''
 LANG_TAG = '''<span class="views-field views-field-field-iso-639-3">'''
-ETHNO_DIR = "../data/ethnologue/"
+ETHNO_DIR = parentddir+"/data/ethnologue/"
 
 class Tree(defaultdict):
   """
@@ -106,7 +108,7 @@ def get_language_families():
           isocode = re.findall(r'\[([^]]*)\]',lang)[0]
           geo = re.findall(r'\([^)]*\)',lang)[0].rpartition(" ")[2][:-1]
           ##print isocode, langname , geo
-          lang_fams[langfamily].append((isocode, langname , geo))
+          lang_fams[langfamily].append((isocode, langname , geo, langfamlink))
   return lang_fams
 
 def load_language_families():
@@ -129,15 +131,43 @@ def load_language_families():
   with codecs.open(ETHNO_DIR+'languagefamilies.pk','rb') as fin2: 
     return pickle.load(fin2)
 
-# TODO:
-def get_langinfo(isocode):
-  """ Gets language information from Ethnologue. """
-  page = "http://www.ethnologue.com/language/"+isocode
-
-# TODO:
-def langiso():
-  """ [in]: Language name, [out]: isocode. """
-  pass
-
-langfam = get_language_families()
-print len(langfam)
+def lang_families():
+  from bs4 import BeautifulSoup as bs
+  langfamfile = 'languagefamilies_with_info.pk'
+  if not os.path.exists(ETHNO_DIR+langfamfile):
+    ethno = {'pop':"field field-name-field-population field-type-"+\
+             "text-with-summary field-label-inline clearfix",
+             'altnames':"field field-name-field-alternate-names field-type-"+\
+             "text-long field-label-inline clearfix",
+             'loc':"field field-name-field-region field-type-"+\
+             "text-with-summary field-label-inline clearfix",
+             'status':"field field-name-language-status field-type-"+\
+             "ds field-label-inline clearfix"}
+    _lf = {k:[j[0] for j in v] for k,v in load_language_families().items()}
+    lf = defaultdict(list)
+    for i in _lf:
+      for j in _lf[i]:
+        site = bs(urllib2.urlopen('https://www.ethnologue.com/language/'+j).read().decode('utf8'))
+        name = site.find('title').text.replace(' | Ethnologue','').strip()
+        pop = site.find(attrs={"class": ethno['pop']}).find(attrs={"class": 'even'}).text.strip()
+        status = site.find(attrs={"class": ethno['status']}).find(attrs={"class": 'even'}).text.strip()
+        try:
+          loc = site.find(attrs={"class": ethno['loc']}).find(attrs={"class": 'even'}).text.strip()
+        except AttributeError:
+          loc = None
+        try:
+          altnames = site.find(attrs={"class": ethno['altnames']}).find(attrs={"class": 'even'}).text.strip()
+        except AttributeError:
+          altnames = None
+        lf[i].append((i,name, pop, altnames, loc, status))
+        print j, i, status
+    with codecs.open(ETHNO_DIR+langfamfile,'wb') as fout:
+      pickle.dump(lf, fout)
+  
+  with codecs.open(ETHNO_DIR+langfamfile,'wb') as fin2:
+    return pickle.load(lf, fin2)
+  
+lang_families()
+    
+    
+        

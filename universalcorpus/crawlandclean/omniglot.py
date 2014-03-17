@@ -214,7 +214,7 @@ def phrases(intarfile=parentddir+'/data/omniglot/omniglotphrases.tar', \
       for line in fin.readlines():
         sentence, translation = line.strip().split('\t')
         if onlysource and sentence:
-          yield language, sentence
+          yield language, sentence.strip()
         else:
           yield language, sentence, translation
 

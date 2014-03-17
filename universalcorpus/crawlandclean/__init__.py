@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import odin, omniglot, udhr, wikipedia
+import odin, omniglot, udhr, wikipedia,  ethnologue
