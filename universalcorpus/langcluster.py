@@ -27,9 +27,9 @@ def sent2ngrams(text, n=3):
 
 def generate_ngrams(data_source):
   ngrams = defaultdict(Counter)
-  for lang, sent in globals()[data_source].source_sents():
-    for num in range(2,4):
-      _counter = normalize(Counter(sent2ngrams(sent,num)))
+  for num in range(2,4):
+    for lang, sent in globals()[data_source].source_sents():
+      _counter = normalize(Counter(sent2ngrams(sent,num))) ## TODO: normalize all ngrams in the 
       if _counter:
         ##print data_source, num, _counter
         ngrams[lang]+= _counter
@@ -76,7 +76,8 @@ def load_ngram_array():
       languages.append(lang)
       x = [ng[i] for i in all_features]
       data.append(x)
-    data = pd.lib.to_object_array(data).astype(float)
+    
+    data = pd.lib.to_object_array(data).astype(float) # converts counters to array.
     print>>open('language.tag','w'), languages
     np.save('tocluster.data',data)
     print>>codecs.open('all_features','w'), " ".join(all_features)
@@ -102,3 +103,14 @@ print set(clusters), len(set(clusters))
 print clusters
 print languages
 print all_features
+
+
+def distance(counter1, counter2):
+  """
+  Calculates the dot product, assuming NORMALIZED.
+  """
+  dp = 0
+  for x in counter1.keys().intersection(counter2.keys()):
+    dp += counter1[x]*counter2[x]
+  return dp
+

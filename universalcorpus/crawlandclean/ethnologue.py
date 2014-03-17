@@ -134,6 +134,7 @@ def load_language_families():
 def lang_families():
   from bs4 import BeautifulSoup as bs
   langfamfile = 'languagefamilies_with_info.pk'
+  fout_tmp = codecs.open('langfam.tmp','w','utf8')
   if not os.path.exists(ETHNO_DIR+langfamfile):
     ethno = {'pop':"field field-name-field-population field-type-"+\
              "text-with-summary field-label-inline clearfix",
@@ -149,7 +150,10 @@ def lang_families():
       for j in _lf[i]:
         site = bs(urllib2.urlopen('https://www.ethnologue.com/language/'+j).read().decode('utf8'))
         name = site.find('title').text.replace(' | Ethnologue','').strip()
-        pop = site.find(attrs={"class": ethno['pop']}).find(attrs={"class": 'even'}).text.strip()
+        try:
+          pop = site.find(attrs={"class": ethno['pop']}).find(attrs={"class": 'even'}).text.strip()
+        except AttributeError:
+          pop = None  
         status = site.find(attrs={"class": ethno['status']}).find(attrs={"class": 'even'}).text.strip()
         try:
           loc = site.find(attrs={"class": ethno['loc']}).find(attrs={"class": 'even'}).text.strip()
@@ -159,15 +163,83 @@ def lang_families():
           altnames = site.find(attrs={"class": ethno['altnames']}).find(attrs={"class": 'even'}).text.strip()
         except AttributeError:
           altnames = None
-        lf[i].append((i,name, pop, altnames, loc, status))
-        print j, i, status
+        lf[i].append((j, name, pop, altnames, loc, status))
+        print>>fout_tmp, "\t".join(map(str,[j, i, name, pop, altnames, loc, status]))
     with codecs.open(ETHNO_DIR+langfamfile,'wb') as fout:
       pickle.dump(lf, fout)
   
   with codecs.open(ETHNO_DIR+langfamfile,'wb') as fin2:
     return pickle.load(lf, fin2)
   
-lang_families()
-    
-    
+##lang_families()
+
+def download_lang_families():
+  _lf = {k:[j[0] for j in v] for k,v in load_language_families().items()}
+  for i in _lf:
+    for j in _lf[i]:
+      if os.path.exists(parentddir+"/data/ethnologue/languages/"+j+'.ethno'):
+        print i
+      try:
+        site = urllib2.urlopen('https://www.ethnologue.com/language/' \
+                                  +j).read().decode('utf8')
+      except urllib2.HTTPError:
+        time.sleep(5)
+        site = urllib2.urlopen('https://www.ethnologue.com/language/' \
+                                  +j).read().decode('utf8')
         
+      with codecs.open(parentddir+"/data/ethnologue/languages/"+j+'.ethno','w','utf8') as fout:
+        print>>fout, site
+
+'''
+from bs4 import BeautifulSoup as bs
+langfamfile = 'languagefamilies_with_info.pk'
+_lf = {k:[j[0] for j in v] for k,v in load_language_families().items()}
+ethno = {'pop':"field field-name-field-population field-type-"+\
+             "text-with-summary field-label-inline clearfix",
+             'altnames':"field field-name-field-alternate-names field-type-"+\
+             "text-long field-label-inline clearfix",
+             'loc':"field field-name-field-region field-type-"+\
+             "text-with-summary field-label-inline clearfix",
+             'status':"field field-name-language-status field-type-"+\
+             "ds field-label-inline clearfix"}
+import udhr, odin, omniglot
+langs_we_have = sorted(set(udhr.languages() + odin.languages() + omniglot.languages()))
+
+lf = defaultdict(list)
+for i in _lf:
+  for j in _lf[i]:
+    try:
+      infile = codecs.open(parentddir+"/data/ethnologue/languages/"+j+'.ethno','r','utf8').read()
+    except IOError:
+      if j in langs_we_have: print i, j
+      continue
+    site = bs(infile)
+    name = site.find('title').text.replace(' | Ethnologue','').strip()
+    try:
+      pop = site.find(attrs={"class": ethno['pop']}).find(attrs={"class": 'even'}).text.strip()
+    except AttributeError:
+      pop = None  
+    status = site.find(attrs={"class": ethno['status']}).find(attrs={"class": 'even'}).text.strip()
+    try:
+      loc = site.find(attrs={"class": ethno['loc']}).find(attrs={"class": 'even'}).text.strip()
+    except AttributeError:
+      loc = None
+    try:
+      altnames = site.find(attrs={"class": ethno['altnames']}).find(attrs={"class": 'even'}).text.strip()
+    except AttributeError:
+      altnames = None
+    lf[j].append((i, name, pop, altnames, loc, status))
+    
+with codecs.open(ETHNO_DIR+langfamfile,'wb') as fout:
+  pickle.dump(lf, fout)
+'''
+
+def language_families():
+  langfam = pickle.load(codecs.open(ETHNO_DIR+\
+                                  'languagefamilies_with_info.pk','rb'))
+  return langfam
+'''
+x = language_families()
+for i in x:
+  print i, x[i][0]
+'''

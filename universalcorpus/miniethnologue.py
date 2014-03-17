@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import codecs
+import codecs, re
 from collections import defaultdict
 
 # from http://www-01.sil.org/iso639-3/iso-639-3_Name_Index.tab
@@ -11156,7 +11156,6 @@ zun  Zuni  Shiwi'ma  zun  USA  2  19280  160996  ZUN  -  -  -  ifb ifk  en  no  
 zyj  Youjiang Zhuang  -  zyj  China  6  853  5544  -  -  -  -  en  en  no  -  Fri Oct 18 00:05:31 CDT 2013  -  Tai-Kadai, Kam-Tai, Tai, Northern
 zza  Zaza  -  zza  Turkey  93  1126852  6643343  -  -  -  -  kmr ote"""
 
-
 def getKey(dic, value):
   return [k for k,v in sorted(dic.items()) if value in v]
 
@@ -11169,6 +11168,13 @@ for i in retired_iso6393.split('\n'):
   line = i.split('  ')
   code = line[0]; langname = line[1]
   ISO2LANG[code].append(langname.lower())
+
+RETIRED2ISO = defaultdict(list)
+for i in retired_iso6393.split('\n'):
+  line = i.split('  ')
+  oldcode = line[0]
+  newcode = [line[3]] if line[3] else re.findall(r'\[([^]]*)\]',line[4])
+  RETIRED2ISO[oldcode] = newcode
   
 for i in crubadantable.split('\n'):
   line = i.split('  '); code = line[3]
