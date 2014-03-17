@@ -1,0 +1,20 @@
+\documentclass[11pt]{article}
+\title{\textbf{universal corpus}}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Detecting Similar Languages}
+
+When working on low-resource or endangered languages, computational and documentary linguists face the issue of lack of resources and knowledge about the language. Often, having knowledge about related or similar language(s) provides useful lexical, syntactic or morphological minimal pairs across languages and also helps in bootstrapping language models in NLP (Yarowsky
+and Ngai, 2001; Xia and Lewis, 2007). 
+
+The task of identifying related/similar language is also known as ``language classification" where (i) languages are mapped onto language families trees depending on their historical ancestry often measured by comparing string distance from a fix lexical list across languages, aka. \emph{genetic classification} or \emph{lexicostatistics} (e.g. Swadesh, 1952; Starostin, 2010) or (ii) languages are grouped by their degrees of similarity with regards to their typological features, aka. \emph{typological classification} (e.g. Daume, 2009; Georgi et al. 2010).
+
+To exemplify the use of the universal corpus for research on low-resource languages, we experimented with automatic detection of similar languages using K-means clustering with character ngrams and word unigrams features. Each language is represented by a vector of character bigrams and trigrams and word unigram features from the universal corpus. 
+\newline \newline
+\noindent \textbf{SHOW FANCY FIGURE OF CLUSTER}
+\newline \newline
+\textbf{Evaluate the cluster (quantitatively/qualitatively)}
+
+\end{document}
