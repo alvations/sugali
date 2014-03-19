@@ -1,23 +1,115 @@
-\section{Something about cleaning data, merging data, formatting, standardization}
+\section{Data source case studies}
 
-\subsection{Details for individual data sources (or perhaps rather individual topics}
+In this section we describe in detail the work required to merge each of our four data sources into a single common source. \textcolor{blue}{[Universal Corpus???]}
 
-\textcolor{blue}{[Import things from previous section]}
-
-
+In the following subsections, we describe each source, and the processing required to convert the data into a standardised form. 
 
 
-\subsection{Universal Corpus and Data Structure} \label{sec:structure}
+\subsection{UDHR}
 
-\textcolor{blue}{[Perhaps this comes elsewhere?]}
 
-\newcite{abney2011data} describe the data structure they envisage for the universal corpus in more detail, distinguishing between \textbf{aligned texts} and \textbf{analysed texts}: the former consists of multiple parallel texts, aligned at the document, sentence, or word level [add more detail]; the latter contains more detailed annotations including parts of speech, morphological information, and syntactic relations. In our work, we have strived to maintain a data structure consistent with their recommendations for aligned texts.
+The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations, which has been translated into a wide variety of languages. Although there was a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution was laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR. This dataset was extremely clean, and simply required segmentation into sentences.
 
-However, we disagree that analysed texts should be accommodated in this way. If such a universal corpus is to succeed at all, it must enjoy support from a substantial part, if not all, of the linguistics community, and doing this requires theory-neutrality. Although their data structure is fairly lightwight, it is not theory neutral, explicitly encoding support for dependency grammars but not constituency grammars, and positing a specific list of relevant features which should be used to annotate words. Other linguists might wish to use a different set of properties, which could threaten to fragment a universal corpus before it truly gets off the ground. More fundamentally, they assume that the corpus should be segmented into words, but \newcite{haspelmath2011segment} argues that there is no cross-linguistically valid definition of "word", which would render such an endeavour impossible from the start.
 
-It is not within the scope of this paper to resolve these theoretical concerns. Instead, we suggest that the data structure for a universal corpus should be even more lightweight than Abney and Bird suggest. We agree with their characterisation of aligned texts, but propose an alternative for analysed texts. To motivate the role of parallel texts in a universal corpus, they propose using translations into a high-resource reference language as a convenient surrogate of meaning. By the same reasoning, we can use the glosses in an IGT to provide a more detailed surrogate of meaning. We propose that, just as we can align texts at the document, sentence, and word levels, we can also align texts at the morpheme level, as recommended by the Leipzig Glossing Rules,\footnote{http://www.eva.mpg.de/lingua/resources/glossing-rules.php} and as practised by documentary linguists.
+\subsection{Wikipedia}
 
-Then, only difference between analysed and aligned texts is that the text is aligned with descriptions in a metalanguage,\footnote{While we would urge researchers to keep such annotations simple, as usually done in IGTs, there is nothing in principle to stop someone from using a complex metalanguage capable of encoding the full set of properties proposed by Abney and Bird, or even more complicated data structures.} rather than a natural language. The benefits, however, are that we can use the same data structure to represent both aligned and analysed texts, and the representation is simple enough that linguistic controversies are difficult to raise. We admit that highly detailed annotations, such as trees and dependency graphs, are more awkward to encode, but such resources are unlikely to be available in more than a small handful of languages, and will remain outside the scope of a universal corpus, at least for the foreseeable future. To make it indicate what reference language is being used, we propose prefixing \texttt{gloss-} to the language code of the reference language - for example \texttt{gloss-eng} and \texttt{gloss-eng} if a text has been glossed into English or Spanish, respectively. Using a prefix rather than a suffix makes it clear that this is not a subvariety of the given language.
 
-Finally, it is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining "seven dimensions" along which this can vary. [more detail?] Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. We have written an API to allow access to this data according to the guidelines of Abney and Bird, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
+At the time of writing, Wikipedia contains 30.8 million articles in 287 languages, which provides a sizeable amount of clean monolingual text in a fairly wide range of languages. Text dumps are made regularly, and can be downloaded from \url{www.dumps.wikimedia.org}. One major issue with using the Wikipedia dump extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After conversion into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+
+Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or ISO~639-2/3. We converted all of them into ISO~639-3, following documentation from the Wikimedia Foundation.\footnote{http://meta.wikimedia.org/wiki/Special\_language\_codes}
+
+
+\subsection{Omniglot}
+
+
+The Omniglot website\footnote{htp://www.omniglot.com} is an online encyclopedia of writing systems and languages. We chose to extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us a parallel data in a reasonably large number of languages. The urls for these resources are:
+
+\begin{itemize}[noitemsep]
+\item \url{www.omniglot.com/language/phrases/*} 
+\item \url{www.omniglot.com/babel/*}
+\end{itemize}
+
+\noindent One problem with this data is that only the language name is given, not the ISO 639-3 code. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{http://www-01.sil.org/iso639-3/iso-639-3.tab}
+
+
+
+\subsection{ODIN}
+
+
+ODIN (The Online Database of Interlinear Text) is a repository of IGTs extracted from scholarly documents \cite{lewis2006odin,lewis2010odin}.  Compared to other resources, it is notable for the breadth of languages included, and the level of linguistic annotation; however, the data requires further processing to bring it in line with the proposed format for a universal corpus.
+
+The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the Interlinear Glossed Texts (IGTs) are encoded in the \texttt{<igt><example>...</example></igt>} tags. Each XML file is saved under a filename that matches the respective language code. While cleaning the data, filenames that does not adhere to ISO 639-3\footnote{http://www-01.sil.org/iso639-3} were excluded in the uniWaC compilation. [Huh? Should this really happen? - the codes are given on their website and look valid to me...]
+\\ \\
+\begin{minipage}{\columnwidth}
+
+\quad 21 a.\quad o lesu mai \\
+\indent \qquad\qquad 2sg return here \\
+\indent \qquad\qquad `\emph{You return here.}' \\
+\centerline{Figure 1: Fijian IGT from ODIN.}
+\end{minipage}
+
+%%
+% Is there a reason we need to use minipages rather than figures? This doesn't seem to allow automatic numbering.
+% Also, some of the lines go outside of the column!!
+%%
+
+\begin{minipage}{\columnwidth}
+\begin{lstlisting}[language=XML]
+<igt>
+  <example>
+    <line>21 a. o lesu mai</line>
+    <line>2sg return here</line>
+    <line>`You return here.'</line>
+  </example>
+</igt>
+\end{lstlisting} 
+\centerline{Figure 2: Fijian IGT in ODIN's XML format.}
+\end{minipage}
+\\ \\
+\noindent The IGTs from an academic publication usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
+\begin{minipage}{\columnwidth}
+\begin{lstlisting}[language=XML]
+<igt>
+  <example>
+    <line>(69) na-Na-tmi-kwalca-t 
+    Yimas (Foley 1991)</line>
+    <line>3sgA-1sgO-say-rise-PERF
+    </line>
+    <line>`She woke me up' 
+    (by verbal action)</line>
+  </example>
+</igit>
+\end{lstlisting} 
+\smallskip
+\centerline{Figure 3: Yimas IGT in ODIN's XML format.}
+\end{minipage}
+\\ \\
+
+\noindent The primary problem in extracting the source text is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes the language name, and a citation for the example, which introduces noise into the corpus.
+
+Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents to deviate from the standard convention; when compiling the ODIN data, they attempted a regex-based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness':
+
+[This hasn't been implemented, but I think we could try this: Split source and gloss lines into tokens according to whitespace. Check the source has more tokens. Count the number of hyphens and equal signs in each token (since they denote morphemes). Match the gloss line with a substring of the source line, according to numbers of hyphens and equal signs. If there's exactly one match, keep it, and discard tokens at the ends of the line. If there's more than one match, look for other punctuation in the initial and final tokens.]
+\\ \\
+\begin{minipage}{\columnwidth}
+\begin{itemize}
+\item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
+\begin{itemize}
+\item[(i)]
+\begin{Verbatim}
+^(?\s?\w{1,5}\s*[):.]\s*
+\end{Verbatim}
+\item[(ii)] 
+\begin{Verbatim}
+[\[\(].{1,}[\]\)]
+\end{Verbatim}
+\end{itemize}
+\item \emph{Cleanest}: Only source lines without punctuation.
+\end{itemize}
+\end{minipage}
+\\ \\
+
+\noindent The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages. The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing. 
+
+
 
