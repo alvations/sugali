@@ -150,3 +150,13 @@ def source_sents(cleanedwikidir=parentddir+"/data/wikipedia/clean/"):
 for i,j in source_sents():
   print i,j
 '''
+            
+def langs():
+  from miniethnologue import WIKI2ISO, ISO2LANG
+  from crawlandclean import ethnologue
+  wikilangs = [WIKI2ISO[i] for i in WIKI2ISO if WIKI2ISO[i] and WIKI2ISO[i] in ISO2LANG]
+  
+  language_families = ethnologue.language_families()
+  
+  return set(language_families.keys()).difference(wikilangs)
+  

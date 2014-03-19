@@ -202,8 +202,13 @@ ethno = {'pop':"field field-name-field-population field-type-"+\
              "text-with-summary field-label-inline clearfix",
              'status':"field field-name-language-status field-type-"+\
              "ds field-label-inline clearfix"}
+
+
 import udhr, odin, omniglot
-langs_we_have = sorted(set(udhr.languages() + odin.languages() + omniglot.languages()))
+from miniethnologue import WIKI2ISO, ISO2LANG
+
+wikilangs = [WIKI2ISO[i] for i in WIKI2ISO if WIKI2ISO[i] and WIKI2ISO[i] in ISO2LANG]
+langs_we_have = sorted(set(udhr.languages() + odin.languages() + omniglot.languages() + wikilangs))
 
 lf = defaultdict(list)
 for i in _lf:
@@ -233,6 +238,8 @@ for i in _lf:
 with codecs.open(ETHNO_DIR+langfamfile,'wb') as fout:
   pickle.dump(lf, fout)
 '''
+
+
 
 def language_families():
   langfam = pickle.load(codecs.open(ETHNO_DIR+\

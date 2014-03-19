@@ -10,11 +10,12 @@ dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
         "tpn":"Tupinamba","ojp":"Old Japanese","sga":"Old Irish",
         "hit":"Hittite","tkm":"Takelma","dum":"Middle Dutch",
         "fro":"Old French","nci":"Classical Nahuatl","gmh":"Middle High German",
-        "mxi":"Mozarabic"}
+        "mxi":"Mozarabic", "ang": "Old English"}
 macro_split = {"nob":"Norwegian, Bokmaal","nno":"Norwegian Nynorsk"} # nor.
 constructed = {"ido":"Ido","tlh":"Klingon","tzl":"Talossan","jbo":"Lojban",
-               "ina":"Interlingua"}
+               "ina":"Interlingua","nov":"Novial"}
 
+alllangs = []
 language_families = ethnologue.language_families()
 for i in [odin, omniglot, udhr]:
   langs = [j for j in i.languages() if j in ISO2LANG]
@@ -27,33 +28,39 @@ for i in [odin, omniglot, udhr]:
   isolangs = list(set(langs)-set(macros.keys())-set(retired.keys())-\
                   set(dead.keys())-set(macro_split.keys())-\
                   set(constructed.keys()))
-                  
+  alllangs+=isolangs
+  
+print alllangs
+  
+  
+'''                
   families = list(set([language_families[j][0][0] for j in isolangs]))
   
   endangerment = defaultdict(list)
   for j in isolangs:
     ed = language_families[j][0][-1].split()[0]
     endangerment[ed].append(j)
+'''  
   
+
   ##print len(langs), len(macros), len(retired), len(families)
   ##print len(splits), len(died), len(con)
   ##print splits
   ##print retired
   ##print died
-  '''
-  for e in sorted(endangerment):
+
+'''for e in sorted(endangerment):
     for i in families:
       print e, len(endangerment[e])
-  print len(set(endangerment['10']))
-  print
-  '''
+  
   families2endanger = defaultdict(list)
   for j in isolangs:
     fam = language_families[j][0][0]
     ed = language_families[j][0][-1].split()[0]
-    print language_families[j]
-    print ed, fam
-    
-x = list(set([v[0][0] for k,v in language_families.items()]))
-print x
-print len(x)
+    ##print language_families[j]
+    ##print ed, fam
+
+  x = list(set([v[0][0] for k,v in language_families.items()]))
+  print x
+  print len(x)
+  '''

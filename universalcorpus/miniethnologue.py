@@ -11238,9 +11238,25 @@ def macrolang():
     else:
       lang = i.strip().split('  ')[0]
     macro2lang[lastmacro].append(lang)
+  macro2lang['zha'].append('Zhuang')
   return macro2lang
     
 MACRO2LANG = macrolang()
+
+CONLANG = {"ido":"Ido","tlh":"Klingon","tzl":"Talossan","jbo":"Lojban",
+          "ina":"Interlingua","nov":"Novial", "arc":"Imperial Aramaic",
+          "got":"Gothic","ile":"Interlingue","vol":"Volapük"}
+
+DEADLANG = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
+        "got":"Gothic","wlm":"Middle Welsh","oge":"Old Georgian",
+        "tpn":"Tupinamba","ojp":"Old Japanese","sga":"Old Irish",
+        "hit":"Hittite","tkm":"Takelma","dum":"Middle Dutch",
+        "fro":"Old French","nci":"Classical Nahuatl","gmh":"Middle High German",
+        "mxi":"Mozarabic", "ang": "Old English", "lzh": "Literary Chinese"}
+
+
+
+  
 
 ##print len(MACRO2LANG)
 #for i in ISO2LANG:
