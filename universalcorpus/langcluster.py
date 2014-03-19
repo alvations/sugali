@@ -143,8 +143,6 @@ def distance(c1, c2):
     return 0
   return acos(dimsum)
 
-
-
 if not os.path.exists('ngram.data'):
   data = load_ngram_array()
   with open('ngram.data','wb') as ngramout:
@@ -209,39 +207,49 @@ matrix = pd.lib.to_object_array(matrix).astype(float)
 
 import scipy
 import matplotlib.pylab as plt
-x = scipy.cluster.hierarchy.linkage(matrix, method='weighted')
-y = scipy.cluster.hierarchy.dendrogram(x)
-plt.savefig('tree.png')
 
-z = scipy.cluster.hierarchy.fcluster(x,148,'maxclust')
+methods = 'single complete average weighted centroid ward'.split()
+criterion = 'inconsistent distance maxclust'.split()
 
+fouteval = open('cluster.eval.outputs','w')
 
-lang2clusters = {}
-cluster2langs = defaultdict(list)
-for i,j in zip(z.tolist(), labels):
-  lang2clusters[j] = i
-  cluster2langs[i].append(j)
-
-fouti = open('induce-clusters','w')
-precisions, recalls, fscores = [], [], []
-for i in labels:
-  gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[i]]
-  induced_cluster = set(cluster2langs[lang2clusters[i]])
-  print>>fouti, i
-  print>>fouti, induced_cluster
-  print>>fouti, gold_class
-  print>>fouti, "\n"
-  overlap = len(induced_cluster.intersection(gold_class))
-  rec = overlap /float(len(gold_class))
-  prec = overlap /float(len(induced_cluster))
-  precisions.append(prec)
-  recalls.append(rec)
-  fscores.append(2*prec*rec/float(prec/rec))
+for me, cr in product(methods,criterion):
+  x = scipy.cluster.hierarchy.linkage(matrix, method=me)
+  y = scipy.cluster.hierarchy.dendrogram(x)
+  plt.savefig('tree.png')
   
-def avg(l):
-  return sum(l)/float(len(l))
-
-print avg(precisions), avg(recalls), avg(fscores)
+  z = scipy.cluster.hierarchy.fcluster(x,148,cr)
+  
+  lang2clusters = {}
+  cluster2langs = defaultdict(list)
+  for cluster_num, lang_labels in zip(z.tolist(), labels):
+    lang2clusters[lang_labels] = cluster_num
+    cluster2langs[cluster_num].append(lang_labels)
+    
+  fouti = open('induce-clusters','w')
+  precisions, recalls, fscores = [], [], []
+  for i in labels:
+    gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[i]]
+    gold_class = [g for g in gold_class if g in living_languages]
+    induced_cluster = set(cluster2langs[lang2clusters[i]])
+    print>>fouti, i
+    print>>fouti, induced_cluster
+    print>>fouti, gold_class
+    print>>fouti, "\n"
+    overlap = len(induced_cluster.intersection(gold_class))
+    print overlap, len(gold_class)
+    rec = overlap /float(len(gold_class))
+    prec = overlap /float(len(induced_cluster))
+    precisions.append(prec)
+    recalls.append(rec)
+    
+    fscores.append((2*prec*rec)/float(prec+rec))
+    
+  def avg(l): return sum(l)/float(len(l));
+  
+  print>>fouteval, "\t".join([me, cr, "{0:.5f}".format(avg(precisions)), \
+                              "{0:.5f}".format(avg(recalls)), \
+                              "{0:.5f}".format(avg(fscores))])
   
 
 

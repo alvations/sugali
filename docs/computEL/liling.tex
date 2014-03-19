@@ -19,14 +19,23 @@
 \caption{Corpus Coverage}
 \end{table}
 
+\noindent
+According to ethnologue \\
+Total Living languages: 7105 \\
+Total Living language families: 147 \\
 
-According to ethnologue
-Total Living languages: 7105
-Total Living language families: 147
+\begin{table}[h!]
+    \begin{tabular}{l|ccc|ccc}
+    ~        & complete & ~       & ~       & ward    & ~       & ~       \\ \cline{2-7}
+    ~        & precision & recall       & f-score       & precision    & recall       & f-score      \\ \hline
+    distance & 0.0614   & 0.8565 & \textbf{0.1099} & 0.06140  & 0.8565 & \textbf{0.1099} \\
+    maxclust & 0.1925  & \textbf{0.0927} & 0.0692 & \textbf{0.1963} & 0.0905 & 0.0686  \\
+    \end{tabular}
+\caption{Comparing of clustering algorithms where number of clusters is set to genetic grouping on Ethnologue.}
+\end{table}
 
-
-6,749
-33,117
+\noindent
+see full table in http://goo.gl/bs2vPo
 
 
 \end{document}
