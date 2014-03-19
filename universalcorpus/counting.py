@@ -4,6 +4,7 @@ from crawlandclean import udhr, omniglot, odin, ethnologue
 from collections import Counter, defaultdict
 from miniethnologue import ISO2LANG, MACRO2LANG, RETIRED2ISO
 ##from crawlandclean import ethnologue
+from itertools import chain
 
 dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
         "got":"Gothic","wlm":"Middle Welsh","oge":"Old Georgian",
@@ -29,19 +30,18 @@ for i in [odin, omniglot, udhr]:
                   set(dead.keys())-set(macro_split.keys())-\
                   set(constructed.keys()))
   alllangs+=isolangs
-  
-print alllangs
-  
-  
-'''                
   families = list(set([language_families[j][0][0] for j in isolangs]))
   
   endangerment = defaultdict(list)
   for j in isolangs:
     ed = language_families[j][0][-1].split()[0]
     endangerment[ed].append(j)
-'''  
-  
+    
+  #for e in sorted(endangerment):
+  #  print i, e, len(endangerment[e])
+
+  print sum([len(i) for i in endangerment.values()]), len(isolangs), len(langs)
+    
 
   ##print len(langs), len(macros), len(retired), len(families)
   ##print len(splits), len(died), len(con)
