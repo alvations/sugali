@@ -238,8 +238,12 @@ def language_families():
   langfam = pickle.load(codecs.open(ETHNO_DIR+\
                                   'languagefamilies_with_info.pk','rb'))
   return langfam
-'''
-x = language_families()
-for i in x:
-  print i, x[i][0]
-'''
+
+langfam = language_families()
+ISO2FAMILY = {i:langfam[i][0][0] for i in langfam}
+FAMILIES2ISO = defaultdict(list)
+for i in langfam:
+  FAMILIES2ISO[langfam[i][0][0]].append(i)
+
+
+

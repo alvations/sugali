@@ -41,18 +41,3 @@ class Suppress_print(object):
     sys.stdout = StringIO.StringIO()
   def __exit__(self, *args):
     sys.stdout = self.stdout
-    
-def normalize(featurevector, length=1):
-  """
-  Normalises a feature vector to a specific length.
-  Zero vectors are left zero.
-  NOTE: featurevector will be updated with normalized count.
-  """
-  from math import sqrt
-  try:
-    norm = length / sqrt(sum([x*x for x in featurevector.values()]))
-  except ZeroDivisionError:
-    return
-  for feat in featurevector:
-    featurevector[feat] *= norm
-  return featurevector

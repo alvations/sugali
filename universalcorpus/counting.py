@@ -11,7 +11,7 @@ dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
         "hit":"Hittite","tkm":"Takelma","dum":"Middle Dutch",
         "fro":"Old French","nci":"Classical Nahuatl","gmh":"Middle High German",
         "mxi":"Mozarabic"}
-macro_split = {"nob":"Norwegian, Bokmaal","nno":"Norwegian Nynorsk"}
+macro_split = {"nob":"Norwegian, Bokmaal","nno":"Norwegian Nynorsk"} # nor.
 constructed = {"ido":"Ido","tlh":"Klingon","tzl":"Talossan","jbo":"Lojban",
                "ina":"Interlingua"}
 
