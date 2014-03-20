@@ -39,21 +39,29 @@ The Omniglot website\footnote{htp://www.omniglot.com} is an online encyclopedia 
 ODIN (The Online Database of Interlinear Text) is a repository of IGTs extracted from scholarly documents \cite{lewis2006odin,lewis2010odin}.  Compared to other resources, it is notable for the breadth of languages included, and the level of linguistic annotation; however, the data requires further processing to bring it in line with the proposed format for a universal corpus.
 
 The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the Interlinear Glossed Texts (IGTs) are encoded in the \texttt{<igt><example>...</example></igt>} tags. Each XML file is saved under a filename that matches the respective language code. While cleaning the data, filenames that does not adhere to ISO 639-3\footnote{http://www-01.sil.org/iso639-3} were excluded in the uniWaC compilation. [Huh? Should this really happen? - the codes are given on their website and look valid to me...]
-\\ \\
-\begin{minipage}{\columnwidth}
 
+\begin{figure}
 \quad 21 a.\quad o lesu mai \\
 \indent \qquad\qquad 2sg return here \\
 \indent \qquad\qquad `\emph{You return here.}' \\
-\centerline{Figure 1: Fijian IGT from ODIN.}
-\end{minipage}
+\caption{Fijian IGT from ODIN.} \label{fig:odin_fijian}
+\end{figure}
+
+% \begin{minipage}{\columnwidth}
+% \quad 21 a.\quad o lesu mai \\
+% \indent \qquad\qquad 2sg return here \\
+% \indent \qquad\qquad `\emph{You return here.}' \\
+% %\caption{Fijian IGT from ODIN.} 
+% \end{minipage}
+
+
 
 %%
 % Is there a reason we need to use minipages rather than figures? This doesn't seem to allow automatic numbering.
 % Also, some of the lines go outside of the column!!
 %%
 
-\begin{minipage}{\columnwidth}
+\begin{figure}
 \begin{lstlisting}[language=XML]
 <igt>
   <example>
@@ -63,11 +71,28 @@ The ODIN data is easily accessible in XML format from the online database\footno
   </example>
 </igt>
 \end{lstlisting} 
-\centerline{Figure 2: Fijian IGT in ODIN's XML format.}
-\end{minipage}
-\\ \\
+\caption{Fijian IGT in ODIN's XML format.} \label{fig:odin_fijian_xml}
+\end{figure}
+
+
+
+% \begin{minipage}{\columnwidth}
+% \begin{lstlisting}[language=XML]
+% <igt>
+%   <example>
+%     <line>21 a. o lesu mai</line>
+%     <line>2sg return here</line>
+%     <line>`You return here.'</line>
+%   </example>
+% </igt>
+% \end{lstlisting} 
+% \centerline{Figure 2: Fijian IGT in ODIN's XML format.}
+% \end{minipage}
+
 \noindent The IGTs from an academic publication usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
-\begin{minipage}{\columnwidth}
+
+
+\begin{figure}
 \begin{lstlisting}[language=XML]
 <igt>
   <example>
@@ -81,17 +106,37 @@ The ODIN data is easily accessible in XML format from the online database\footno
 </igit>
 \end{lstlisting} 
 \smallskip
-\centerline{Figure 3: Yimas IGT in ODIN's XML format.}
-\end{minipage}
-\\ \\
+\caption{Yimas IGT in ODIN's XML format.}\label{fig:odin_yimas_xml}
+\end{figure}
+
+
+
+% \begin{minipage}{\columnwidth}
+% \begin{lstlisting}[language=XML]
+% <igt>
+%   <example>
+%     <line>(69) na-Na-tmi-kwalca-t 
+%     Yimas (Foley 1991)</line>
+%     <line>3sgA-1sgO-say-rise-PERF
+%     </line>
+%     <line>`She woke me up' 
+%     (by verbal action)</line>
+%   </example>
+% </igit>
+% \end{lstlisting} 
+% \smallskip
+% \centerline{Figure 3: Yimas IGT in ODIN's XML format.}
+% \end{minipage}
+
 
 \noindent The primary problem in extracting the source text is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes the language name, and a citation for the example, which introduces noise into the corpus.
 
 Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents to deviate from the standard convention; when compiling the ODIN data, they attempted a regex-based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness':
 
 [This hasn't been implemented, but I think we could try this: Split source and gloss lines into tokens according to whitespace. Check the source has more tokens. Count the number of hyphens and equal signs in each token (since they denote morphemes). Match the gloss line with a substring of the source line, according to numbers of hyphens and equal signs. If there's exactly one match, keep it, and discard tokens at the ends of the line. If there's more than one match, look for other punctuation in the initial and final tokens.]
-\\ \\
-\begin{minipage}{\columnwidth}
+
+
+\begin{figure}
 \begin{itemize}
 \item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
 \begin{itemize}
@@ -106,8 +151,27 @@ Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents t
 \end{itemize}
 \item \emph{Cleanest}: Only source lines without punctuation.
 \end{itemize}
-\end{minipage}
-\\ \\
+\caption{Do we want this still as a figure?}
+\end{figure}
+
+
+% \begin{minipage}{\columnwidth}
+% \begin{itemize}
+% \item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
+% \begin{itemize}
+% \item[(i)]
+% \begin{Verbatim}
+% ^(?\s?\w{1,5}\s*[):.]\s*
+% \end{Verbatim}
+% \item[(ii)] 
+% \begin{Verbatim}
+% [\[\(].{1,}[\]\)]
+% \end{Verbatim}
+% \end{itemize}
+% \item \emph{Cleanest}: Only source lines without punctuation.
+% \end{itemize}
+% \end{minipage}
+
 
 \noindent The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages. The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing. 
 
