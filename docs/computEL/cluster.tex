@@ -40,6 +40,6 @@ There are many possible metrics to evaluate the quality of a clustering compared
 
 As well as performing clustering, we can view this as an information retrieval task: given a language, what are similar languages?  To do this, we found the languages with the closest vectors of n-grams and words.  Since BCubed is calculated averaging across languages and not clusters, we can use exactly the same calculation, using the set of nearby languages in place of a cluster.
 
-In table \ref{tab:cluster}, we give results of our clustering experiments.  The f-scores are much higher than the random baseline, and comparable to the values reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.
+In table \ref{tab:cluster}, we give results of our clustering experiments.  The F-scores are much higher than the random baseline, and comparable to the values reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
 
 It is also worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear to be very different.  Nonetheless, our system is reasonably capable of identifying those languages which are both related and also written similarly.
