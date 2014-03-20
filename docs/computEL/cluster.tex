@@ -36,7 +36,7 @@ see full table in http://goo.gl/bs2vPo
 
 
 
-There are many possible metrics to evaluate the quality of a clustering compared to a gold standar. \newcite{amigo2009metrics} propose a set of criteria which a clustering evaluation metric should satisfy, and demonstrate that most popular metrics fail to satisfy at least one of these criteria.  However, they prove that they are satisfied by the BCubed metric, which we adopt for this reason.  To calculate this, we find the induced cluster and gold standard class for each language, and calculate the F-score of the cluster compared to the class.  These F-scores are then averaged across all languages.
+There are many possible metrics to evaluate the quality of a clustering compared to a gold standard. \newcite{amigo2009metrics} propose a set of criteria which a clustering evaluation metric should satisfy, and demonstrate that most popular metrics fail to satisfy at least one of these criteria.  However, they prove that they are satisfied by the BCubed metric, which we adopt for this reason.  To calculate this, we find the induced cluster and gold standard class for each language, and calculate the F-score of the cluster compared to the class.  These F-scores are then averaged across all languages.
 
 As well as performing clustering, we can view this as an information retrieval task: given a language, what are similar languages?  To do this, we found the languages with the closest vectors of n-grams and words.  Since BCubed is calculated averaging across languages and not clusters, we can use exactly the same calculation, using the set of nearby languages in place of a cluster.
 
