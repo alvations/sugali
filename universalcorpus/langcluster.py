@@ -14,11 +14,12 @@ import numpy as np
 import pandas as pd
 ##from sklearn import cluster; import milk
 import scipy
+import scipy.spatial
+import scipy.cluster
 import matplotlib.pylab as plt
 
 from crawlandclean import odin, omniglot, udhr, ethnologue
 from miniethnologue import ISO2LANG, MACRO2LANG, RETIRED2ISO
-
 
 random.seed(0)
 
@@ -45,6 +46,7 @@ def normalize(featurevector, length=1):
     featurevector[feat] *= norm
   return featurevector
 
+
 dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
         "got":"Gothic","wlm":"Middle Welsh","oge":"Old Georgian",
         "tpn":"Tupinamba","ojp":"Old Japanese","sga":"Old Irish",
@@ -55,15 +57,17 @@ macro_split = {"nob":"Norwegian, Bokmaal","nno":"Norwegian Nynorsk"} # nor.
 constructed = {"ido":"Ido","tlh":"Klingon","tzl":"Talossan","jbo":"Lojban",
                "ina":"Interlingua"}
 
-living_languages = set(ISO2LANG.keys()) - set(RETIRED2ISO.keys()) - \
-set(dead.keys()) - set(constructed.keys()) - set(MACRO2LANG.keys()) - \
-set(macro_split.keys())
+living_languages = set(ISO2LANG.keys()) - set(RETIRED2ISO.keys()) \
+- set(dead.keys()) - set(constructed.keys()) \
+- set(MACRO2LANG.keys()) - set(macro_split.keys())
 
 def generate_ngrams(data_source):
   twograms = defaultdict(Counter) 
   threegrams = defaultdict(Counter)
   unigrams = defaultdict(Counter)
   for lang, sent in globals()[data_source].source_sents():
+    if lang not in living_languages:
+      continue
     if lang not in living_languages: continue;
     twograms[lang].update(Counter(sent2ngrams(sent,2))) 
     threegrams[lang].update(Counter(sent2ngrams(sent,3)))
@@ -107,14 +111,15 @@ def load_ngram_array():
     unigrams[lang] = normalize(unigrams[lang], 1/sqrt(3))
     
   allgrams = defaultdict(Counter)
-  for k,v in chain(twograms.iteritems(), threegrams.iteritems(), 
-                   unigrams.iteritems()):
-    allgrams[k].update(v)  
+  for k,v in chain(twograms.iteritems(), threegrams.iteritems(), unigrams.iteritems()):
+    allgrams[k].update(v)
+  
   return allgrams
-
+    
 def distance(c1, c2):
   dimsum = sum(c1[i]*c2[i] for i in set(c1.keys()).intersection(c2.keys()))
   if dimsum >= 1.0: 
+    ##print dimsum
     return 0
   return acos(dimsum)
 
@@ -150,6 +155,7 @@ else:
     data = pickle.load(fin)
 
 # Calculates distance matrix.
+print "Calculating/Loading distance matrix ..."
 dmatrix = []
 if not os.path.exists('distance.out'):    
   fout = open('distance.out','w')
@@ -163,27 +169,71 @@ else:
     dist = float(dist)
     dmatrix.append((l1,l2,dist))
 
-# Converts distance matrix into numpy array
-matrix = {}; labels = []
+def plot_tree(P, pos=None):
+  import matplotlib.pylab as plt
+  icoord = scipy.array(P['icoord'])
+  dcoord = scipy.array(P['dcoord'])
+  color_list = scipy.array(P['color_list'])
+  xmin, xmax = icoord.min(), icoord.max()
+  ymin, ymax = dcoord.min(), dcoord.max()
+  if pos:
+    icoord = icoord[pos]
+    dcoord = dcoord[pos]
+    color_list = color_list[pos]
+    
+  for xs, ys, color in zip(icoord, dcoord, color_list):
+    plt.plot(xs, xy, color)
+  plt.xlim(xmin010, xmax+0.1*abs(xmax))
+  plt.ylim(ymin, ymax+01.*abs(ymaxs))
+  plt.show()
+
+'''
+matrix = {}
+labels = []
 for l1, l2, dist in dmatrix:
+  if l2 == l1:
+    continue
   if l1 in living_languages and l2 in living_languages:
     if l2 not in labels: labels.append(l2)
     matrix.setdefault(l1, {})[l2] = dist
 
+
 matrix = [v.values() for k,v in matrix.iteritems()]
 matrix = pd.lib.to_object_array(matrix).astype(float) 
+'''
+  
+labels = []
+index = {}
+for l1, l2, dist in dmatrix:
+  if l1 not in labels:
+    index[l1] = len(labels)
+    labels.append(l1)
+    
 
-methods = 'single complete average weighted centroid ward'.split()
+matrix = np.zeros((len(labels),len(labels)))
+
+for l1, l2, dist in dmatrix:
+  index1 = index[l1]
+  index2 = index[l2]
+  if l1 == l2:
+    continue
+  matrix[index1,index2] = dist
+  matrix[index1,index2] = dist
+
+condensed = scipy.spatial.distance.squareform(matrix)
+
+methods = 'single complete average weighted'.split()
 criterion = 'inconsistent distance maxclust'.split()
 
 fouteval = open('cluster.eval.outputs','w')
-
-for me, cr in product(methods,criterion):
-  x = scipy.cluster.hierarchy.linkage(matrix, method=me)
+numclust = [10,20,30,40,50,60,70,80,90,100,110,120,130,147,148]
+for me, cr, nc  in product(methods,criterion, numclust):
+  ##print me, cr, nc
+  x = scipy.cluster.hierarchy.linkage(condensed, method=me)
   y = scipy.cluster.hierarchy.dendrogram(x)
   plt.savefig('tree.png')
   
-  z = scipy.cluster.hierarchy.fcluster(x,148,cr)
+  z = scipy.cluster.hierarchy.fcluster(x,nc,cr)
   
   lang2clusters = {}
   cluster2langs = defaultdict(list)
@@ -193,6 +243,7 @@ for me, cr in product(methods,criterion):
     
   ##fouti = open('induce-clusters','w')
   precisions, recalls, fscores = [], [], []
+  #maxoverlap = 0
   for i in labels:
     gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[i]]
     gold_class = [g for g in gold_class if g in living_languages]
@@ -202,17 +253,20 @@ for me, cr in product(methods,criterion):
     ##print>>fouti, gold_class
     ##print>>fouti, "\n"
     overlap = len(induced_cluster.intersection(gold_class))
+    ##print overlap, len(gold_class)
     rec = overlap /float(len(gold_class))
     prec = overlap /float(len(induced_cluster))
-    precisions.append(prec); recalls.append(rec)
+    
+    #maxoverlap = overlap if overlap > maxoverlap else maxoverlap
+    
+    precisions.append(prec)
+    recalls.append(rec)
     fscores.append((2*prec*rec)/float(prec+rec))
   
-  print>>fouteval, "\t".join([me, cr, "{0:.5f}".format(avg(precisions)), \
+  print>>fouteval, "\t".join([str(nc), me, cr, "{0:.5f}".format(avg(precisions)), \
                               "{0:.5f}".format(avg(recalls)), \
                               "{0:.5f}".format(avg(fscores))])
   
-
-
 
 ''' # Kmeans using sklearn.
 k_means = cluster.KMeans(n_clusters=20)
