@@ -225,6 +225,9 @@ condensed = scipy.spatial.distance.squareform(matrix)
 methods = 'single complete average weighted'.split()
 criterion = 'inconsistent distance maxclust'.split()
 
+if os.path.exist('cluster.eval.outputs'):
+  exit()
+  
 fouteval = open('cluster.eval.outputs','w')
 numclust = [10,20,30,40,50,60,70,80,90,100,110,120,130,147,148]
 for me, cr, nc  in product(methods,criterion, numclust):
