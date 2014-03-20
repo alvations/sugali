@@ -2,24 +2,22 @@
 
 \subsection{Representation and Universality} \label{sec:stats}
 
-Number of languages, size of corpus, etc.
+According to Ethnologue, there are 7105 living languages, and 147 living language families. Across all our data sources, we manage to cover 1347 languages in 106 families, which represents 19.0\% of the world's languages. To get a better idea of the kinds of languages represented, we give a breakdown according to their EGIDS scores (Expanded Graded Intergenerational Disruption Scale) in figure \textcolor{blue}{[insert reference here when it's ready]}. The values in each cell have been colored according to proportion of languages represented, with green indicated good coverage and red poor. It's interesting to note that vigorous languages (6a) are poorly represented across all data sources, and worse than more endangered categories. In terms of language documentation, vigorous languages are less urgent goals than those in categories 6b and up, but this highlights an unexpected gap in linguistic resources.
 
-\begin{table}
-\centering
-    \begin{tabular}{l|cc}
-    ~         				& \#Languages & \#Families \\ \hline
-    ODIN      				& 1218       & 101       \\
-    Omniglot  				& 134        & 21        \\
-    UDHR      				& 355        & 47        \\
-    Wikipedia 				& 209        & 22       \\ \hline
-    \textbf{Combined}	& 1347			 & 106 
-    \end{tabular}
-\caption{Corpus Coverage}
-\end{table}
 
-According to ethnologue
-Total Living languages: 7105
-Total Living language families: 147
+
+%\begin{table}
+%\centering
+%    \begin{tabular}{l|cc}
+%    ~         				& \#Languages & \#Families \\ \hline
+%    ODIN      				& 1218       & 101       \\
+%    Omniglot  				& 134        & 21        \\
+%    UDHR      				& 355        & 47        \\
+%    Wikipedia 				& 209        & 22       \\ \hline
+%    \textbf{Combined}	& 1347			 & 106 
+%    \end{tabular}
+%\caption{Corpus Coverage}
+%\end{table}
 
 
 \begin{table}[h!]
@@ -33,22 +31,22 @@ Total Living language families: 147
     \textbf{Combined}	& 1,347			 & 106 
     \end{tabular}
 \caption{Corpus Coverage}
+\label{table:corpus}
 \end{table}
 
-
+\textcolor{blue}{[insert heatmap here]}
 
 
 
 \subsection{Data Sources} \label{sec:sources}
 
-Although data size matters in general NLP \cite{banko2001scaling} [is this the best reference?], \emph{universality} is the utmost priority for a universal corpus. We chose to focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured):
+Although data size matters in general NLP \cite{banko2001scaling} \textcolor{blue}{[is this the best reference?]}, \emph{universality} is the utmost priority for a universal corpus. We chose to focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured):
 
 \begin{enumerate}
 \item The Online Database of Interlinear Text (ODIN)
 \item The Omniglot website
 \item The Universal Declaration of Human Rights (UDHR)
 \item Wikipedia
-\item The Leipzig Corpora Collection (LCC) [do we include this?]
 \end{enumerate}
 
 
