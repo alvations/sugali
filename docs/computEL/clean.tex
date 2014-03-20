@@ -2,43 +2,28 @@
 
 In this section we describe in detail the work required to merge each of our four data sources into a single common source. \textcolor{blue}{[Universal Corpus???]}
 
-In the following subsections, we describe each source, and the processing required to convert the data into a standardised form. 
+In the following subsections, we describe the processing required to convert the data into a standardised form.  We then discuss standardisation of language codes and file formats.
 
 
 \subsection{UDHR}
 
-
-The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations, which has been translated into a wide variety of languages. Although there was a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution was laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR. This dataset was extremely clean, and simply required segmentation into sentences.
+Although there is a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution is laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR. This dataset was extremely clean, and simply required segmentation into sentences.
 
 
 \subsection{Wikipedia}
 
-
-At the time of writing, Wikipedia contains 30.8 million articles in 287 languages, which provides a sizeable amount of clean monolingual text in a fairly wide range of languages. Text dumps are made regularly, and can be downloaded from \url{www.dumps.wikimedia.org}. One major issue with using the Wikipedia dump extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After conversion into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
-
-Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or ISO~639-2/3. We converted all of them into ISO~639-3, following documentation from the Wikimedia Foundation.\footnote{http://meta.wikimedia.org/wiki/Special\_language\_codes}
+One major issue with using the Wikipedia dump extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After conversion into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
 
 
 \subsection{Omniglot}
 
 
-The Omniglot website\footnote{htp://www.omniglot.com} is an online encyclopedia of writing systems and languages. We chose to extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us a parallel data in a reasonably large number of languages. The urls for these resources are:
-
-\begin{itemize}[noitemsep]
-\item \url{www.omniglot.com/language/phrases/*} 
-\item \url{www.omniglot.com/babel/*}
-\end{itemize}
-
-\noindent One problem with this data is that only the language name is given, not the ISO 639-3 code. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{http://www-01.sil.org/iso639-3/iso-639-3.tab}
-
+The main issue with extracting this data is that the pages are designed to be human-readable, not machine-readable.  Cleaning this data required parsing the html source, and extracting the relevant content, which required different code for the two types of page we considered (useful phrases, and the Tower of Babel story).  Even after automatic extraction, some noise in the data remained, such as explanatory notes given in parentheses, which are written in English and not the target language.  Even though the total amount of data here is small compared to our ther sources, the amount of effort required to process it was not, because of these idiosyncracies.  We expect that researchers seeking to convert data from human-readable to machine-readable formats will encounter similar problems, but unfortunately there is unlikely to be a one-size-fits-all solution to this problem.
 
 
 \subsection{ODIN}
 
-
-ODIN (The Online Database of Interlinear Text) is a repository of IGTs extracted from scholarly documents \cite{lewis2006odin,lewis2010odin}.  Compared to other resources, it is notable for the breadth of languages included, and the level of linguistic annotation; however, the data requires further processing to bring it in line with the proposed format for a universal corpus.
-
-The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the Interlinear Glossed Texts (IGTs) are encoded in the \texttt{<igt><example>...</example></igt>} tags. Each XML file is saved under a filename that matches the respective language code. While cleaning the data, filenames that does not adhere to ISO 639-3\footnote{http://www-01.sil.org/iso639-3} were excluded in the uniWaC compilation. [Huh? Should this really happen? - the codes are given on their website and look valid to me...]
+The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the IGTs (described in section \ref{sec:odin}) are encoded in tags of the form \texttt{<igt><example>...</example></igt>}.  For example, the IGT in Figure 1 is represented by the XML snippet in Figure 2.
 
 \begin{figure}
 \quad 21 a.\quad o lesu mai \\
@@ -56,11 +41,6 @@ The ODIN data is easily accessible in XML format from the online database\footno
 
 
 
-%%
-% Is there a reason we need to use minipages rather than figures? This doesn't seem to allow automatic numbering.
-% Also, some of the lines go outside of the column!!
-%%
-
 \begin{figure}
 \begin{lstlisting}[language=XML]
 <igt>
@@ -73,8 +53,6 @@ The ODIN data is easily accessible in XML format from the online database\footno
 \end{lstlisting} 
 \caption{Fijian IGT in ODIN's XML format.} \label{fig:odin_fijian_xml}
 \end{figure}
-
-
 
 % \begin{minipage}{\columnwidth}
 % \begin{lstlisting}[language=XML]
@@ -89,7 +67,6 @@ The ODIN data is easily accessible in XML format from the online database\footno
 % \centerline{Figure 2: Fijian IGT in ODIN's XML format.}
 % \end{minipage}
 
-\noindent The IGTs from an academic publication usually follow the Leipzig Glossing Rules, where the first line is the source language text, the second line contains the word/morphemic equivalence and the third line is an English gloss. From the ODIN XML format, an IGT as of Figure 1 will be represented as in an XML snippet as in Figure 2. Eventually, we need to clean and extract (i) the source text `\emph{o lesu mai}' without the preceding index `\emph{a.}' and (ii) the target language gloss without the quotation marks `\emph{You return here}'.
 
 
 \begin{figure}
@@ -109,8 +86,6 @@ The ODIN data is easily accessible in XML format from the online database\footno
 \caption{Yimas IGT in ODIN's XML format.}\label{fig:odin_yimas_xml}
 \end{figure}
 
-
-
 % \begin{minipage}{\columnwidth}
 % \begin{lstlisting}[language=XML]
 % <igt>
@@ -129,12 +104,9 @@ The ODIN data is easily accessible in XML format from the online database\footno
 % \end{minipage}
 
 
-\noindent The primary problem in extracting the source text is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes the language name, and a citation for the example, which introduces noise into the corpus.
+The primary problem in extracting the data is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes two types of metadata: the language name, and a citation, both of which introduce noise.  Finally, extraneous punctuation such as the quotation marks in the translation line need to be removed.
 
-Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents to deviate from the standard convention; when compiling the ODIN data, they attempted a regex-based approached and reported 59\% F-score. Similar to their regex approaches for extracting IGT, we cleaned the source line with regexes and kept the ODIN data with two levels of `cleanliness':
-
-[This hasn't been implemented, but I think we could try this: Split source and gloss lines into tokens according to whitespace. Check the source has more tokens. Count the number of hyphens and equal signs in each token (since they denote morphemes). Match the gloss line with a substring of the source line, according to numbers of hyphens and equal signs. If there's exactly one match, keep it, and discard tokens at the ends of the line. If there's more than one match, look for other punctuation in the initial and final tokens.]
-
+To clean the source lines, we used the following regular expressions:
 
 \begin{figure}
 \begin{itemize}
@@ -151,7 +123,7 @@ Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents t
 \end{itemize}
 \item \emph{Cleanest}: Only source lines without punctuation.
 \end{itemize}
-\caption{Do we want this still as a figure?}
+\caption{I don't think we want this as a figure.}
 \end{figure}
 
 
@@ -173,7 +145,24 @@ Lewis and Xia (2010) noted that it is not uncommon for IGTs found in documents t
 % \end{minipage}
 
 
-\noindent The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages. The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing. 
+The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages.  \textcolor{blue}{Maybe we should just remove this next sentence:} The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing.
+
+In future work, we intend to explore more sophisticated methods of cleaning.  For example, we could leverage the fact that the number of hyphens and equal signs in each word should match between the source and gloss lines.  However, it must be stressed that no method is likely to be foolproof.  As people start to incorporate large sets of IGTs from documentary linguistic projects into a universal corpus, we can expect problems with inconsistencies to grow, and more time will need to be devoted to resolve this issue.
+
+\textcolor{blue}{[Feel free to modify the above paragraph]}
 
 
 
+\subsection{Language Codes}
+
+We chose to use ISO~639-3 as our standard set of language codes, since it aims for universal coverage, and has widespread acceptance in the community.  As a result, we needed to make sure that all our data was labelled with these codes.  Data from ODIN and the UDHR already used this standard, and hence did not pose problems.
+
+Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or ISO~639-3.  The older ISO~639-1 codes are easy to recognise, being two letters long instead of three, and can be straightforwardly converted.  However, a small number of Wikipedia codes are not ISO codes at all - we converted these to ISO~639-3, following documentation from the Wikimedia Foundation.\footnote{\url{http://meta.wikimedia.org/wiki/Special\_language\_codes}}
+
+Omniglot does not give codes at all, but only the language name. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{\url{http://www-01.sil.org/iso639-3/iso-639-3.tab}}
+
+
+
+\subsection{File Formats}
+
+It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining "seven dimensions" along which this can vary. Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. We have written an API to allow access to the data according to the guidelines of \newcite{abney2010universal}, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
