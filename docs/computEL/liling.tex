@@ -1,11 +1,11 @@
-% \documentclass[11pt]{article}
-% \title{\textbf{universal corpus}}
-% \date{}
-% \begin{document}
-% \maketitle
+\documentclass[11pt]{article}
+\title{\textbf{universal corpus}}
+\date{}
+\begin{document}
+\maketitle
 
-\section{Corpus Coverage and Universality, something, something numbers...}
-
+\section{Corpus Coverage and Universality, something, something numbers, heatmap, somehow, somewhere endangered...}
+% I think guy already wrote a small paragraph to describe the numbers in the table and the heatmap.
 \begin{table}[h!]
 \centering
     \begin{tabular}{l|rrrr}
@@ -24,18 +24,44 @@ According to ethnologue \\
 Total Living languages: 7105 \\
 Total Living language families: 147 \\
 
-\begin{table}[h!]
-    \begin{tabular}{l|ccc|ccc}
-    ~        & complete & ~       & ~       & ward    & ~       & ~       \\ \cline{2-7}
-    ~        & precision & recall       & f-score       & precision    & recall       & f-score      \\ \hline
-    distance & 0.0614   & 0.8565 & \textbf{0.1099} & 0.06140  & 0.8565 & \textbf{0.1099} \\
-    maxclust & 0.1925  & \textbf{0.0927} & 0.0692 & \textbf{0.1963} & 0.0905 & 0.0686  \\
+\newpage
+\section{Clustering}
+When working on low-resource or endangered languages, computational and documentary linguists face the issue of lack of resources and knowledge about the language. Often, having knowledge about related or similar languages provides useful lexical, syntactic or morphological minimal pairs across languages and also helps in bootstrapping language models in NLP \cite{yarowsky:ngai:2001,xia2007multilingual}.
+
+Language classification can be carried out either: geneologically, mapping languages onto families trees depending on their historical ancenstry \cite{swadesh1952,starostin2010}; or typologically, grouping languages according to typological features \cite{georgi2010wals,daume2009}.
+
+To exemplify the use of the universal corpus for research on low-resource languages, we experimented with automatic detection of similar languages using hierarchical clustering with character ngrams and word unigrams features. Each language is represented by a vector of frequencies of  character bigrams, character trigrams and word unigram features. Each of the three components in the vector is normalized by unit length.
+
+
+\subsection{Experimental Setup}
+We implemented hierarchical/agglomerative clustering using a variety of linkage methods: (i) \texttt{single}, (ii) \texttt{complete} and (iii) \texttt{weighted} (WPGMA, weighted pair group method with averaging). The \texttt{single} method calculates the distance between the newly formed clusters by assigning the minimal distance between the clusters and the \texttt{complete} method assigns the maximal distance between the newly formed clusters. The \texttt{weighted} method assigns the averaged distance between the newly formed cluster and its intermediate clusters. 
+
+The \texttt{maxclust} criterion for flattening clusters from the hierarchy is achieved by finding the minimum threshold, \emph{r}, such that the cophenetic distance between any two original observations in the same flat cluster is no more than \emph{r} and not more than the number of clusters.
+
+\newpage
+\subsection{Results}
+\begin{table*}[h!]
+\begin{centering}
+
+    \begin{tabular}{l|ccc}
+    ~        & Precision & Recall       & F-score    \\ \hline
+    \texttt{single} & 0.1958	& 0.6755	 & 0.1240  \\
+	\texttt{complete} & \textbf{0.3153}	& 0.1699	 & \textbf{0.1420} \\
+	\texttt{weighted} & 0.0614	& \textbf{0.8565}	 & 0.1099 \\ \hline
+	\emph{random} & 0.1925 &	0.0927 & 	0.0692 \\
     \end{tabular}
 \caption{Comparing of clustering algorithms where number of clusters is set to genetic grouping on Ethnologue.}
-\end{table}
+\end{centering}
+\label{tab:cluster}
+\end{table*}
 
-\noindent
-see full table in http://goo.gl/bs2vPo
+\newpage
+\section{Conclusion}
+\subsection{Deliverables/API/something something to say that we have script to access the data easily and CompLing and DocLing people can use them with NLTK}
+Other than the clean corpus data, SeedLing comes with a python API to access the data programmatically and it is easily compatible with the analysis tools available from the Natural Language ToolKit (NLTK). In addition, the clustering script used in section X will also be made free available with an open source license.
+
+The API also includes a feature to access information on a language from Ethnologue and/or WALS. This feature queries the Ethnologue and/or WALS site both in real-time when internet connection is available and from a local copy of the information offline. 
 
 
-%\end{document}
+
+\end{document}
