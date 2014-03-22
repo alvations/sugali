@@ -30,7 +30,6 @@ To exemplify the use of the universal corpus for research on low-resource langua
 
 
 \noindent
-see full table in http://goo.gl/bs2vPo
 
 
 
@@ -43,3 +42,35 @@ As well as performing clustering, we can view this as an information retrieval t
 In table \ref{tab:cluster}, we give results of our clustering experiments.  The F-scores are much higher than the random baseline, and comparable to the values reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
 
 It is also worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear to be very different.  Nonetheless, our system is reasonably capable of identifying those languages which are both related and also written similarly.
+
+%%%%%%%%%%%
+
+\section{Clustering}
+When working on low-resource or endangered languages, computational and documentary linguists face the issue of lack of resources and knowledge about the language. Often, having knowledge about related or similar languages provides useful lexical, syntactic or morphological minimal pairs across languages and also helps in bootstrapping language models in NLP \cite{yarowsky:ngai:2001,xia2007multilingual}.
+
+Language classification can be carried out either: geneologically, mapping languages onto families trees depending on their historical ancenstry \cite{swadesh1952,starostin2010}; or typologically, grouping languages according to typological features \cite{georgi2010wals,daume2009}.
+
+To exemplify the use of the universal corpus for research on low-resource languages, we experimented with automatic detection of similar languages using hierarchical clustering with character ngrams and word unigrams features. Each language is represented by a vector of frequencies of  character bigrams, character trigrams and word unigram features. Each of the three components in the vector is normalized by unit length.
+
+
+\subsection{Experimental Setup}
+We implemented hierarchical/agglomerative clustering using a variety of linkage methods: (i) \texttt{single}, (ii) \texttt{complete} and (iii) \texttt{weighted} (WPGMA, weighted pair group method with averaging). The \texttt{single} method calculates the distance between the newly formed clusters by assigning the minimal distance between the clusters and the \texttt{complete} method assigns the maximal distance between the newly formed clusters. The \texttt{weighted} method assigns the averaged distance between the newly formed cluster and its intermediate clusters. 
+
+The \texttt{maxclust} criterion for flattening clusters from the hierarchy is achieved by finding the minimum threshold, \emph{r}, such that the cophenetic distance between any two original observations in the same flat cluster is no more than \emph{r} and not more than the number of clusters.
+
+\newpage
+\subsection{Results}
+\begin{table*}[h!]
+\begin{centering}
+
+    \begin{tabular}{l|ccc}
+    ~        & Precision & Recall       & F-score    \\ \hline
+    \texttt{single} & 0.1958	& 0.6755	 & 0.1240  \\
+	\texttt{complete} & \textbf{0.3153}	& 0.1699	 & \textbf{0.1420} \\
+	\texttt{weighted} & 0.0614	& \textbf{0.8565}	 & 0.1099 \\ \hline
+	\emph{random} & 0.1925 &	0.0927 & 	0.0692 \\
+    \end{tabular}
+\caption{Comparing of clustering algorithms where number of clusters is set to genetic grouping on Ethnologue.}
+\end{centering}
+\label{tab:cluster}
+\end{table*}
