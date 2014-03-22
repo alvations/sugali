@@ -1,18 +1,30 @@
 \section{Data source case studies} \label{sec:case_studies}
-
-In this section we describe in detail the work required to merge each of our four data sources into a single common source. \textcolor{blue}{[Universal Corpus???]}
-
-In the following subsections, we describe the processing required to convert the data into a standardised form.  We then discuss standardisation of language codes and file formats.
-
+Consistency in data structures and formatting is essential to facilitate use of data in computational linguistics research \cite{palmer2010lilt}. In the following subsections, we describe the processing required to convert the data into a standardised form.  We then discuss standardisation of language codes and file formats.
 
 \subsection{UDHR}
 
-Although there is a pre-compiled version of the UDHR data from the Natural Language ToolKit (NLTK) corpora distribution\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}, the distribution is laden with encoding problems during their conversion from pdf to plaintext format. Instead, we used the plaintext files available from the Unicode website\footnote{http://unicode.org/udhr/d}, which are free of encoding issues. The first four lines of each file records metadata, and the rest is the translation of the UDHR. This dataset was extremely clean, and simply required segmentation into sentences.
+Although there is a pre-compiled version of the UDHR data from the
+Natural Language ToolKit (NLTK) corpora
+distribution,\footnote{http://nltk.googlecode.com/svn/trunk/nltk\_data/index.xml}
+the distribution is laden with encoding problems 
+%during their
+%conversion from pdf to plaintext format. 
+Instead, we use the
+plaintext files available from the Unicode
+website,\footnote{http://unicode.org/udhr/d} which are free of
+encoding issues. The first four lines of each file record metadata,
+and the rest is the translation of the UDHR. This dataset is
+extremely clean, and simply required segmentation into sentences.
 
 
 \subsection{Wikipedia}
 
-One major issue with using the Wikipedia dump extracting text from a glut of Wikipedia markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor \footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor} tool. After conversion into textfiles, we used the several regexes to delete residual Wikipedia markup and so-called ``magic words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
+One major issue with using the Wikipedia dump is the problem of separating text from abundant source-specific markup. To convert compressed
+Wikipedia dumps to textfiles, we used the WikiExtractor
+\footnote{http://medialab.di.unipi.it/wiki/Wikipedia\_Extractor}
+tool. After conversion into textfiles, we used several regular expressions to
+delete residual Wikipedia markup and so-called ``magic
+words"\footnote{http://en.wikipedia.org/wiki/Help:Magic\_words}.
 
 
 \subsection{Omniglot}
@@ -23,14 +35,7 @@ The main issue with extracting this data is that the pages are designed to be hu
 
 \subsection{ODIN}
 
-The ODIN data is easily accessible in XML format from the online database\footnote{http://odin.linguistlist.org/download}, where data for each language is saved in a separate XML file and the IGTs (described in section \ref{sec:odin}) are encoded in tags of the form \texttt{<igt><example>...</example></igt>}.  For example, the IGT in Figure 1 is represented by the XML snippet in Figure 2.
-
-\begin{figure}
-\quad 21 a.\quad o lesu mai \\
-\indent \qquad\qquad 2sg return here \\
-\indent \qquad\qquad `\emph{You return here.}' \\
-\caption{Fijian IGT from ODIN.} \label{fig:odin_fijian}
-\end{figure}
+The ODIN data is easily accessible in XML format from the online database,\footnote{http://odin.linguistlist.org/download} where data for each language is saved in a separate XML file and the IGTs are encoded in tags of the form \texttt{<igt><example>...</example></igt>}.  For example, the IGT in figure~\ref{fig:odin_fijian} is represented by the XML snippet in figure~\ref{fig:odin_fijian_xml}.
 
 % \begin{minipage}{\columnwidth}
 % \quad 21 a.\quad o lesu mai \\
@@ -41,7 +46,25 @@ The ODIN data is easily accessible in XML format from the online database\footno
 
 
 
-\begin{figure}
+The primary problem in extracting the data is a lack of consistency in
+the IGTs. In the above examples, the sentence is introduced by a
+letter or number, which needs to be removed; however, the form of such
+indexing elements varies. In addition, the source line in figure~\ref{fig:odin_yimas_xml}
+includes two types of metadata: the language name, and a citation,
+both of which introduce noise.  Finally, extraneous punctuation such
+as the quotation marks in the translation line need to be removed. We used regular expressions for cleaning lines within the IGTs.
+
+
+\begin{figure}[t]
+\quad 21 a.\quad o lesu mai \\
+\indent \qquad\qquad 2sg return here \\
+\indent \qquad\qquad `\emph{You return here.}' \\
+\caption{Fijian IGT from ODIN.} \label{fig:odin_fijian}
+\end{figure}
+
+
+\begin{figure}[t]
+\small
 \begin{lstlisting}[language=XML]
 <igt>
   <example>
@@ -69,7 +92,8 @@ The ODIN data is easily accessible in XML format from the online database\footno
 
 
 
-\begin{figure}
+\begin{figure}[t]
+\small
 \begin{lstlisting}[language=XML]
 <igt>
   <example>
@@ -104,27 +128,25 @@ The ODIN data is easily accessible in XML format from the online database\footno
 % \end{minipage}
 
 
-The primary problem in extracting the data is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure 3 includes two types of metadata: the language name, and a citation, both of which introduce noise.  Finally, extraneous punctuation such as the quotation marks in the translation line need to be removed.
+% To clean the source lines, we used the following regular expressions:
 
-To clean the source lines, we used the following regular expressions:
-
-\begin{figure}
-\begin{itemize}
-\item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
-\begin{itemize}
-\item[(i)]
-\begin{Verbatim}
-^(?\s?\w{1,5}\s*[):.]\s*
-\end{Verbatim}
-\item[(ii)] 
-\begin{Verbatim}
-[\[\(].{1,}[\]\)]
-\end{Verbatim}
-\end{itemize}
-\item \emph{Cleanest}: Only source lines without punctuation.
-\end{itemize}
-\caption{I don't think we want this as a figure.}
-\end{figure}
+% \begin{figure}
+% \begin{itemize}
+% \item \emph{Cleaner}: Removed (i) all heading and trailing text embedded in square or rounded brackets and (ii) heading double character token ending with bracket or fullstop.
+% \begin{itemize}
+% \item[(i)]
+% \begin{Verbatim}
+% ^(?\s?\w{1,5}\s*[):.]\s*
+% \end{Verbatim}
+% \item[(ii)] 
+% \begin{Verbatim}
+% [\[\(].{1,}[\]\)]
+% \end{Verbatim}
+% \end{itemize}
+% \item \emph{Cleanest}: Only source lines without punctuation.
+% \end{itemize}
+% \caption{I don't think we want this as a figure.}
+% \end{figure}
 
 
 % \begin{minipage}{\columnwidth}
@@ -145,13 +167,9 @@ To clean the source lines, we used the following regular expressions:
 % \end{minipage}
 
 
-The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages.  \textcolor{blue}{Maybe we should just remove this next sentence:} The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing.
+% The original version of the ODIN data contains XML files for 1275 languages, while the cleaner version of ODIN contains IGTs for 1042 languages and the cleanest version contains IGTs for 402 languages.  \textcolor{blue}{Maybe we should just remove this next sentence:} The drop from 1275 to 1042 languages was largely because {\color{red} XXXX} XML files from the original ODIN data had used language codes that were not in ISO 639-3 and for {\color{red} XXXX} other files, the \texttt{<igt>...</igt>} tags were missing.
 
-In future work, we intend to explore more sophisticated methods of cleaning.  For example, we could leverage the fact that the number of hyphens and equal signs in each word should match between the source and gloss lines.  However, it must be stressed that no method is likely to be foolproof.  As people start to incorporate large sets of IGTs from documentary linguistic projects into a universal corpus, we can expect problems with inconsistencies to grow, and more time will need to be devoted to resolve this issue.
-
-\textcolor{blue}{[Feel free to modify the above paragraph]}
-
-
+In future work, we intend to explore more sophisticated methods of cleaning.  For example, we could leverage the fact that the number of hyphens and equal signs in each word should match between the source and gloss lines.  However, no method is likely to be foolproof.  As people start to incorporate large sets of IGTs from documentary linguistic projects into a universal corpus, we can expect problems with inconsistencies to grow.
 
 \subsection{Language Codes}
 
@@ -165,4 +183,4 @@ Omniglot does not give codes at all, but only the language name. To resolve this
 
 \subsection{File Formats}
 
-It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining "seven dimensions" along which this can vary. Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. We have written an API to allow access to the data according to the guidelines of \newcite{abney2010universal}, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according these guidelines.
+It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describes a set of best practices for maintaining portability of digital information, outlining seven dimensions along which this can vary. Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. We have written an API to allow access to the data according to the guidelines of \newcite{abney2010universal}, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according to these guidelines.
