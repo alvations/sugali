@@ -1,16 +1,24 @@
 Susanne
 ====
-- check the numbers of langs
+- check the numbers of langs (incl. number with 2+ sources)
 
 
 Guy
 ====
 - Run/reruns the clustering algorithms
+- More explanation of results (incl. qualitative discussion)
+- Morpheme alignment?
 
 
 Liling
 ====
 - fixed up the repos and API
 - handle the move to make seedling to universal corpus format (parallel data).
+
+
+odds and ends
+====
+- tidy references
+- tidy formatting
 
 please check this out: http://www.cs.jhu.edu/ACL2014/Volunteers.htm
