@@ -2,63 +2,62 @@
 
 In this section, we review existing efforts to compile multilingual machine-readable resources.  Although some commercial resources are available, we restrict attention to freely accessible data, as this will be most relevant to documentary linguistics and computational linguists.  All figures given below were correct at the time of writing, but it must be borne in mind that most resources discussed below are constantly growing.
 
-\subsection{Traditional Archives}
-
+\paragraph{Traditional archives.}
 Many archives exist to store the wealth of traditional resources produced by the documentary linguistics community.  Such documents are increasingly being digitised, or produced in a digital form, and there are a number of archives which now offer free online access to their data.
 
-Some archives aim for a universal scope, including languages from all parts of the world.  Of particular note are:
+Some archives aim for a universal scope, including languages from all parts of the world.  Of particular note are: The Language Archive, maintained by the Max Planck Institute of Psycholinguistics, which includes DoBeS (Dokumentation Bedrohter Sprachen) and many other projects;
+Collection Pangloss, maintained by LACITO (Langues et Civilisations à Tradition Orale);
+The Endangered Languages Archive (ELAR), maintained by the School of Oriental and African Studies, which forms one part of the Hans Rausing Endangered Languages Project (HRELP).
 
-The Language Archive, maintained by the Max Planck Institute of Psycholinguistics, which includes DoBeS (Dokumentation Bedrohter Sprachen), among many other projects.
-Collection Pangloss, maintained by LACITO (Langues et Civilisations à Tradition Orale).
-The Endangered Languages Archive (ELAR), maintained by the School of Oriental and African Studies, London, which forms one part of the Hans Rausing Endangered Languages Project (HRELP).
+Regional archives include: AILLA (Archive of Indigenous Languages of Latin America), University of Texas at Austin;
+AIATSIS collections (Australian Institute of Aboriginal and Torres Strait Islander Studies);
+California Language Archive, managed by the Survey of California and Other Indian Languages;
+ANLA (Alaska Native Language Archive), at the University of Alaska Fairbanks;
+PARADISEC (Pacific and Regional Archive for Digital Sources in Endangered Cultures).
 
-Regional archives include:
-
-AILLA (Archive of Indigenous Languages of Latin America), at the University of Texas at Austin. (Not in OLAC)
-AIATSIS collections (Australian Institute of Aboriginal and Torres Strait Islander Studies) (Not in OLAC)
-California Language Archive, managed by the Survey of California and Other Indian Languages
-ANLA (Alaska Native Language Archive), at the University of Alaska Fairbanks.
-PARADISEC (Pacific and Regional Archive for Digital Sources in Endangered Cultures)
-
-However, there are two main problems common to all of the above data sources.  Firstly, the data is not always machine readable.  For instance, in their own words, ANLA consists of "mostly paper records".  Even where the data is available digitally, these often take the form of scanned images, or audio files.  While both can provide invaluable information, they are extremely difficult to process with a computer, requiring an impractical level of pre-processing of the image or audio, before linguistic analysis can begin.  Even textual data, which avoids these issues, may not be available in a machine-readable form, being stored as pdfs or 
-
+However, there are two main problems common to all of the above data sources.  Firstly, the data is not always machine readable.  For instance, in their own words, ANLA consists of ``mostly paper records''.  Even where the data is available digitally, these often take the form of scanned images or audio files.  While both can provide invaluable information, they are extremely difficult to process with a computer, requiring an impractical level of image or video pre-processing before linguistic analysis can begin.  Even textual data, which avoids these issues, may not be available in a machine-readable form, being stored as pdfs or other opaque formats.
 Secondly, when data is machine readable, the format can vary wildly.  This makes automated processing difficult, especially if one is not aware of the details of each project.  Even when metadata standards and encodings agree, there can be idiosyncractic markup or non-linguistic information, such as labels for speakers in the transcript of a conversation.
 
-We can see that there is still much work to be done by individual researchers in digitising and standardising linguistic data, and it is outside of the scope of this paper to attempt this for the above archives.  Guidelines for producing new materials are available from the E-MELD project (Electronic Metastructure for Endangered Languages Data), which specifically aimed to deal with the expanding number of standards for linguistic data.  It gives best practice recommendations, illustrated with eleven case studies, and provides input tools which link to the GOLD ontology language, and the OLAC metadata set.  Further recommendations are given by \newcite{bird2003port}, who describes seven dimensions along which the portability of linguistic data can vary. Various tools are available from The Language Archive at the Max Planck Institute for Psycholinguistics.
+We can see that there is still much work to be done by individual researchers in digitising and standardising linguistic data, and it is outside of the scope of this paper to attempt this for the above archives.  Guidelines for producing new materials are available from the E-MELD project (Electronic Metastructure for Endangered Languages Data), which specifically aimed to deal with the expanding number of standards for linguistic data.  It gives best practice recommendations, illustrated with eleven case studies, and provides input tools which link to the GOLD ontology language, and the OLAC metadata set.  Further recommendations are given by \newcite{bird2003port}, who describe seven dimensions along which the portability of linguistic data can vary. Various tools are available from The Language Archive at the Max Planck Institute for Psycholinguistics.
 
-Many of these archives are part of the Open Language Archive Community (OLAC), a subcommunity of the Open Archives Initiative.  OLAC maintains a metadata standard, based on the 15-element Dublin Core, which allows a user to search through all participating archives in a unified fashion.  However, centralising access to disparate resources, while of course extremely helpful, does not solve the problem of inconsistent standards.  Indeed, it can become difficult even to answer simple questions like "how many languages are represented?"
+Many of these archives are part of the Open Language Archive Community (OLAC), a subcommunity of the Open Archives Initiative.  OLAC maintains a metadata standard, based on the 15-element Dublin Core, which allows a user to search through all participating archives in a unified fashion.  However, centralising access to disparate resources, while of course extremely helpful, does not solve the problem of inconsistent standards.  Indeed, it can be difficult even to answer simple questions like ``how many languages are represented?''
 
-We do of course acknowledge that such resources have their purpose - for instance, there can be plenty of material to work with for a researcher who is looking to find data on a specific language, who is willing to put in a little time browsing through different catalogues, and who only needs human-readable data.  However, for large-scale machine processing, they leave much to be desired.
+Such resources are invaluable for many purposes
+for instance, there can be plenty of material to work with for a
+researcher who is looking to find data on a specific language, who is
+willing to put in a little time browsing through different catalogues,
+and who only needs human-readable data.  However, for large-scale
+machine processing, they leave much to be desired.
 
 
-\subsection{Generic corpora collections}
+\paragraph{Generic corpus collections.}
+Some corpus collections exist which do not focus on endangered languages, but which nonetheless cover an increasing number of languages.
 
-There are some corpora collections which do not take endangered languages to be a main aim, but which nonetheless cover an increasing number of languages.
+MetaShare (Multilingual Europe Technology Alliance) provides data in a little over 100 languages. 
+While language codes are used, they have not been standardised, so that multiple codes are used for the same language.  Linguistic Data Consortium (LDC) and the European Language Resources Association (ELRA) both offer data in multiple languages.  However, while large in size, they cover only a limited number of languages.  Furthermore, the corpora they contain are stored separately, making it difficult to access data according to language.
 
-MetaShare (Multilingual Europe Technology Alliance) provides data in a little over 100 languages. While language codes are used, they have not been standardised, so that multiple codes are used for the same language.
+% It seems likely that resources which do not specifically aim to cover endangered languages will continue to be skewed heavily towards a handful of high-resource languages.
 
-Linguistic Data Consortium (LDC) and the European Language Resources Association (ELRA) both offer data in multiple languages.  However, while large in size, they cover only a limited number of languages.  Furthermore, the corpora they contain are stored separately, making it difficult to access data according to language.
+\paragraph{Parallel corpora.}
 
-It seems likely that resources which do not specifically aim to cover endangered languages will continue to be skewed heavily towards a handful of high-resource languages.
+The Machine Translation community has assembled a number of parallel corpora, which are crucial for statistical machine translation. The OPUS corpus \cite{tiedemann2012opus} subsumes a number of other well-known parallel corpora, such as Europarl, and covers documents from 350 languages, with various language pairs.  
 
-\subsection{Parallel Corpora}
+%However, not all of the data has been manually checked, which introduces noise.
 
-The Machine Translation community has assembled a number of parallel corpora, which are crucial for statistical machine translation. The OPUS corpus \cite{tiedemann2012opus} subsumes a number of other well-known parallel corpora, such as Europarl, and covers documents from 350 languages, with various language pairs.  However, not all of the data has been manually checked, which introduces noise.
-
-\subsection{Web Corpora}
+\paragraph{Web corpora.}
 
 There has been increasing interest in deriving corpora from the web, due to the promise of large amounts of data.  The majority of web corpora are however aimed at either one or a small number of languages, which is perhaps to be expected, given that the majority of online text is written in a handful of high-resource languages.  Nonetheless, there have been a few efforts to apply the same methods to a wider range of languages.
 
-HC Corpora currently provides download of corpora in 68 different language varieties, which vary in size from 2M to 150M words. The corpora are thus of a respectable size, but only 1% of the world's languages are represented.  A further difficulty is that languages are named, without the corresponding ISO codes. This problem may be small when all 68 varieties are well-known, but will become a serious concern if this corpus collection is to grow and include smaller languages.
+HC Corpora currently provides download of corpora in 68 different language varieties, which vary in size from 2M to 150M words. The corpora are thus of a respectable size, but only 1\% of the world's languages are represented.  A further difficulty is that languages are named, without the corresponding ISO codes. This problem may be small when all 68 varieties are well-known, but will become a serious concern if this corpus collection is to grow and include smaller languages.
 
-The Leipzig Corpora Collection (LCC)\footnote{http://corpora.uni-leipzig.de} \cite{biemann2007leipzig} provides download of corpora in 117 languages, and dictionaries in a number of others, bringing the total number of represented languages up to 230. The corpora are large, readily available, in plain text, and labelled with ISO codes.
+The Leipzig Corpora Collection (LCC)\footnote{\url{http://corpora.uni-leipzig.de}} \cite{biemann2007leipzig} provides download of corpora in 117 languages, and dictionaries in a number of others, bringing the total number of represented languages up to 230. The corpora are large, readily available, in plain text, and labelled with ISO language codes.
 
 The Crúbadán Project aims to crawl the web for text in low-resource languages, and data is currently available for 1872 languages.  This represents a significant portion of the world's languages; unfortunately, due to copyright restrictions, only lists of n-grams and their frequencies are publically available, not the texts themselves.  While the breadth of languages covered makes this a useful resource for cross-linguistic research, the lack of actual texts means that only a limited range of applications are possible with this data.
 
-While the above efforts are commendable, and allow cross-linguistic analysis to a certain extent, there is still a long way to go to producing a universal corpus.
+% While the above efforts are commendable, and allow cross-linguistic analysis to a certain extent, there is still a long way to go to producing a universal corpus.
 
-\subsection{Cross-linguistic projects}
+\paragraph{Cross-linguistic projects.}
 
-Responding to the call to document and preserve the world's languages, highly cross-linguistic projects have sprung up, striving towards the aim of universality.  Of particular note are the Endangered Languages Project, and the Rosetta Project.
+Responding to the call to document and preserve the world's languages, highly cross-linguistic projects have sprung up, striving towards the aim of universality.  Of particular note are the Endangered Languages Project, and the Rosetta Project. These projects are to be praised for their commitment to universality, but in their current forms it is difficult to use their data to perform large-scale NLP.  
 
-However, as much as these projects are to be praised for their commitment to universality, it is difficult to use their data to perform large-scale NLP.  A researcher looking for a data on a specific language can easily navigate to the language in question, and download the available resources - but trying to access all the data can be awkward.  While the sleek online interface used by the Endangered Languages Project may make it more accessible to those unfamiliar with language processing, it is not ideal for a computational linguistics researcher.
+% A researcher looking for a data on a specific language can easily navigate to the language in question, and download the available resources - but trying to access all the data can be awkward.  While the sleek online interface used by the Endangered Languages Project may make it more accessible to those unfamiliar with language processing, it is not ideal for a computational linguistics researcher.

@@ -1,19 +1,9 @@
+\section{Conclusion and Outlook} \label{sec:conclusion}
 
-\section{Future Work} \label{sec:future}
+In this paper, we have described the creation of SeedLing, a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia. The resulting corpus is more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. At present, SeedLing has data from 19\% of the world's languages, covering 72\% of language families. We believe that a corpus with such high degrees of language diversity, uniformity and cleanliness of data format, and ease of access provides an excellent seed for the universal corpus. It is our hope that taking steps toward creating this resource will spur both further data contributions and interesting computational research with cross-linguistic or typological perspectives; we have here demonstrated SeedLing's utility for such research by using the data to perform language clustering, with promising results.
 
-Specific suggestions on how to work on resources mentioned in section \ref{sec:related}...
+SeedLing will be made available initially through the websites of the authors, as we have yet to properly address the question of long-term access; we welcome ideas or collaborations along these lines. In addition, we are releasing a Python API which allows programmatic access to the data and is easily compatible with the analysis tools available from the Natural Language ToolKit \cite{BirdKleinLoper09}. The API also facilitates access to information from both Ethnologue and WALS: a user can extract information about languages, language classification, endangerment status, typological features, and so on. Finally, we will make our clustering scripts freely available. 
 
+% To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results.
 
-\section{Conclusion} \label{sec:conclusion}
-
-In this paper, we have described the creation of a foundation text for a universal corpus, following the guidelines of Abney and Bird (2010; 2011). To do this, we cleaned and standardised data from several multilingual data sources: ODIN, Omniglot, the UDHR, Wikipedia, and the LCC. The resulting corpus is more easily machine-readable than any of the underlying data sources, and has been stored according to the best practices suggested by \newcite{bird2003port}. [Give a summary statistic of size.] To demonstrate the utility of this resource, we used the data to perform language clustering, which gave promising results. We believe that this is the first corpus of its kind, which we hope will act as a seed corpus for the Human Language Project.
-
-
-
-\subsection{General recommendations for future sources?}
-
-\begin{itemize}
-\item next steps for DL?
-\item next steps for CL?
-\item uses of clustering?
-\end{itemize}
+% The API also includes a feature to access information on a language from Ethnologue and/or WALS. This feature queries the Ethnologue and/or WALS site both in real-time when internet connection is available and from a local copy of the information offline. 

@@ -36,6 +36,7 @@
   morekeywords={xmlns,version,type}% list your attributes here
 }
 
+\newcommand{\bluenote}[1]{\textcolor{blue}{[#1]}}
 
 \setlength\titlebox{5cm}
 
@@ -53,9 +54,27 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-\textcolor{blue}{[revisit abstract]}
-Computational study of endangered languages is constrained by the lack of digitally-available data. Existing corpora are limited in the range of languages covered, in standardisation, or in machine-readability.
-This makes the situation even worse for the computational linguist, especially one who would like to take a cross-linguistic or typological approach. We first survey existing efforts to compile cross-linguistic resources, then describe our own approach and give an example application - language clustering. To build the foundation text for a Universal Corpus, we crawled and cleaned texts from several web sources that contain data from a large number languages, and converted them into a standardised form consistent with the guidelines set out by \newcite{abney2010universal}. The resulting corpus is more easily-accessible and machine-readable than any of the underlying data sources, and represents a significant base corpus for researchers to draw on and add to in the future.
+  A broad-coverage corpus such as the Human Language Project
+  envisioned by \newcite{abney2010universal} would be a powerful
+  resource for the study of endangered languages.
+%, \bluenote{keep? from
+ %   the perspective of both the documentary and the computational
+  %  linguist}. 
+  Existing corpora are limited in the range of languages covered, in
+  standardisation, or in machine-readability. In this paper we present
+  SeedLing, a seed corpus for the Human Language Project. We first
+  survey existing efforts to compile cross-linguistic resources, then
+  describe our own approach. To build the foundation text for a
+  universal corpus, we crawl and clean texts from several web sources
+  that contain data from a large number of languages, and convert them
+  into a standardised form consistent with the guidelines of
+  \newcite{abney2011data}. The resulting corpus is more
+  easily-accessible and machine-readable than any of the underlying
+  data sources, and, with data from 1347 languages covering 106
+  language families, represents a significant base corpus for
+  researchers to draw on and add to in the future. To show the utility
+  of SeedLing for cross-lingual computational research, we use our
+  data in the test application of detecting similar languages.
 \end{abstract}
 
 
