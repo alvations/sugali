@@ -1,4 +1,3 @@
-
 Susanne
 ====
 - check the numbers of langs
@@ -12,4 +11,6 @@ Guy
 Liling
 ====
 - fixed up the repos and API
-- handle the move to make sapling to universal corpus format.
+- handle the move to make seedling to universal corpus format (parallel data).
+
+please check this out: http://www.cs.jhu.edu/ACL2014/Volunteers.htm
