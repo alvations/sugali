@@ -1,18 +1,18 @@
 Susanne
 ====
 - check the numbers of langs (incl. number with 2+ sources)
-
+- readthrough of paper
 
 Guy
 ====
 - Run/reruns the clustering algorithms
-- More explanation of results (incl. qualitative discussion)
+- More explanation of results (incl. qualitative discussion), also clean up & clarify existing discussion
 - Morpheme alignment?
-
 
 Liling
 ====
 - fixed up the repos and API
+- move discussion of API (and general availability of our corpus/scripts/resources) out of conclusion and into a section of its own
 - handle the move to make seedling to universal corpus format (parallel data).
 
 
@@ -20,5 +20,7 @@ odds and ends
 ====
 - tidy references
 - tidy formatting
+- clarify point that clean-up of data also reduces (but of course doesn't eliminate) influence of source/domain on data 
 
 please check this out: http://www.cs.jhu.edu/ACL2014/Volunteers.htm
+
