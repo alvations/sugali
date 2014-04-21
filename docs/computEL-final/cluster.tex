@@ -1,58 +1,15 @@
-% \section{Detecting Similar Languages} \label{sec:cluster}
+\section{Detecting Similar Languages} \label{sec:cluster}
 
-% When working on low-resource or endangered languages, computational and documentary linguists face the issue of lack of resources and knowledge about the language. Often, having knowledge about related or similar languages provides useful lexical, syntactic or morphological minimal pairs across languages and also helps in bootstrapping language models in NLP \cite{yarowsky:ngai:2001,xia2007multilingual}.
+To exemplify the use of SeedLing for computational research on low-resource languages, we experiment with automatic detection of similar languages. When working on endangered languages, documentary and computational linguists alike face the issue of lack of resources. It is often helpful to exploit lexical, syntactic or morphological knowledge about related or similar languages. For example, information about relatedness can be useful for identifying high-resource languages to be used in bootstrapping approaches such as those described in \newcite{yarowsky:ngai:2001} or \newcite{xia2007multilingual}.
 
-% Language classification can be carried out either: geneologically, mapping languages onto families trees depending on their historical ancenstry \cite{swadesh1952,starostin2010}; or typologically, grouping languages according to typological features \cite{georgi2010wals,daume2009}.
-
-% To exemplify the use of the universal corpus for research on low-resource languages, we experimented with automatic detection of similar languages using hierarchical clustering with character ngrams and word unigrams features. Each language is represented by a vector of character bigrams and trigrams and word unigram features from the universal corpus. 
-% \newline \newline
-% \noindent \textbf{SHOW FANCY FIGURE OF CLUSTER}
-% \newline \newline
-% \textbf{Evaluate the cluster (quantitatively/qualitatively)}
-
-
-
-%%%%%%%%%%%
-
-\section{Detecting Similar Languages} 
-
-To exemplify the use of SeedLing for computational research that is relevant for low-resource languages, we experiment  with automatic detection of similar languages on the basis of our data. 
-\label{sec:cluster} When working on low-resource or endangered 
-languages, documentary and computational linguists alike face the
-issue of lack of resources and knowledge about the language. Often,
-having knowledge about related or similar languages provides useful
-lexical, syntactic or morphological minimal pairs across
-languages. What's more, information about relatedness between
-languages can be useful for identifying data sources for high-resource
-languages to be used in bootstrapping approaches such as those
-described in \newcite{yarowsky:ngai:2001} or
-\newcite{xia2007multilingual}.
-
-Language classification can be carried out in a number of ways. Two common approaches are genealogical classification, mapping languages onto family trees according to their historical relatedness \cite{swadesh1952,starostin2010}; and typological classification, grouping languages according to certain linguistic features \cite{georgi2010wals,daume2009}. These approaches require linguistic analysis. By contrast, we use very simple features (character ngrams and word unigrams) extracted from SeedLing and an off-the-shelf hierarchical clustering algorithm.\footnote{\url{http://glaros.dtc.umn.edu/gkhome/views/cluto}} Specifically, each language is represented by a vector of frequencies of character bigrams, character trigrams, and word unigrams. Each of the three types of vector components is normalized by unit length.
-
-% To exemplify the use of the universal corpus for research on low-resource languages, we experimented with automatic detection of similar languages using hierarchical clustering with character ngrams and word unigrams features. Each language is represented by a vector of frequencies of  character bigrams, character trigrams and word unigram features. Each of the three components in the vector is normalized by unit length.
-
-
-% \begin{table*}[t]
-% \begin{centering}
-
-%     \begin{tabular}{l|ccc|ccc}
-%     ~        & complete & ~       & ~       & ward    & ~       & ~       \\ \cline{2-7}
-%     ~        & precision & recall       & f-score       & precision    & recall       & f-score      \\ \hline
-%     distance & 0.0614   & 0.8565 & \textbf{0.1099} & 0.06140  & 0.8565 & \textbf{0.1099} \\
-%     maxclust & 0.1925  & \textbf{0.0927} & 0.0692 & \textbf{0.1963} & 0.0905 & 0.0686  \\
-%     \end{tabular}
-% \caption{Comparing of clustering algorithms where number of clusters is set to genetic grouping on Ethnologue.}
-% \end{centering}
-% \label{tab:cluster}
-% \end{table*}
+Language classification can be carried out in various ways. Two common approaches are genealogical classification, mapping languages onto family trees according to their historical relatedness \cite{swadesh1952,starostin2010}; and typological classification, grouping languages according to linguistic features \cite{georgi2010wals,daume2009}. Both of these approaches require linguistic analysis. By contrast, we use surface features (character n-gram and word unigram frequencies) extracted from SeedLing, and apply an off-the-shelf hierarchical clustering algorithm.\footnote{\url{http://www.scipy.org/}} Specifically, each language is represented as a vector of frequencies of character bigrams, character trigrams, and word unigrams. Each of these three components is normalized to unit length.
 
 \paragraph{Experimental Setup.}
-We perform hierarchical/agglomerative clustering using a variety of linkage methods: (i) \texttt{single}, (ii) \texttt{complete} and (iii) \texttt{weighted}.
-%(WPGMA, weighted pair group method with averaging). 
-The \texttt{single} method calculates the distance between the newly formed clusters by assigning the minimal distance between the clusters and the \texttt{complete} method assigns the maximal distance between the newly formed clusters. The \texttt{weighted} method assigns the averaged distance between the newly formed cluster and its intermediate clusters. We set the number of clusters to 147, the number of top-level genetic groupings in Ethnologue (presumably the maximum number of language family clusters we would seek to induce).
+We performed hierarchical clustering, which produces a tree structure: each leaf represents a language, and each node a cluster. We used linkage methods, which recursively build the tree starting from the leaves. Initially, each language is in a separate cluster, then we iteratively find the closest two clusters and merge them. Each time we do this, we take the two corresponding subtrees, and introduce a new node to join them.
 
-% The \texttt{maxclust} criterion for flattening clusters from the hierarchy is achieved by finding the minimum threshold, \emph{r}, such that the cophenetic distance between any two original observations in the same flat cluster is no more than \emph{r} and not more than the number of clusters.
+We tested three methods, which differ in how they define the distance between two clusters. The \texttt{single} method considers all pairs of languages with one from each cluster, and finds the smallest distance. The \texttt{complete} method instead finds the largest distance. The \texttt{weighted} method calculates an average across all the pairwise differences, weighted according to the languages' positions in the tree.
+
+While a tree structure might be linguistically useful, evaluating the structure is more awkward. However, the above methods can be easily used to produce partitional clusters, by stopping when we reach a certain number of clusters. We set the number of clusters to 147, the number of top-level genetic groupings in Ethnologue.
 
 \begin{table}[t]
 \begin{centering}
@@ -64,21 +21,22 @@ The \texttt{single} method calculates the distance between the newly formed clus
 	\texttt{weighted} & 0.0614	& \textbf{0.8565}	 & 0.1099 \\ \hline
 	\emph{random} & 0.1925 &	0.0927 & 	0.0692 \\
     \end{tabular}
-\caption{Comparison of clustering algorithms} %where number of clusters is set to genetic grouping on Ethnologue.} 
+\caption{Comparison of clustering algorithms}
+\label{table:cluster}
 \end{centering}
- \label{table:cluster}
 \end{table}
 
 \paragraph{Evaluation.}
 There are many possible metrics to evaluate the quality of a clustering compared to a gold standard. 
-\newcite{amigo2009metrics} propose a set of criteria which a clustering evaluation metric should satisfy, and demonstrate that most popular metrics fail to satisfy at least one of these criteria.  However, they prove that they are satisfied by the BCubed metric, which we adopt for this reason.  To calculate this, we find the induced cluster and gold standard class for each language, and calculate the F-score of the cluster compared to the class.  These F-scores are then averaged across all languages.
+\newcite{amigo2009metrics} propose a set of criteria which a clustering evaluation metric should satisfy, and demonstrate that most popular metrics fail to satisfy at least one of these criteria.  However, they prove that they are satisfied by the BCubed metric, which we adopt for this reason.  To calculate this, we take the induced cluster and gold standard class for each language, and calculate the F-score of the cluster compared to the class.  These F-scores are then averaged across all languages.
+
+In table \ref{table:cluster}, we give results of our clustering experiments, comparing the three clustering methods to a random baseline (clustering based on random distances, averaged over several runs).  The F-scores are comparable to those reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
 
 
-In table 2, we give results of our clustering experiments, comparing three clustering approaches to a random baseline.  The F-scores are comparable to those reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
+%%% [ADD THIS!] As well as performing clustering, we can view this as an information retrieval task: given a language, what are similar languages?  To do this, we found the languages with the closest vectors of n-grams and words.  Since BCubed is calculated averaging across languages and not clusters, we can use exactly the same calculation, using the set of nearby languages in place of a cluster.
 
 
-% As well as performing clustering, we can view this as an information retrieval task: given a language, what are similar languages?  To do this, we found the languages with the closest vectors of n-grams and words.  Since BCubed is calculated averaging across languages and not clusters, we can use exactly the same calculation, using the set of nearby languages in place of a cluster.
+It is worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear different.  Nonetheless, our system is reasonably capable of identifying languages which are both related and written similarly.
 
-% In table \ref{table:cluster}, we give results of our clustering experiments.  The F-scores are much higher than the random baseline, and comparable to the values reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
 
-It is also worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear to be very different.  Nonetheless, our system is reasonably capable of identifying those languages which are both related and also written similarly.
+\paragraph{Qualitative Inspection.}
