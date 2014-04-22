@@ -11,15 +11,16 @@ dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
         "tpn":"Tupinamba","ojp":"Old Japanese","sga":"Old Irish",
         "hit":"Hittite","tkm":"Takelma","dum":"Middle Dutch",
         "fro":"Old French","nci":"Classical Nahuatl","gmh":"Middle High German",
-        "mxi":"Mozarabic"}
+        "mxi":"Mozarabic","grc":"Ancient Greek"}
 macro_split = {"nob":"Norwegian, Bokmaal","nno":"Norwegian Nynorsk"} # nor.
 constructed = {"ido":"Ido","tlh":"Klingon","tzl":"Talossan","jbo":"Lojban",
-               "ina":"Interlingua"}
+               "ina":"Interlingua","epo":"Esperanto"}
 
 living_languages = set(ISO2LANG.keys()) - set(RETIRED2ISO.keys()) \
 - set(dead.keys()) - set(constructed.keys()) \
 - set(MACRO2LANG.keys()) - set(macro_split.keys())
 
+### Note: We should not just ignore Norwegian!
 
 x = defaultdict(list)
 for line in open('distance.out'):
@@ -28,7 +29,7 @@ for line in open('distance.out'):
   
 precisions, recalls, fscores = [], [], []
 for lang in x:
-  gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[i]]
+  gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[lang]]
   gold_class = [g for g in gold_class if g in living_languages]
   induced_cluster = set([i for _,i in sorted(x['eng'][:21])])
   

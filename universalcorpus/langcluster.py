@@ -61,6 +61,8 @@ living_languages = set(ISO2LANG.keys()) - set(RETIRED2ISO.keys()) \
 - set(dead.keys()) - set(constructed.keys()) \
 - set(MACRO2LANG.keys()) - set(macro_split.keys())
 
+### Note: We should not just ignore Norwegian!
+
 def generate_ngrams(data_source):
   twograms = defaultdict(Counter) 
   threegrams = defaultdict(Counter)
@@ -201,36 +203,53 @@ for l1, l2, dist in dmatrix:
 matrix = [v.values() for k,v in matrix.iteritems()]
 matrix = pd.lib.to_object_array(matrix).astype(float) 
 '''
+
+condensed_file = 'distance_condensed.pk'
+if not os.path.exists(condensed_file):
+  labels = []
+  index = {}
+  for l1, l2, dist in dmatrix:
+    if l1 not in labels:
+      index[l1] = len(labels)
+      labels.append(l1)
+      
   
-labels = []
-index = {}
-for l1, l2, dist in dmatrix:
-  if l1 not in labels:
-    index[l1] = len(labels)
-    labels.append(l1)
-    
-
-matrix = np.zeros((len(labels),len(labels)))
-
-for l1, l2, dist in dmatrix:
-  index1 = index[l1]
-  index2 = index[l2]
-  if l1 == l2:
-    continue
-  matrix[index1,index2] = dist
-  matrix[index1,index2] = dist
-
-condensed = scipy.spatial.distance.squareform(matrix)
+  matrix = np.zeros((len(labels),len(labels)))
+  
+  for l1, l2, dist in dmatrix:
+    index1 = index[l1]
+    index2 = index[l2]
+    if l1 == l2:
+      continue
+    matrix[index1,index2] = dist
+    matrix[index1,index2] = dist
+  
+  condensed = scipy.spatial.distance.squareform(matrix)
+  with open(condensed_file,'wb') as f:
+    pickle.dump((condensed, labels), f)
+  
+else:
+  with open(condensed_file,'rb') as f:
+    condensed, labels = pickle.load(f)
 
 methods = 'single complete average weighted'.split()
 criterion = 'inconsistent distance maxclust'.split()
 
-if os.path.exist('cluster.eval.outputs'):
+output_file = 'cluster2.eval.outputs'
+if os.path.exists(output_file):
+  print('Output file already exists! Exiting.')
   exit()
-  
-fouteval = open('cluster.eval.outputs','w')
-numclust = [10,20,30,40,50,60,70,80,90,100,110,120,130,147,148]
-for me, cr, nc  in product(methods,criterion, numclust):
+
+print('Calculating clustering...')
+fouteval = open(output_file,'w')
+numclust = [150] # [10,20,30,40,50,60,70,80,90,100,110,120,130,147,148]
+
+gold = {}
+for lang in labels:
+	gold[lang] = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[lang]]
+	gold[lang] = set([g for g in gold[lang] if g in living_languages])
+
+for me, cr, nc  in product(methods, criterion, numclust):
   ##print me, cr, nc
   x = scipy.cluster.hierarchy.linkage(condensed, method=me)
   y = scipy.cluster.hierarchy.dendrogram(x)
@@ -239,18 +258,17 @@ for me, cr, nc  in product(methods,criterion, numclust):
   z = scipy.cluster.hierarchy.fcluster(x,nc,cr)
   
   lang2clusters = {}
-  cluster2langs = defaultdict(list)
+  cluster2langs = defaultdict(set)
   for cluster_num, lang_labels in zip(z.tolist(), labels):
     lang2clusters[lang_labels] = cluster_num
-    cluster2langs[cluster_num].append(lang_labels)
+    cluster2langs[cluster_num].add(lang_labels)
     
   ##fouti = open('induce-clusters','w')
   precisions, recalls, fscores = [], [], []
   #maxoverlap = 0
   for i in labels:
-    gold_class = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[i]]
-    gold_class = [g for g in gold_class if g in living_languages]
-    induced_cluster = set(cluster2langs[lang2clusters[i]])
+    induced_cluster = cluster2langs[lang2clusters[i]]
+    gold_class = gold[i]
     ##print>>fouti, i
     ##print>>fouti, induced_cluster
     ##print>>fouti, gold_class
