@@ -66,7 +66,8 @@ def read_language(filehandle):
   """
   Extracts languages names, the language family, and dialect information 
   from a page on Ethnologue.
-  """ 
+  """
+  from bs4 import BeautifulSoup as bs
   soup = bs(filehandle.read())
   primary_name = soup.find("meta", property="og:title")["content"]
   alternate_names = soup.find("div", class_="field-name-field-alternate-names"       ).find("div", class_=["field-item", "even"]).string.split(", ")
@@ -174,6 +175,7 @@ def lang_families():
 ##lang_families()
 
 def download_lang_families():
+  import time
   _lf = {k:[j[0] for j in v] for k,v in load_language_families().items()}
   for i in _lf:
     for j in _lf[i]:

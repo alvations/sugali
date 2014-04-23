@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cPickle as pickle
-import time, os, ast, random,codecs
+import time, os, ast, random, codecs
 
 from math import sqrt, acos
 from collections import Counter, defaultdict
@@ -20,6 +20,7 @@ import matplotlib.pylab as plt
 
 from crawlandclean import odin, omniglot, udhr, ethnologue
 from miniethnologue import ISO2LANG, MACRO2LANG, RETIRED2ISO
+from evaluate import normalise
 
 random.seed(0)
 
@@ -30,21 +31,6 @@ def word2ngrams(text, n=3):
 def sent2ngrams(text, n=3):
   """ Convert sentence into character ngrams. """
   return list(chain(*[word2ngrams(i,n) for i in text.lower().split()]))
-    
-def normalize(featurevector, length=1):
-  """
-  Normalises a feature vector to a specific length.
-  Zero vectors are left zero.
-  NOTE: featurevector will be updated with normalized count.
-  """
-  from math import sqrt
-  try:
-    norm = length / sqrt(sum([x*x for x in featurevector.values()]))
-  except ZeroDivisionError:
-    return featurevector
-  for feat in featurevector:
-    featurevector[feat] *= norm
-  return featurevector
 
 
 dead = {"osp":"Old Spanish", "odt":"Old Dutch", "goh": "Old High German",
@@ -108,9 +94,9 @@ def load_ngram_array():
     threegrams[k].update(v)
   
   for lang in twograms:
-    twograms[lang] = normalize(twograms[lang], 1/sqrt(3))
-    threegrams[lang] = normalize(threegrams[lang], 1/sqrt(3))
-    unigrams[lang] = normalize(unigrams[lang], 1/sqrt(3))
+    normalise(twograms[lang], 1/sqrt(3))
+    normalise(threegrams[lang], 1/sqrt(3))
+    normalise(unigrams[lang], 1/sqrt(3))
     
   allgrams = defaultdict(Counter)
   for k,v in chain(twograms.iteritems(), threegrams.iteritems(), unigrams.iteritems()):
@@ -125,29 +111,11 @@ def distance(c1, c2):
     return 0
   return acos(dimsum)
 
-def plot_tree(P, pos=None):
-  import matplotlib.pylab as plt
-  icoord = scipy.array(P['icoord'])
-  dcoord = scipy.array(P['dcoord'])
-  color_list = scipy.array(P['color_list'])
-  xmin, xmax = icoord.min(), icoord.max()
-  ymin, ymax = dcoord.min(), dcoord.max()
-  if pos:
-    icoord = icoord[pos]
-    dcoord = dcoord[pos]
-    color_list = color_list[pos]
-    
-  for xs, ys, color in zip(icoord, dcoord, color_list):
-    plt.plot(xs, xy, color)
-  plt.xlim(xmin010, xmax+0.1*abs(xmax))
-  plt.ylim(ymin, ymax+01.*abs(ymaxs))
-  plt.show()
-
 def avg(l): return sum(l)/float(len(l));
 
 ###########################################################################
 
-# Access subcorpora, extracts ngrams features, normalize counts of ngrams. 
+# Access subcorpora, extracts ngrams features, normalise counts of ngrams. 
 if not os.path.exists('ngram.data'):
   data = load_ngram_array()
   with open('ngram.data','wb') as ngramout:
@@ -172,7 +140,6 @@ else:
     dmatrix.append((l1,l2,dist))
 
 def plot_tree(P, pos=None):
-  import matplotlib.pylab as plt
   icoord = scipy.array(P['icoord'])
   dcoord = scipy.array(P['dcoord'])
   color_list = scipy.array(P['color_list'])
@@ -184,9 +151,9 @@ def plot_tree(P, pos=None):
     color_list = color_list[pos]
     
   for xs, ys, color in zip(icoord, dcoord, color_list):
-    plt.plot(xs, xy, color)
-  plt.xlim(xmin010, xmax+0.1*abs(xmax))
-  plt.ylim(ymin, ymax+01.*abs(ymaxs))
+    plt.plot(xs, ys, color)
+  plt.xlim(xmin, xmax+0.1*abs(xmax))
+  plt.ylim(ymin, ymax+0.1*abs(ymax))
   plt.show()
 
 '''
@@ -246,8 +213,8 @@ numclust = [150] # [10,20,30,40,50,60,70,80,90,100,110,120,130,147,148]
 
 gold = {}
 for lang in labels:
-	gold[lang] = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[lang]]
-	gold[lang] = set([g for g in gold[lang] if g in living_languages])
+  gold[lang] = ethnologue.FAMILIES2ISO[ethnologue.ISO2FAMILY[lang]]
+  gold[lang] = set([g for g in gold[lang] if g in living_languages])
 
 for me, cr, nc  in product(methods, criterion, numclust):
   ##print me, cr, nc

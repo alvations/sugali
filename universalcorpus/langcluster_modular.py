@@ -1,19 +1,20 @@
 from __future__ import print_function, division
-from scipy.cluster.hierarchy import linkage, fcluster
+from scipy.cluster.hierarchy import linkage
 import cPickle as pickle
 from collections import defaultdict
-from miniethnologue import ISO2LANG, LANG2ISO
+from miniethnologue import ISO2LANG
 from crawlandclean.ethnologue import ISO2FAMILY, FAMILIES2ISO
 
 def bcubed(induced, gold, verbose=False):
 	"""
 	Calculates the B-Cubed score for an induced clustering compared to a gold standard
-	Both inputs should dictionaries, mapping from items to sets of items
+	Both inputs should be dictionaries, mapping from items to sets of items
 	"""
 	
 	if set(induced.keys()) ^ set(gold.keys()):
-		print(induced.keys())
-		print(gold.keys())
+		if verbose:
+			print(induced.keys())
+			print(gold.keys())
 		raise KeyError("The induced clusters and gold classes must be defined over the same set")
 	
 	N_items = len(induced.keys())
@@ -45,6 +46,36 @@ def bcubed(induced, gold, verbose=False):
 	
 	return (av_precision, av_recall, av_fscore)
 
+def pairwise(induced, gold, verbose=False):
+	"""
+	Calculates pairwise precision, recall, and f-scores for an induced clustering compared to a gold standard
+	Both inputs should be dictionaries, mapping from items to sets of items
+	"""
+	items = set(induced.keys())
+	if items ^ set(gold.keys()):
+		if verbose:
+			print(induced.keys())
+			print(gold.keys())
+		raise KeyError("The induced clusters and gold classes must be defined over the same set")
+	
+	induced_pairs = {(x,y) for cluster in set(induced.values()) for x in cluster for y in cluster if x<y}
+	gold_pairs    = {(x,y) for klass   in set(gold.values())    for x in klass   for y in klass if x<y}
+	
+	both = len(induced_pairs & gold_pairs)
+	false_pos = len(induced_pairs) - both
+	false_neg = len(gold_pairs)    - both
+	
+	precision = both / (both + false_pos)
+	recall = both / (both + false_neg)
+	fscore = 2 * both / (2 * both + false_pos + false_neg)
+	
+	if verbose:
+		print('Precision: {}'.format(precision))
+		print('Recall:    {}'.format(recall))
+		print('F-score:   {}'.format(fscore))
+	
+	return (precision, recall, fscore)
+
 
 def flatten(hierarchy, labels, N_clust=147):
 	"""
@@ -63,7 +94,7 @@ def flatten(hierarchy, labels, N_clust=147):
 	return {item:cluster for cluster in members.values() for item in cluster}
 
 
-def evaluate(filename='distance_condensed.pk', option='once', method='complete', N_clust=147, verbose=True):
+def evaluate(filename='distance_condensed.pk', option='once', method='complete', N_clust=147, metric=bcubed, verbose=True):
 	if verbose: print("Loading data...")
 	with open(filename,'rb') as f:
 		condensed, labels = pickle.load(f)
@@ -71,7 +102,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 	
 	ISO2NAME = {iso:u'{} ({})'.format(ISO2LANG[iso][0].decode('utf-8'), iso) for iso in labels}
 	
-	FAM2ISO = {fam:set([x for x in codes if x in labels]) for fam, codes in FAMILIES2ISO.items()}
+	FAM2ISO = {fam:frozenset([x for x in codes if x in labels]) for fam, codes in FAMILIES2ISO.items()}
 	ISO2FAM = {iso:fam for iso, fam in ISO2FAMILY.items() if iso in labels}
 	gold = {iso:FAM2ISO[ISO2FAM[iso]] for iso in labels}
 	# After filtering like this, we should add Norwegian...
@@ -79,12 +110,12 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 	if option == "baseline-separate":
 		if verbose: print("Calculating baseline with all languages in separate clusters...\n")
 		separate_clusters = {iso:{iso} for iso in labels}
-		return bcubed(separate_clusters, gold, verbose=verbose)
+		return metric(separate_clusters, gold, verbose=verbose)
 	
 	elif option == "baseline-same":
 		if verbose: print("Calculating baseline with all languages in the same cluster...\n")
 		same_cluster = {iso:set(labels) for iso in labels}
-		return bcubed(same_cluster, gold, verbose=verbose)
+		return metric(same_cluster, gold, verbose=verbose)
 	
 	elif option[0:16] == "baseline-random-":  # e.g. 'baseline-random-12' to average over 12 runs
 		from random import random
@@ -100,7 +131,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 				condensed.append(random())
 			hierarchy = linkage(condensed, method=method)
 			flat = flatten(hierarchy, labels, N_clust)
-			p, r, f = bcubed(flat, gold)
+			p, r, f = metric(flat, gold)
 			if verbose: print(p, r, f)
 			sum_precision += p
 			sum_recall += r
@@ -129,7 +160,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 			for x in sorted(size):
 				print('{} - {}'.format(x, size[x]))
 			print('')
-		return bcubed(flat, gold, verbose=verbose)
+		return metric(flat, gold, verbose=verbose)
 	
 	if option[0:6] == 'range-':  # e.g. 'range-10-250-10' - numbers will be passed to range()
 		numbers = [int(x) for x in option[6:].split('-')]
@@ -138,7 +169,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 		fscore = []
 		for N_clust in range(*numbers):
 			flat = flatten(hierarchy, labels, N_clust)
-			p, r, f = bcubed(flat, gold)
+			p, r, f = metric(flat, gold)
 			precision.append(p)
 			recall.append(r)
 			fscore.append(f)
@@ -148,7 +179,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 
 
 if __name__ == '__main__':
-	evaluate(option='range-1-301')
+	evaluate(option='range-1-301', metric=pairwise)
 	#evaluate(N_clust=98)
 	#evaluate(N_clust=99)
-	
+	#evaluate(metric=pairwise)
