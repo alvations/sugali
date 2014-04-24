@@ -8,7 +8,7 @@ Building on their previous paper, \newcite{abney2011data} describe the data stru
 
 Analysed texts, in addition to the raw text, contain more detailed annotations including parts of speech, morphological information, and syntactic relations.  This is stored as a table, where each row represents a word, and each column a type of information.  They propose the following columns: document ID, language code, sentence ID, word ID, wordform, lemma, morphological information, part of speech, gloss, head/governor, and relation/role.
 
-Out of our data sources, three can be straightforwardly represented in their aligned text structure.  However, ODIN contains richer annotations, which are in fact difficult to fit into their proposal, and which we discuss in section \ref{sec:odin} below.
+Out of our data sources, three can be straightforwardly represented in their aligned text structure. However, ODIN contains richer annotations, which are in fact difficult to fit into their proposal, and which we discuss in section \ref{sec:odin} below.
 
 
 \subsection{Data Sources} \label{sec:sources}
@@ -45,12 +45,12 @@ Our resulting corpus runs the full gamut of text types outlined by Abney and Bir
 
 \paragraph{Universal Declaration of Human Rights.}
 
-The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations in 1948, and represents the first global expression of human rights. It consists of 30 articles, amounting to about four pages of text. This is a useful document for CL, since it has been translated into a wide variety of languages, providing a highly parallel text.
+The Universal Declaration of Human Rights (UDHR) is a document released by the United Nations in 1948, and represents the first global expression of human rights. It consists of 30 articles, amounting to about four pages of text. This is a useful document for NLP, since it has been translated into a wide variety of languages, providing a highly parallel text.
 
 
 \paragraph{Wikipedia.}
 
-Wikipedia\footnote{\url{http://www.wikipedia.org}} is a collaboratively-edited encyclopedia, appealing to use for NLP because of its large size and easy availability. At the time of writing, it contained 30.8 million articles in 287 languages, which provides a sizeable amount of monolingual text in a fairly wide range of languages. Text dumps are made regularly, and can be downloaded from \url{www.dumps.wikimedia.org}.
+Wikipedia\footnote{\url{http://www.wikipedia.org}} is a collaboratively-edited encyclopedia, appealing to use for NLP because of its large size and easy availability. At the time of writing, it contained 30.8 million articles in 286 languages, which provides a sizeable amount of monolingual text in a fairly wide range of languages. Text dumps are made regularly available, and can be downloaded from \url{www.dumps.wikimedia.org}.
 
 \paragraph{Omniglot.}
 
@@ -87,7 +87,7 @@ The proposed data structure for the universal corpus is aligned at the word leve
 
 Secondly, it is unclear how to represent the gloss.  Since the gloss line is not written in a natural language, we cannot treat it as a simple translation.  However, it is not straightforward to incorporate it into the proposed structure for analysed texts, either.  
 % We could simply always map the gloss to the \textsc{gloss} field, but this would run against the suggestion that this field should "contain symbols from controlled vocabularies".  Indeed, this information might be more suited to the \textsc{morph, pos,} or \textsc{rel} fields, but it would be difficult to automatically process ODIN to determine which morphemes should be assigned to which field.
-One possible resolution is to move all elements of the gloss written in capital letters to the \textsc{morph} field (as functional elements are usually annotated in this way), and all remaining elements to the \textsc{gloss} field.  However, this loses information, since we no longer know which morpheme has which meaning.  To keep all information encoded in the IGT, we need to modify the \newcite{abney2011data}'s proposal.
+One possible resolution is to move all elements of the gloss written in capital letters to the \textsc{morph} field (as functional elements are usually annotated in this way), and all remaining elements to the \textsc{gloss} field.  However, this loses information, since we no longer know which morpheme has which meaning.  To keep all information encoded in the IGT, we need to modify \newcite{abney2011data}'s proposal.
 
 The simplest solution we can see is to allow morphemes to be a level of structure in the universal corpus, just as documents, sentences, and words already are.  The overall architecture remains unchanged.  We must then decide how to represent the glosses.
 
@@ -108,7 +108,7 @@ language.  For example, glosses into English and
 Spanish-based metalanguages would be given the codes
 \texttt{gloss-eng} and \texttt{gloss-spa}, respectively.
 
-One benefit of this approach is that glossed texts are treated in exactly the same way as parallel texts.  There is a unique identifier for each morpheme, and glosses are stored under this identifier and the corresponding gloss code.  Furthermore, to motivate the important place of parallel texts in a universal corpus, Abney and Bird view translations into a high-resource reference language as a convenient surrogates of meaning. By the same reasoning, we can use glosses to provide a more detailed surrogate of meaning, only written in a metalanguage instead of a natural one.
+One benefit of this approach is that glossed texts are treated in exactly the same way as parallel texts.  There is a unique identifier for each morpheme, and glosses are stored under this identifier and the corresponding gloss code.  Furthermore, to motivate the important place of parallel texts in a universal corpus, Abney and Bird view translations into a high-resource reference language as convenient surrogates of meaning. By the same reasoning, we can use glosses to provide a more detailed surrogate of meaning, only written in a metalanguage instead of a natural one.
 
 
 
