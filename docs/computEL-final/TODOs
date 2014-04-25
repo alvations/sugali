@@ -7,21 +7,25 @@ Guy
 ====
 - Run/reruns the clustering algorithms
 - More explanation of results (incl. qualitative discussion), also clean up & clarify existing discussion
-- Morpheme alignment?
 
 Liling
 ====
-- fixed up the repos and API
-- move discussion of API (and general availability of our corpus/scripts/resources) out of conclusion and into a section of its own
-- handle the move to make seedling to universal corpus format (parallel data).
+- fix up the repos and API
+- move discussion of API and general availability of our corpus/scripts/resources, out of conclusion and into a section of its own. (This should include a summary of what our API can do, mentioning that a detailed manual/readme will be available in the repo)
 
 
 odds and ends
 ====
-- tidy references
+- tidy references (including those in Alexis's recent emails)
 - tidy formatting
 - clarify point that clean-up of data also reduces (but of course doesn't eliminate) influence of source/domain on data 
 - check whether languages are being double-counted between national and international endangerment status.
 
 please check this out: http://www.cs.jhu.edu/ACL2014/Volunteers.htm
 
+
+
+lower priority than paper writing
+====
+- make seedling accessible in universal corpus format (parallel data).
+- use morpheme alignment on ODIN
