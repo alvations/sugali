@@ -7,7 +7,7 @@ Language classification can be carried out in various ways. Two common approache
 \paragraph{Experimental Setup.}
 We performed hierarchical clustering, which produces a tree structure: each leaf represents a language, and each node a cluster. We used linkage methods, which recursively build the tree starting from the leaves. Initially, each language is in a separate cluster, then we iteratively find the closest two clusters and merge them. Each time we do this, we take the two corresponding subtrees, and introduce a new node to join them.
 
-We tested three methods, which differ in how they define the distance between two clusters. The \texttt{single} method considers all pairs of languages with one from each cluster, and finds the smallest distance. The \texttt{complete} method instead finds the largest distance. The \texttt{weighted} method calculates an average across all the pairwise differences, weighted according to the languages' positions in the tree.
+We tested four methods, which differ in how they define the distance between two clusters. The \texttt{complete} method considers all pairs of languages with one from each cluster, and finds the largest distance. The \texttt{single} method instead finds the smallest distance. The \texttt{average} and \texttt{weighted} methods calculate averages across all the pairwise differences, either unweighted, or weighted according to the languages' positions in the tree.
 
 While a tree structure might be linguistically useful, evaluating the structure is more awkward. However, the above methods can be easily used to produce partitional clusters, by stopping when we reach a certain number of clusters. We set the number of clusters to 147, the number of top-level genetic groupings in Ethnologue.
 
@@ -16,10 +16,11 @@ While a tree structure might be linguistically useful, evaluating the structure 
 
     \begin{tabular}{l|ccc}
     ~        & Precision & Recall       & F-score    \\ \hline
-    \texttt{single} & 0.1958	& 0.6755	 & 0.1240  \\
-	\texttt{complete} & \textbf{0.3153}	& 0.1699	 & \textbf{0.1420} \\
-	\texttt{weighted} & 0.0614	& \textbf{0.8565}	 & 0.1099 \\ \hline
-	\emph{random} & 0.1925 &	0.0927 & 	0.0692 \\
+	\texttt{complete} & \textbf{0.3142}	& 0.1938	 & \textbf{0.1556} \\
+	\texttt{single} & 0.1949	& \textbf{0.7850}	 & 0.1282 \\
+	\texttt{average} & 0.2216	& 0.5163	& 0.1348 \\
+	\texttt{weighted} & 0.2326	& 0.3343	& 0.1271 \\ \hline
+	\emph{random} & 0.1836	& 0.0917	& 0.0675 \\
     \end{tabular}
 \caption{Comparison of clustering algorithms}
 \label{table:cluster}
@@ -30,13 +31,16 @@ While a tree structure might be linguistically useful, evaluating the structure 
 There are many possible metrics to evaluate the quality of a clustering compared to a gold standard. 
 \newcite{amigo2009metrics} propose a set of criteria which a clustering evaluation metric should satisfy, and demonstrate that most popular metrics fail to satisfy at least one of these criteria.  However, they prove that they are satisfied by the BCubed metric, which we adopt for this reason.  To calculate this, we take the induced cluster and gold standard class for each language, and calculate the F-score of the cluster compared to the class.  These F-scores are then averaged across all languages.
 
-In table \ref{table:cluster}, we give results of our clustering experiments, comparing the three clustering methods to a random baseline (clustering based on random distances, averaged over several runs).  The F-scores are comparable to those reported by \newcite{georgi2010wals}, even though we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
+In table \ref{table:cluster}, we give results of our clustering experiments, comparing the three clustering methods to a random baseline (clustering based on random distances, averaged over 20 runs).  It is worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear different.  Nonetheless, our system is reasonably capable of identifying languages which are both related and written similarly.
+
+To allow a closer comparison with \newcite{georgi2010wals}, we can also calculate pairwise scores - i.e. considering when pairs of languages are in the same cluster or the same class. For 147 clusters, the \texttt{complete} method gives a pairwise f-score of 0.147, while they report 0.140. The figures are not quite comparable since we are evaluating over a different set of languages; nonetheless, this result is suggestive, given that we have only used surface features, while they used typological features taken from WALS.  This demonstrates that it possible for cross-linguistic research to be conducted even based on extremely shallow features.
 
 
 %%% [ADD THIS!] As well as performing clustering, we can view this as an information retrieval task: given a language, what are similar languages?  To do this, we found the languages with the closest vectors of n-grams and words.  Since BCubed is calculated averaging across languages and not clusters, we can use exactly the same calculation, using the set of nearby languages in place of a cluster.
 
 
-It is worth noting that precision is higher than recall.  This is perhaps to be expected, given that related languages using wildly differing orthographies will appear different.  Nonetheless, our system is reasonably capable of identifying languages which are both related and written similarly.
-
 
 \paragraph{Qualitative Inspection.}
+Ga: It's actually pretty difficult to interpret the clusters directly because there's so much noise. I will try to write something better, but here are a few thoughts I've had:
+
+Using the \texttt{complete} method with 147 clusters, we obtain a mix of large and small clusters. There are 27 singleton clusters, while the largest cluster contains 123 languages. Although these singleton clusters belong to classes of various size, it is interesting that the distribution of sizes is similar to the distribution in the gold standard data, where we have 27 single classes, and the largest class contains 150 languages.  This isn't true for the other clustering methods - the \texttt{single} method produces 138 singleton clusters, with almost all languages in a single cluster of size 968.

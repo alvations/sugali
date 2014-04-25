@@ -51,8 +51,8 @@ def pairwise(induced, gold, verbose=False):
 	Calculates pairwise precision, recall, and f-scores for an induced clustering compared to a gold standard
 	Both inputs should be dictionaries, mapping from items to sets of items
 	"""
-	items = set(induced.keys())
-	if items ^ set(gold.keys()):
+	
+	if set(induced.keys()) ^ set(gold.keys()):
 		if verbose:
 			print(induced.keys())
 			print(gold.keys())
@@ -93,8 +93,21 @@ def flatten(hierarchy, labels, N_clust=147):
 		members[N_items + n] = members.pop(j) | members.pop(k)
 	return {item:cluster for cluster in members.values() for item in cluster}
 
+def flatten_scipy(hierarchy, labels, N_clust=147):
+	"""
+	Takes a hierarchical clustering and flattens it, using scipy.
+	Returns a dictionary from items to the set of elements in the cluster
+	Note that this does not let you precisely fix the number of clusters
+	"""
+	from scipy.cluster.hierarchy import fcluster
+	members = defaultdict(set) # Map from the index for a cluster to its members
+	flat = fcluster(hierarchy, t=N_clust, criterion='maxclust')
+	for i in range(len(flat)):
+		members[flat[i]].add(labels[i])
+	frozen_members = {key:frozenset(value) for key, value in members.items()}
+	return {item:cluster for cluster in frozen_members.values() for item in cluster}
 
-def evaluate(filename='distance_condensed.pk', option='once', method='complete', N_clust=147, metric=bcubed, verbose=True):
+def evaluate(filename='distance_condensed.pk', option='once', method='complete', N_clust=147, metric=bcubed, flat_func=flatten, verbose=True):
 	if verbose: print("Loading data...")
 	with open(filename,'rb') as f:
 		condensed, labels = pickle.load(f)
@@ -130,7 +143,7 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 			for _ in range(length):
 				condensed.append(random())
 			hierarchy = linkage(condensed, method=method)
-			flat = flatten(hierarchy, labels, N_clust)
+			flat = flat_func(hierarchy, labels, N_clust)
 			p, r, f = metric(flat, gold)
 			if verbose: print(p, r, f)
 			sum_precision += p
@@ -146,10 +159,10 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 		return (av_precision, av_recall, av_fscore)
 	
 	if verbose: print("Calculating hierarchical clustering...")
-	hierarchy = linkage(condensed, method='complete')
+	hierarchy = linkage(condensed, method=method)
 	
 	if option == 'once':
-		flat = flatten(hierarchy, labels, N_clust)
+		flat = flat_func(hierarchy, labels, N_clust)
 		if verbose:
 			size = defaultdict(int)
 			print('\nClusters:')
@@ -160,26 +173,46 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 			for x in sorted(size):
 				print('{} - {}'.format(x, size[x]))
 			print('')
-		return metric(flat, gold, verbose=verbose)
+		return (metric(flat, gold, verbose=verbose), flat, gold, ISO2NAME)
 	
 	if option[0:6] == 'range-':  # e.g. 'range-10-250-10' - numbers will be passed to range()
-		numbers = [int(x) for x in option[6:].split('-')]
+		clust_range = range(*[int(x) for x in option[6:].split('-')])
 		precision = []
 		recall = []
 		fscore = []
-		for N_clust in range(*numbers):
-			flat = flatten(hierarchy, labels, N_clust)
+		high_score = (None,None,None,0)
+		for N_clust in clust_range:
+			flat = flat_func(hierarchy, labels, N_clust)
 			p, r, f = metric(flat, gold)
 			precision.append(p)
 			recall.append(r)
 			fscore.append(f)
 			if verbose:
 				print(N_clust, p, r, f)
-		return (precision, recall, fscore)
+			if f > high_score[3]:
+				high_score = (N_clust, p, r, f)
+		if verbose:
+			print("\nBest result for {} clusters:\n\nPrecision: {}\nRecall:    {}\nF-score:   {}".format(*high_score))
+		return (clust_range, precision, recall, fscore)
 
 
 if __name__ == '__main__':
-	evaluate(option='range-1-301', metric=pairwise)
+	#evaluate(option='range-1-301')
+	#evaluate(option='range-1-301', metric=pairwise)
 	#evaluate(N_clust=98)
 	#evaluate(N_clust=99)
-	#evaluate(metric=pairwise)
+	#evaluate(N_clust=199)
+	#evaluate(option='baseline-random-20')
+	#evaluate(method='average')
+	#evaluate(flat_func=flatten_scipy, N_clust=80)
+	scores, flat, gold, name = evaluate()
+	print('\nGold class size frequencies:')
+	size = defaultdict(int)
+	for klass in set(gold.values()):
+		size[len(klass)] += 1
+	for x in sorted(size):
+		print('{} - {}'.format(x, size[x]))
+	print('\nSingleton clusters:\n')
+	for lang in flat:
+		if len(flat[lang]) == 1:
+			print(u"{}, {}: {}".format(name[lang], len(gold[lang]), u', '.join([name[x] for x in gold[lang]])))
