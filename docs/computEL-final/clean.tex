@@ -89,18 +89,64 @@ The primary problem in extracting the data is a lack of consistency in the IGTs.
 %However, no method is likely to be foolproof.  
 %As people incorporate large sets of IGTs from documentary linguistic projects into a universal corpus, we can expect problems with inconsistencies to grow.
 
-
-
 \subsection{Language Codes}
 We use ISO~639-3 as our standard set of language codes, since it aims for universal coverage, and has widespread acceptance in the community. % As a result, we needed to make sure that all our data was labelled with these codes.  
 Data from ODIN and the UDHR already used this standard, and hence did not pose problems.
 
 Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or ISO~639-3.  The older ISO~639-1 codes are easy to recognise, being two letters long instead of three, and can be straightforwardly converted.  However, a small number of Wikipedia codes are not ISO codes at all - we converted these to ISO~639-3, following documentation from the Wikimedia Foundation.\footnote{\url{http://meta.wikimedia.org/wiki/Special_language_codes}}
 
-Omniglot does not give codes at all, but only the language name. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{\url{http://www-01.sil.org/iso639-3/iso-639-3.tab}}
+Omniglot does not give codes at all, but only the language name. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{\url{http://www-01.sil.org/iso639-3/iso-639-3.tab}}. 
 
+To facilitate the standardization of language code, we have written a small python API that can be used in query information about a language and its code(s). Also, a function to convert language names to their appropriate ISO 639-3 codes. If internet connection is available, the API automatically updates the ISO 639-3 file stored locally on the users harddrive before responding to the user's query. An example usage of the API is as such:
 
+\small\begin{verbatim}
+>>> from seedling import miniethnologue
+>>> sil = miniethnologue.miniSIL()
+>>> sil.ISO6393['eng']
+{'iso6391': 'en', 
+'iso6392t': 'eng',
+'iso6392b': 'eng',
+'name': 'English', 
+'ismacro': False, 
+'scope': 'Indvidual', 
+'type': 'Living'}
+>>> sil.name2code('German')
+deu
+\end{verbatim}
+\normalsize
+
+Similarly, we provide an API to access language information from the World Atlas of Language Structures (WALS). The language clustering experiment in section 5 uses this API to access the language family information.
+
+\small\begin{verbatim}
+>>> from seedling import miniwals
+>>> wals = miniwals.MiniWALS()
+>>> wals['eng']
+{'glottocode': 'stan1293', 
+'name': 'English', 
+'family': 'Indo-European', 
+'longitude': '0.0', 
+'latitude': '52.0', 
+'genus': 'Germanic', 
+'macroarea': u'Eurasia'}
+\end{verbatim}
+\normalsize
 
 \subsection{File Formats}
 
-It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describe a set of best practices for maintaining portability of digital information, outlining seven dimensions along which this can vary. Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. We have written an API to allow access to the data according to the guidelines of \newcite{abney2010universal}, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according to these guidelines.
+It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describe a set of best practices for maintaining portability of digital information, outlining seven dimensions along which this can vary. Following this advice, we have ensured that all our data is available as plain text files, with utf-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. We have written an API to allow access to the data according to the guidelines of \newcite{abney2010universal}, who remain agnostic as to the specific form of data storage. If, for reasons of space or speed, an alternative format would be preferred, the data would be straightfoward to convert since it can be accessed according to these guidelines. SeedLing's python API can be invoked as such:
+
+\small\begin{verbatim}
+>>> from seedling import udhr
+>>> for lang, sent in udhr.sents():
+>>>   print lang, sent
+...
+eng Universal Declaration of 
+Human Rights
+eng Preamble
+eng Whereas recognition of the 
+inherent dignity and of the equal 
+...
+\end{verbatim}
+\normalsize
+
+Without programmatically accessing the corpus using the API, users are able to download a copy tab-delimited plaintext files and process it easily in the programming language or software of their choice.
