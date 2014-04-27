@@ -18,8 +18,8 @@ As a spin-off, we've also produce the **SeedLing** corpus with data from over a 
 Credits
 ====
 
-* Susanne Fertmann (@Su)
-* Guy Emerson (@Ga)
-* Liling Tan (@Li)
+* Susanne Fertmann
+* Guy Emerson
+* Liling Tan
 * Alexis Palmer 
 * Michaela Regneri
