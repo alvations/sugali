@@ -13,7 +13,7 @@ Out of our data sources, three can be straightforwardly represented in their ali
 
 \subsection{Data Sources} \label{sec:sources}
 
-Although data size matters in general NLP, \emph{universality} is the top priority for a universal corpus. We chose to focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured): Online Database of Interlinear Text (ODIN), Omniglot website, Universal Declaration of Human Rights (UHDR), and Wikipedia.
+Although data size matters in general NLP, \emph{universality} is the top priority for a universal corpus. We focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured): Online Database of Interlinear Text (ODIN), Omniglot website, Universal Declaration of Human Rights (UHDR), and Wikipedia.
 
 Our resulting corpus runs the full gamut of text types outlined by Abney and Bird, ranging from single-language text (Wikipedia) to parallel text (UDHR and Omniglot) to IGTs (ODIN).  Table~\ref{table:corpus} gives some coverage statistics, and we describe each source in the following subsections.
 
@@ -46,7 +46,7 @@ Wikipedia\footnote{\url{http://www.wikipedia.org}} is a collaboratively-edited e
 
 \paragraph{Omniglot.}
 
-The Omniglot website\footnote{\url{http://www.omniglot.com}} is an online encyclopedia of writing systems and languages. We chose to extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us parallel data in a reasonably large number of languages. % The urls for these resources are:
+The Omniglot website\footnote{\url{http://www.omniglot.com}} is an online encyclopedia of writing systems and languages. We extract information from pages on \emph{`Useful foreign phrases'} and the \emph{`Tower of Babel'} story, both of which give us parallel data in a reasonably large number of languages. % The urls for these resources are:
 
 \paragraph{ODIN.} \label{sec:odin}
 
@@ -78,7 +78,7 @@ One possible resolution is to move all elements of the gloss written in capital 
 
 The simplest solution we can see is to allow morphemes to be a level of structure in the universal corpus, just as documents, sentences, and words already are.  The overall architecture remains unchanged.  We must then decide how to represent the glosses.
 
-Even though glosses in ODIN are based on English, having been extracted from English-language documents, this is not true of IGTs in general.  In particular, it is common for documentary linguists working on indigenous languages of the Americas to provide glosses and translations based on Spanish.  For this reason, we believe it would be wise to specify the language used to produce the gloss.  Since it is not quite the language itself, but a metalanguage, one solution
+Even though glosses in ODIN are based on English, having been extracted from English-language documents, this is not true of IGTs in general.  For example, it is common for documentary linguists working on indigenous languages of the Americas to provide glosses and translations based on Spanish.  For this reason, we believe it would be wise to specify the language used to produce the gloss.  Since it is not quite the language itself, but a metalanguage, one solution
 would be to use new language codes that make it clear both that a metalanguage is being used, and also what natural language it is based on.  The five-letter code \texttt{gloss} cannot be confused with any code in any version of ISO 639 (with codes of length two to four).  Following the convention that subvarieties of a language are indicated with suffixes, we can append the code of the natural language.  For example, glosses into English and Spanish-based metalanguages would be given the codes \texttt{gloss-eng} and \texttt{gloss-spa}, respectively.
 
 One benefit of this approach is that glossed texts are treated in exactly the same way as parallel texts.  There is a unique identifier for each morpheme, and glosses are stored under this identifier and the corresponding gloss code.  Furthermore, to motivate the important place of parallel texts in a universal corpus, Abney and Bird view translations into a high-resource reference language as a convenient surrogate of meaning. By the same reasoning, we can use glosses to provide a more detailed surrogate of meaning, only written in a metalanguage instead of a natural one.
