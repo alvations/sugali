@@ -3,7 +3,6 @@ sugali
 
 This is a legacy repository of the *language identification project for many (many) languages* project for the software project course, [NLP projects for low-resource languages](http://www.coli.uni-saarland.de/courses/cl4lrl-swp/page.php?id=projects).
 
-----
 
 Description
 =====
@@ -13,7 +12,6 @@ Given a string of text in an arbitrary language, can we train a system to recogn
 
 As a spin-off, we've also produce the **SeedLing** corpus with data from over a 1000 languages to train the language identification system. The corpus is freely available on the [SeedLing](https://github.com/alvations/SeedLing) github repository.
 
-----
 
 Credits
 ====
