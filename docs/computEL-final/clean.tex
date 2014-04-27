@@ -4,12 +4,11 @@ Consistency in data structures and formatting is essential to facilitate use of 
 \subsection{Case Studies}
 
 
-\paragraph{UDHR.} Although there is a pre-compiled version of the UDHR data in the Natural Language ToolKit (NLTK) corpora distribution,\footnote{\url{http://nltk.googlecode.com/svn/trunk/nltk_data/index.xml}}
-the distribution is laden with encoding problems. Instead, we used the plaintext files available from the Unicode website,\footnote{\url{http://unicode.org/udhr/d}} which are free from encoding issues. The first four lines of each file record metadata, and the rest is the translation of the UDHR. This dataset is extremely clean, and simply required segmentation into sentences.
+\paragraph{UDHR.} We used the plaintext UDHR files available from the Unicode website\footnote{\url{http://unicode.org/udhr/d}} which uses the standard UTF8 encoding for all languages. The first four lines of each file record metadata, and the rest is the translation of the UDHR. This dataset is extremely clean, and simply required segmentation into sentences.
 
 
 \paragraph{Wikipedia.}
-One major issue with using the Wikipedia dump is the problem of separating text from abundant source-specific markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor\footnote{\url{http://medialab.di.unipi.it/wiki/Wikipedia_Extractor}} tool. After conversion into textfiles, we used several regular expressions to delete residual Wikipedia markup and so-called ``magic words"\footnote{\url{http://en.wikipedia.org/wiki/Help:Magic_words}}.
+One major issue with using the Wikipedia dump is the problem of separating text from abundant source-specific markup. To convert compressed Wikipedia dumps to textfiles, we used the WikiExtractor\footnote{\url{http://medialab.di.unipi.it/wiki/Wikipedia_Extractor}} tool. After conversion into textfiles, we used several regular expressions to delete residual Wikipedia markup and so-called ``\emph{magic words}".\footnote{\url{http://en.wikipedia.org/wiki/Help:Magic_words}}
 
 
 \paragraph{Omniglot.}
@@ -97,39 +96,7 @@ Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or 
 
 Omniglot does not give codes at all, but only the language name. To resolve this issue, we automatically converted language names to codes using information from the SIL website.\footnote{\url{http://www-01.sil.org/iso639-3/iso-639-3.tab}}. 
 
-To facilitate the standardization of language code, we have written a small python API that can be used in query information about a language and its code(s). Also, a function to convert language names to their appropriate ISO 639-3 codes. If internet connection is available, the API automatically updates the ISO 639-3 file stored locally on the users harddrive before responding to the user's query. An example usage of the API is as such:
-
-\small\begin{verbatim}
->>> from seedling import miniethnologue
->>> sil = miniethnologue.miniSIL()
->>> sil.ISO6393['eng']
-{'iso6391': 'en', 
-'iso6392t': 'eng',
-'iso6392b': 'eng',
-'name': 'English', 
-'ismacro': False, 
-'scope': 'Indvidual', 
-'type': 'Living'}
->>> sil.name2code('German')
-deu
-\end{verbatim}
-\normalsize
-
-Similarly, we provide an API to access language information from the World Atlas of Language Structures (WALS). The language clustering experiment in section 5 uses this API to access the language family information.
-
-\small\begin{verbatim}
->>> from seedling import miniwals
->>> wals = miniwals.MiniWALS()
->>> wals['eng']
-{'glottocode': 'stan1293', 
-'name': 'English', 
-'family': 'Indo-European', 
-'longitude': '0.0', 
-'latitude': '52.0', 
-'genus': 'Germanic', 
-'macroarea': u'Eurasia'}
-\end{verbatim}
-\normalsize
+To facilitate the standardization of language code, we have written a small python API that can be used to query information about a language and its code(s), as well as language family information.
 
 \subsection{File Formats}
 
