@@ -16,9 +16,9 @@ The main issue with extracting the Omniglot data is that the pages are designed 
 
 
 \paragraph{ODIN.}
-The ODIN data is easily accessible in XML format from the online database\footnote{\url{http://odin.linguistlist.org/download}}. Data for each language is saved in a separate XML file and the IGTs are encoded in tags of the form \texttt{<igt><example>...</example></igt>}.  For example, the IGT in figure~\ref{fig:odin_fijian} is represented by the XML snippet in figure~\ref{fig:odin_fijian_xml}.
+The ODIN data is easily accessible in XML format from the online database\footnote{\url{http://odin.linguistlist.org/download}}. Data for each language is saved in a separate XML file and the IGTs are encoded in tags of the form \texttt{<igt><example>...</example></igt>}.  For example, the IGT in Figure~\ref{fig:odin_fijian} is represented by the XML snippet in Figure~\ref{fig:odin_fijian_xml}.
 
-The primary problem in extracting the data is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in figure~\ref{fig:odin_yimas_xml} includes two types of metadata: the language name, and a citation, both of which introduce noise.  Finally, extraneous punctuation such as the quotation marks in the translation line need to be removed. We used regular expressions for cleaning lines within the IGTs.
+The primary problem in extracting the data is a lack of consistency in the IGTs. In the above examples, the sentence is introduced by a letter or number, which needs to be removed; however, the form of such indexing elements varies. In addition, the source line in Figure~\ref{fig:odin_yimas_xml} includes two types of metadata: the language name, and a citation, both of which introduce noise.  Finally, extraneous punctuation such as the quotation marks in the translation line need to be removed. We used regular expressions for cleaning lines within the IGTs.
 
 \begin{figure}[t]
 \quad 21 a.\quad o lesu mai \\
