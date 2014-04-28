@@ -6,7 +6,7 @@
 
 Building on their previous paper, \newcite{abney2011data} describe the data structure they envisage for the universal corpus in more detail, and we aim to adopt this structure where possible.  Two types of text are distinguished: \textbf{aligned texts} consist of multiple parallel documents, aligned at the document, sentence, or word level. The collection of parallel documents as a whole is assigned a unique identifier, with each individual document labelled by this identifier and the corresponding language code.  A monolingual document is simply one with only a single associated language code.  Sentences and words within documents are also assigned identifiers (relative to the document), if alignment has been performed at that level.
 
-Analysed texts, in addition to the raw text, contain more detailed annotations including parts of speech, morphological information, and syntactic relations.  This is stored as a table, where rows represent words, and columns represent the following types of information: document ID, language code, sentence ID, word ID, wordform, lemma, morphological information, part of speech, gloss, head/governor, and relation/role.
+\textbf{Analysed} texts, in addition to the raw text, contain more detailed annotations including parts of speech, morphological information, and syntactic relations.  This is stored as a table, where rows represent words, and columns represent the following types of information: document ID, language code, sentence ID, word ID, wordform, lemma, morphological information, part of speech, gloss, head/governor, and relation/role.
 
 Out of our data sources, three can be straightforwardly represented in their aligned text structure. However, ODIN contains richer annotations, which are in fact difficult to fit into their proposal, and which we discuss in section \ref{sec:odin} below.
 
@@ -15,7 +15,7 @@ Out of our data sources, three can be straightforwardly represented in their ali
 
 Although data size matters in general NLP, \emph{universality} is the top priority for a universal corpus. We focus on the following data sources, because they include a large number of languages, include several parallel texts, and demonstrate a variety of data types which a linguist might encounter (structured, semi-structured, unstructured): Online Database of Interlinear Text (ODIN), Omniglot website, Universal Declaration of Human Rights (UHDR), and Wikipedia.
 
-Our resulting corpus runs the full gamut of text types outlined by Abney and Bird, ranging from single-language text (Wikipedia) to parallel text (UDHR and Omniglot) to IGTs (ODIN).  Table~\ref{table:corpus} gives some coverage statistics, and we describe each source in the following subsections.
+Our resulting corpus runs the full gamut of text types outlined by Abney and Bird, ranging from single-language text (Wikipedia) to parallel text (UDHR and Omniglot) to IGTs (ODIN). For 332 languages the corpus contains data from more than one source.  Table~\ref{table:corpus} gives some coverage statistics, and we describe each source in the following subsections.
 
 
 \begin{table}[t]
@@ -23,11 +23,11 @@ Our resulting corpus runs the full gamut of text types outlined by Abney and Bir
 \centering
     \begin{tabular}{l|rr|rr}
     ~         				& Langs. 	& Families 	& Tokens		& Size	\\ \hline
-    ODIN      				& 1,217      & 101       		& 58,556		& 39 MB		\\
-    Omniglot  				& 134        & 21        		&	6,749			& 677 KB	\\
-    UDHR      				& 355        & 47        		&	33,117		& 5.2 MB	\\
-    Wikipedia 				& 209        & 22       		&						& 37 GB		\\ \hline
-    \textbf{Combined}	& 1,347			 & 106 
+    ODIN      				& 1,270      & 100       		& 58,556		& 39 MB		\\
+    Omniglot  				& 129        & 20        		& 6,749		& 677 KB	\\
+    UDHR      				& 352        & 46        		& 33,117		& 5.2 MB	\\
+    Wikipedia 				& 271        & 21       		&				& 37 GB\\ \hline
+    \textbf{Combined}	    & 1,451	    & 105 
     \end{tabular}
 \caption{Corpus Coverage}
 \label{table:corpus}
