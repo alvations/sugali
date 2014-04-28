@@ -97,6 +97,8 @@ Wikipedia uses its own set of language codes, most of which are in ISO~639-1 or 
 
 Omniglot does not give codes at all, but only the language name. To resolve this issue, we automatically converted language names to codes using information from the SIL website.
 
+For some languages, there is more than one standard orthography. For example, Mandarin Chinese is written with either traditional and simplified characters; Serbian is written with either the Cyrillic or the Roman alphabet. For cross-linguistic NLP, it would be helpful to have codes for orthographies, but unfortunately no standards exist for this purpose.
+
 \subsection{File Formats}
 
 It is important to make sure that the data we have compiled will be available to future researchers, regardless of how the surrounding infrastructure changes. \newcite{bird2003port} describe a set of best practices for maintaining portability of digital information, outlining seven dimensions along which this can vary. Following this advice, we have ensured that all our data is available as plain-text files, with UTF-8 encoding, labelled with the relevant ISO 639-3 code. Metadata is stored separately. This allows users to easily process the data using the programming language or software of their choice.
