@@ -4,7 +4,7 @@ Consistency in data structures and formatting is essential to facilitate use of 
 \subsection{Case Studies}
 
 
-\paragraph{UDHR.} We used the plaintext UDHR files available from the Unicode website\footnote{\url{http://unicode.org/udhr/d}} which uses UTF-8 encoding for all languages. The first four lines of each file record metadata, and the rest is the translation of the UDHR. This dataset is extremely clean, and simply required segmentation into sentences.
+\paragraph{UDHR.} We used the plain-text UDHR files available from the Unicode website\footnote{\url{http://unicode.org/udhr/d}} which uses UTF-8 encoding for all languages. The first four lines of each file record metadata, and the rest is the translation of the UDHR. This dataset is extremely clean, and simply required segmentation into sentences.
 
 
 \paragraph{Wikipedia.}
@@ -89,7 +89,7 @@ The primary problem in extracting the data is a lack of consistency in the IGTs.
 %As people incorporate large sets of IGTs from documentary linguistic projects into a universal corpus, we can expect problems with inconsistencies to grow.
 
 \subsection{Language Codes}
-As \newcite{xia2010multilingual} explain, language names do not always suffice to identify languages, since many names are ambiguous. For this reason, sets of language codes exist to more accurately identify languages. We use ISO~639-3\footnote{url{http://www-01.sil.org/iso639-3/default.asp}} as our standard set of codes, since it aims for universal coverage, and has widespread acceptance in the community. The data from ODIN and the UDHR already used this standard.
+As \newcite{xia2010multilingual} explain, language names do not always suffice to identify languages, since many names are ambiguous. For this reason, sets of language codes exist to more accurately identify languages. We use ISO~639-3\footnote{\url{http://www-01.sil.org/iso639-3/default.asp}} as our standard set of codes, since it aims for universal coverage, and has widespread acceptance in the community. The data from ODIN and the UDHR already used this standard.
 
 To facilitate the standardization of language codes, we have written a python API that can be used to query information about a language or a code, fetching up-to-date information from SIL International (which maintains the ISO~639-3 code set), as well as from Ethnologue.
 
