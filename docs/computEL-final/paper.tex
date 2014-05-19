@@ -41,13 +41,12 @@
 \setlength\titlebox{5cm}
 
 \title{SeedLing: Building and using a seed corpus \\ for the Human Language Project}
-%Getting the Ball Rolling: Producing a Foundation Text for a Universal Corpus of the World's Languages}
 
-% \author{Liling Tan, Guy Emerson, Susanne Fertmann, Alexis Palmer and Michaela Regneri \\
-%   Universität des Saarlandes \\
-%   Campus, 66123 Saarbrücken, Germany \\
-%   {\tt liling.tan@uni-saarland.de, emerson@coli.uni-saarland.de,} \\
-%   {\tt susfert@coli.uni-saarland.de}}
+\author{Guy Emerson, Liling Tan, Susanne Fertmann, Alexis Palmer, and Michaela Regneri \\
+Universität des Saarlandes \\
+66123 Saarbrücken, Germany \\
+{\tt \{emerson, liling, susfert, apalmer, regneri\}} \\
+{\tt @coli.uni-saarland.de}}
 
 \date{}
 
@@ -65,27 +64,28 @@
   SeedLing, a seed corpus for the Human Language Project. We first
   survey existing efforts to compile cross-linguistic resources, then
   describe our own approach. To build the foundation text for a
-  universal corpus, we crawl and clean texts from several web sources
+  Universal Corpus, we crawl and clean texts from several web sources
   that contain data from a large number of languages, and convert them
   into a standardised form consistent with the guidelines of
   \newcite{abney2011data}. The resulting corpus is more
   easily-accessible and machine-readable than any of the underlying
-  data sources, and, with data from 1347 languages covering 106
+  data sources, and, with data from 1451 languages covering 105
   language families, represents a significant base corpus for
-  researchers to draw on and add to in the future. To show the utility
-  of SeedLing for cross-lingual computational research, we use our
+  researchers to draw on and add to in the future. To demonstrate the
+  utility of SeedLing for cross-lingual computational research, we use our
   data in the test application of detecting similar languages.
 \end{abstract}
 
 
 \input{intro}
 \input{relwork}
-%\input{liling}
 \input{data}
 \input{clean}
 \input{cluster}
-%\input{corpus}
 \input{concl}
+
+\section*{Acknowledgements}
+We thank the three anonymous reviewers for their helpful comments. This research was supported in part by the Cluster of Excellence ``Multi-modal Computing and Interaction" in the German Excellence Initiative.
 
 \bibliography{references}
 
