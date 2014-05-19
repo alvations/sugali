@@ -1,0 +1,66 @@
+% A place to put commands that may be handy in other papers later on.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Commands for comments (especially useful for coauthoring)
+%% Some borrowed from Jason Baldridge and Katrin Erk
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[normalem]{ulem}
+\usepackage{xspace}
+\usepackage{xcolor}
+
+%\newcommand{\metatext}[2]{}
+\newcommand{\metatext}[2]
+ {\vspace{2mm}\noindent 
+   \textbf{#1.}\hspace{2mm} \textit{#2}\vspace{2mm}}
+
+
+\newcommand{\bluenote}[1]{\textcolor{blue}{[#1]}}
+\newcommand{\bluetext}[1]{\textcolor{blue}{#1}}
+
+
+
+%\newcommand{\metatexttwo}[2]{\textbf{#1.}\hspace{2mm} \marginpar{#2}}
+
+
+\newcommand{\mycomment}[1]{\metatext{Comment}{#1}}
+\newcommand{\apcomment}[1]{\metatext{Comment}{#1 \textbf{(Alexis)}}}
+\newcommand{\afcomment}[1]{\metatext{Comment}{#1 \textbf{(Anne)}}}
+
+%\newcommand{\commentfn}[2]{}
+\newcommand{\commentfn}[2]{*\footnote{\textbf{#1}: #2}*}
+\newcommand{\apfn}[1]{\commentfn{Alexis}{#1}}
+\newcommand{\affn}[1]{\commentfn{Andrea}{#1}}
+
+\newcommand{\tba}[1]{\metatext{To be added}{#1}}
+\newcommand{\todo}[2]{\metatext{TODO}{#1 \textbf{(#2)}}}
+\newcommand{\padd}[1]{\metatext{Please add}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% References that display appropriately depending on what one is
+%% referring to. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\labex}[1]{\label{ex:#1}}
+
+% modular references
+\newcommand{\eref}[2][]{(\ref{ex:#2}#1)} %examples
+\newcommand{\cref}[1]{Chapter~\ref{chapter:#1}} % chapters
+\newcommand{\dref}[1]{Definition~\ref{def:#1}} % definitions
+\newcommand{\tref}[1]{Table~\ref{table:#1}} % tables
+\newcommand{\fref}[1]{Figure~\ref{fig:#1}} % figures
+\newcommand{\sref}[1]{Sec.~\ref{sec:#1}} %sections 
+
+% situation entity types
+\newcommand{\ev}{\textsc{Event}}
+\newcommand{\rep}{\textsc{Report}}
+\newcommand{\st}{\textsc{State}}
+\newcommand{\gs}{\textsc{Generalizing Sentence}}
+\newcommand{\gen}{\textsc{Generic Sentence}}
+\newcommand{\abs}{\textsc{Abstract Entity}}
+\newcommand{\fact}{\textsc{Fact}}
+\newcommand{\prop}{\textsc{Proposition}}
+\newcommand{\sa}{\textsc{Speech Act}}
+\newcommand{\q}{\textsc{Question}}
+\newcommand{\imp}{\textsc{Imperative}}
+\newcommand{\none}{\textsc{No Situation}}
