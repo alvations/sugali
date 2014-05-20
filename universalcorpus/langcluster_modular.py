@@ -197,6 +197,8 @@ def evaluate(filename='distance_condensed.pk', option='once', method='complete',
 
 
 if __name__ == '__main__':
+	evaluate(N_clust = 105)
+	#evaluate(N_clust = 105, metric = pairwise)
 	#evaluate(option='range-1-301')
 	#evaluate(option='range-1-301', metric=pairwise)
 	#evaluate(N_clust=98)
@@ -205,6 +207,9 @@ if __name__ == '__main__':
 	#evaluate(option='baseline-random-20')
 	#evaluate(method='average')
 	#evaluate(flat_func=flatten_scipy, N_clust=80)
+	#evaluate(option='baseline-separate')
+	#evaluate(option='baseline-same')
+	"""
 	scores, flat, gold, name = evaluate()
 	print('\nGold class size frequencies:')
 	size = defaultdict(int)
@@ -216,3 +221,4 @@ if __name__ == '__main__':
 	for lang in flat:
 		if len(flat[lang]) == 1:
 			print(u"{}, {}: {}".format(name[lang], len(gold[lang]), u', '.join([name[x] for x in gold[lang]])))
+	"""
