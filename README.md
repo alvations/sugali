@@ -22,3 +22,20 @@ Credits
 * Liling Tan
 * Alexis Palmer 
 * Michaela Regneri
+
+
+Cite
+====
+
+If you would need to refer to the poster or the code, feel free to cite
+
+```
+@misc{sugali,
+  author = {Susanne Fertmann and Guy Emerson and Liling Tan},
+  title = {Language Identification for Low-Resource Languages},
+  year = {2014}, 
+  url = "https://github.com/alvations/sugali/",
+  institution = {Saarland University, Germany},
+  note = "Technical Report for NLP projects for low-resource languages. Saarland, Germany"
+}
+```
